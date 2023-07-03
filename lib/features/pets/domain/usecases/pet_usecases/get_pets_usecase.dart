@@ -1,13 +1,13 @@
 import 'package:buddies_app/features/pets/domain/entities/pet/pet_entity.dart';
-import 'package:buddies_app/features/pets/domain/repository/pet_repository/repository.dart';
+import 'package:buddies_app/features/pets/domain/repository/pet_repository/pet_repository.dart';
 
 
 class GetPetsUseCase {
-  final Repository repository;
+  final PetRepository repository;
 
   GetPetsUseCase({required this.repository});
 
-  Stream<List<PetEntity>> call(PetEntity pet) {
-    return repository.getPets(pet);
+  Future<List<PetEntity>> execute() async {
+    return repository.getPets();
   }
 }

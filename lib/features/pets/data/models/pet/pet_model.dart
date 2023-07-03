@@ -35,6 +35,13 @@ class PetModel extends PetEntity {
 
   factory PetModel.fromEntity(PetEntity pet) {
     return PetModel(
-        id: pet.id, name: pet.name, birthday: pet.birthday, type: pet.type, breed: pet.breed, gender: pet.gender, size: pet.size, description: pet.description );
+        id: pet.id,
+        name: pet.name,
+        birthday: pet.birthday,
+        type: pet.type,
+        breed: pet.breed,
+        gender: pet.gender,
+        size: pet.size,
+        description: pet.description);
   }
 }

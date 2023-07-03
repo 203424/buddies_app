@@ -1,12 +1,12 @@
 import 'package:buddies_app/features/pets/domain/entities/pet/pet_entity.dart';
-import 'package:buddies_app/features/pets/domain/repository/pet_repository/repository.dart';
+import 'package:buddies_app/features/pets/domain/repository/pet_repository/pet_repository.dart';
 
 class UpdatePetUseCase {
-  final Repository repository;
+  final PetRepository repository;
 
   UpdatePetUseCase({required this.repository});
 
-  Future<void> call(PetEntity pet) {
-    return repository.updatePet(pet);
+  Future<void> call(PetEntity pet) async {
+    return await repository.updatePet(pet);
   }
 }
