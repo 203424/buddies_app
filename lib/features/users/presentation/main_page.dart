@@ -1,6 +1,7 @@
 import 'package:buddies_app/const.dart';
 import 'package:buddies_app/features/pets/presentation/pets_page.dart';
 import 'package:buddies_app/features/request/presentation/request_page.dart';
+import 'package:buddies_app/features/users/presentation/account_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,7 +19,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    pageController = PageController();
+    pageController = PageController(initialPage: _currentIndex);
     super.initState();
   }
 
@@ -78,7 +79,7 @@ class _MainPageState extends State<MainPage> {
         body: PageView(
           controller: pageController,
           onPageChanged: onPageChanged,
-          children: const [PetsPage(), RequestPage(), RequestPage()],
+          children: const [PetsPage(), RequestPage(), AccountPage()],
         ));
   }
 }

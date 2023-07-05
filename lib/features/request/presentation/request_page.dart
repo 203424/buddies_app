@@ -1,5 +1,6 @@
 import 'package:buddies_app/const.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class RequestPage extends StatelessWidget {
@@ -11,15 +12,14 @@ class RequestPage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: white,
         appBar: AppBar(
-          backgroundColor: redColor,
-          title: const Text(
-            'Buddies',
-            style: Font.buddiesStyle,
-          ),
+          backgroundColor: white,
+          title: BuddiesIcons.logoRounded(sizeIcon: 50.0, color: redColor),
+          shadowColor: Colors.transparent,
         ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -178,6 +178,7 @@ class RequestPage extends StatelessWidget {
   Widget botonServicio({String? title, SvgPicture? icon}) {
     return Container(
       decoration: BoxDecoration(
+          color: inputGrey,
           border: Border.all(color: secondaryColor, width: 3.0),
           borderRadius: BorderRadius.circular(10.0)),
       child:
