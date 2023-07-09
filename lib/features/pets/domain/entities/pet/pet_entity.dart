@@ -21,15 +21,5 @@ class PetEntity {
     this.description,
 });
 
-  @override
-  List<Object?> get props => [
-    id,
-    name,
-    birthday,
-    type,
-    breed,
-    gender,
-    size,
-    description
-      ];
+
 }

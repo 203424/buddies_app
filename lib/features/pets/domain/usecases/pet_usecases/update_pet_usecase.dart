@@ -4,9 +4,9 @@ import 'package:buddies_app/features/pets/domain/repository/pet_repository/pet_r
 class UpdatePetUseCase {
   final PetRepository repository;
 
-  UpdatePetUseCase({required this.repository});
+  UpdatePetUseCase(this.repository);
 
-  Future<void> call(PetEntity pet) async {
-    return await repository.updatePet(pet);
+  Future<List<PetEntity>> execute(int petid, PetEntity pet) async {
+    return await repository.updatePet(petid, pet);
   }
 }

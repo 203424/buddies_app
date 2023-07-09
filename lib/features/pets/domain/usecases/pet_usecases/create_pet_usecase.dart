@@ -4,9 +4,9 @@ import 'package:buddies_app/features/pets/domain/repository/pet_repository/pet_r
 class CreatePetUseCase {
   final PetRepository repository;
 
-  CreatePetUseCase({required this.repository});
+  CreatePetUseCase(this.repository);
 
-  Future<void> call(List<PetEntity>  pet) async {
+  Future<List<PetEntity>> execute(PetEntity  pet) async {
     return await repository.createPet(pet);
   }
 }

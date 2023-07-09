@@ -22,6 +22,6 @@ class MainApp extends StatelessWidget {
           fontFamily: 'Montserrat',
           primarySwatch: redColorSwatch,
         ),
-        home: const MainPage());
+        home:  MainPage());
   }
 }

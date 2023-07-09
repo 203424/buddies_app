@@ -4,9 +4,9 @@ import 'package:buddies_app/features/pets/domain/repository/pet_repository/pet_r
 class GetPetsByIdUseCase {
   final PetRepository repository;
 
-  GetPetsByIdUseCase({required this.repository});
+  GetPetsByIdUseCase(this.repository);
 
-  Future<List<PetEntity>> execute() async{
-    return repository.getPetsById();
+  Future<List<PetEntity>> execute(int petid) async{
+    return repository.getPetsById(petid);
   }
 }

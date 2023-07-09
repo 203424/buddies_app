@@ -1,30 +1,28 @@
-part of 'pet_cubit.dart';
+part of 'pet_bloc.dart';
 
-abstract class PetState extends Equatable {
-  const PetState();
+@immutable
+abstract class PetState {}
+
+class PetInitialState extends PetState {}
+
+class PetLoadingState extends PetState {}
+
+class PetLoadedState extends PetState {
+  final List<PetModel> petList;
+
+  PetLoadedState(this.petList);
 }
 
-class PetInitial extends PetState {
-  @override
-  List<Object> get props => [];
+class PetEmptyState extends PetState {}
+
+class PetErrorState extends PetState {
+  final String errorMessage;
+
+  PetErrorState(this.errorMessage);
 }
 
-class PetLoading extends PetState {
-  @override
-  List<Object> get props => [];
-}
+class PetSuccessState extends PetState {
+  final String successMessage;
 
-
-class PetLoaded extends PetState {
-  final List<PetEntity> pets;
-
-  PetLoaded({required this.pets});
-  @override
-  List<Object> get props => [pets];
-}
-
-
-class PetFailure extends PetState {
-  @override
-  List<Object> get props => [];
+  PetSuccessState(this.successMessage);
 }

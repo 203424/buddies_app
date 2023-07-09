@@ -1,9 +1,15 @@
 import 'package:buddies_app/const.dart';
+import 'package:buddies_app/features/pets/domain/entities/pet/pet_entity.dart';
 import 'package:flutter/material.dart';
 
-class PetsPage extends StatelessWidget {
+class PetsPage extends StatefulWidget {
   const PetsPage({super.key});
 
+  @override
+  State<PetsPage> createState() => _PetsPageState();
+}
+
+class _PetsPageState extends State<PetsPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(

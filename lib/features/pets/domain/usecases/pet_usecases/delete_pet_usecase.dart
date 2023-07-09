@@ -4,9 +4,9 @@ import 'package:buddies_app/features/pets/domain/repository/pet_repository/pet_r
 class DeletePetUseCase {
   final PetRepository repository;
 
-  DeletePetUseCase({required this.repository});
+  DeletePetUseCase(this.repository);
 
-  Future<void> call(PetEntity pet) async {
-    return await repository.deletePet(pet);
+  Future<List<PetEntity>> execute(int petid) async {
+    return await repository.deletePet(petid);
   }
 }

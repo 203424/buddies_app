@@ -7,15 +7,62 @@ String apiURL = '3.215.246.49';
 
 abstract class PetRemoteDataSource {
   Future<List<PetModel>> getPets();
-  Future<List<PetModel>> getPetsById();
+  Future<List<PetModel>> getPetsById( int petid);
 
-  Future<void> createPet(List<PetEntity> pet);
-  Future<void> updatePet(PetEntity pet);
-  Future<void> deletePet(PetEntity pet);
+  Future<List<PetModel>> createPet(PetEntity pet);
+  Future<List<PetModel>> updatePet(PetEntity pet, int petid);
+  Future<List<PetModel>> deletePet(int petid);
 }
 
-class PetRemoteDataSourceImp implements PetRemoteDataSource {
+class PetRemoteDataSourceImpl implements PetRemoteDataSource {
 
+
+  @override
+  Future<List<PetModel>> createPet(PetEntity pet) async {
+    var url = Uri.https(apiURL, '/api/tareas/');
+    var headers = {'Content-Type': 'application/json'};
+
+    List<Map<String, dynamic>> body = [];
+
+      var object = {
+        'name': pet.name,
+        'description': pet.description,
+        'breed': pet.breed,
+        'type': pet.type,
+        'birthday': pet.birthday,
+        'gender': pet.gender,
+        'size': pet.size,
+      };
+      body.add(object);
+
+    var response = await http.post(url, body: convert.jsonEncode(body), headers: headers);
+    if (response.statusCode == 200) {
+      // Si la solicitud fue exitosa, parsea la respuesta y devuelve una lista de PetModel
+      List<dynamic> responseData = convert.jsonDecode(response.body);
+      List<PetModel> petModels = responseData.map((data) => PetModel.fromJson(data)).toList();
+      return petModels;
+    } else {
+      // Si la solicitud falló, puedes lanzar una excepción o manejar el error de alguna otra manera
+      throw Exception('Error al crear la mascota');
+    }
+  }
+
+
+  @override
+  Future<List<PetModel>> deletePet(int petid) async {
+    var url = Uri.https(apiURL, '/api/tareas/$petid');
+    var headers = {'Content-Type': 'application/json'};
+
+    var response = await http.delete(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      // Si la solicitud de eliminación fue exitosa, puedes devolver una lista vacía o cualquier otro resultado deseado.
+      return [];
+    } else {
+      // Si la solicitud falló, puedes lanzar una excepción o manejar el error de alguna otra manera.
+      throw Exception('Error al eliminar la mascota');
+    }
+  }
 
   @override
   Future<List<PetModel>> getPets() async {
@@ -27,72 +74,64 @@ class PetRemoteDataSourceImp implements PetRemoteDataSource {
           .jsonDecode(response.body)
           .map<PetModel>((data) => PetModel.fromJson(data))
           .toList();
-     // final prefs = await SharedPreferences.getInstance();
-     // prefs.setString('tareas', response.body);
       return dataPets;
     } else {
       throw Exception('Error');
     }
   }
-
   @override
-  Future<void> createPet(List<PetEntity> pets) async  {
-    var url = Uri.https(apiURL, '/api/tareas/');
+  Future<List<PetModel>> getPetsById(int petid) async {
+    var url = Uri.https(apiURL, '/api/tareas/$petid');
     var headers = {'Content-Type': 'application/json'};
 
-    List<Map<String, Object>> body = [];
+    var response = await http.get(url, headers: headers);
 
-    for (var PetEntity in pets) {
-      var object = {
-        'description': PetEntity.description!,
-        'size': PetEntity.size!,
-        'gender': PetEntity.gender!,
-        'breed': PetEntity.breed!,
-        'type': PetEntity.type!,
-        'birthday': PetEntity.birthday!,
-        'name': PetEntity.name!,
-      };
-
-      body.add(object);
+    if (response.statusCode == 200) {
+      // Si la solicitud fue exitosa, parsea la respuesta y devuelve una lista con la mascota encontrada
+      dynamic responseData = convert.jsonDecode(response.body);
+      PetModel pet = PetModel.fromJson(responseData);
+      return [pet];
+    } else if (response.statusCode == 404) {
+      // Si la mascota no fue encontrada, devuelve una lista vacía
+      return [];
+    } else {
+      // Si la solicitud falló, puedes lanzar una excepción o manejar el error de alguna otra manera
+      throw Exception('Error al obtener la mascota');
     }
-
-    await http.post(url, body: convert.jsonEncode(body), headers: headers);
-
   }
 
   @override
-  Future<void> deletePet(PetEntity pet) async {
-      var url = Uri.https(apiURL, '/api/tareas/${pet.id}');
-      await http.delete(url);
-  }
-
-  @override
-  Future<List<PetModel>> getPetsById() {
-    // TODO: implement getPetsById
-    throw UnimplementedError();
-  }
-
-
-  @override
-  Future<void> updatePet(PetEntity pet) async {
-    var url = Uri.https(apiURL, '/api/tareas/');
+  Future<List<PetModel>> updatePet(PetEntity pet, int petid) async {
+    var url = Uri.https(apiURL, '/api/tareas/$petid');
     var headers = {'Content-Type': 'application/json'};
 
+    List<Map<String, dynamic>> body = [];
 
-    var body = {
-      'description': pet.description!,
-      'size': pet.size!,
-      'gender': pet.gender!,
-      'breed': pet.breed!,
-      'type': pet.type!,
-      'birthday': pet.birthday!,
-      'name': pet.name!,
+    var object = {
+      'name': pet.name,
+      'description': pet.description,
+      'breed': pet.breed,
+      'type': pet.type,
+      'birthday': pet.birthday,
+      'gender': pet.gender,
+      'size': pet.size,
     };
-    print("update");
-    print(body);
+    body.add(object);
 
-    await http.put(url, body: convert.jsonEncode(body), headers: headers);
+    var response = await http.put(url, body: convert.jsonEncode(body), headers: headers);
+    if (response.statusCode == 200) {
+      // Si la solicitud fue exitosa, parsea la respuesta y devuelve una lista de PetModel
+      List<dynamic> responseData = convert.jsonDecode(response.body);
+      List<PetModel> petModels = responseData.map((data) => PetModel.fromJson(data)).toList();
+      return petModels;
+    } else {
+      // Si la solicitud falló, puedes lanzar una excepción o manejar el error de alguna otra manera
+      throw Exception('Error al actualizar la mascota');
+    }
   }
+
+
+
 
 
 }

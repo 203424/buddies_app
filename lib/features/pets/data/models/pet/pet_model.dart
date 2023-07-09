@@ -44,4 +44,20 @@ class PetModel extends PetEntity {
         size: pet.size,
         description: pet.description);
   }
+    static Map<String, dynamic> fromEntityToJsonCreate(PetEntity pet) {
+      return {
+        'name': pet.name,
+        'birthday': pet.birthday,
+        'type': pet.type,
+        'breed': pet.breed,
+        'gender': pet.gender,
+        'size': pet.size,
+        'description': pet.description
+      };
+    }
+  @override
+  String toString() {
+    return 'PetModel(id: $id, name: $name, birthday: $birthday, type: $type, breed: $breed, gender: $gender, size: $size, description: $description)';
+  }
 }
+
