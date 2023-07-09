@@ -10,26 +10,89 @@ class PetsPage extends StatelessWidget {
     List<Map<String, String>> pets = [
       //lista de prueba
       {
-        'name': 'Kira',
+        'name': '1Kira',
         'birth': '2021-01-04 12:34:56',
         'type': 'Perro',
         'breed': 'Pastor',
         'size': 'Mediana',
       },
       {
-        'name': 'Eevee',
+        'name': '2Eevee',
         'birth': '2019-07-04 12:34:56',
         'type': 'Perro',
         'breed': 'Salchicha',
         'size': 'Pequeño',
       },
       {
-        'name': 'Manguito',
+        'name': '3anguito',
         'birth': '2021-07-04 12:34:56',
         'type': 'Gato',
         'breed': 'Siamés',
         'size': 'Mediana',
-      }
+      },
+      {
+        'name': '4Manguito',
+        'birth': '2021-07-04 12:34:56',
+        'type': 'Gato',
+        'breed': 'Siamés',
+        'size': 'Mediana',
+      },
+      {
+        'name': '5Manguito',
+        'birth': '2021-07-04 12:34:56',
+        'type': 'Gato',
+        'breed': 'Siamés',
+        'size': 'Mediana',
+      },
+      {
+        'name': '6Manguito',
+        'birth': '2021-07-04 12:34:56',
+        'type': 'Gato',
+        'breed': 'Siamés',
+        'size': 'Mediana',
+      },
+      {
+        'name': '7Manguito',
+        'birth': '2021-07-04 12:34:56',
+        'type': 'Gato',
+        'breed': 'Siamés',
+        'size': 'Mediana',
+      },
+      {
+        'name': '8Manguito',
+        'birth': '2021-07-04 12:34:56',
+        'type': 'Gato',
+        'breed': 'Siamés',
+        'size': 'Mediana',
+      },
+      {
+        'name': '9Manguito',
+        'birth': '2021-07-04 12:34:56',
+        'type': 'Gato',
+        'breed': 'Siamés',
+        'size': 'Mediana',
+      },
+      {
+        'name': '10Manguito',
+        'birth': '2021-07-04 12:34:56',
+        'type': 'Gato',
+        'breed': 'Siamés',
+        'size': 'Mediana',
+      },
+      {
+        'name': '11Manguito',
+        'birth': '2021-07-04 12:34:56',
+        'type': 'Gato',
+        'breed': 'Siamés',
+        'size': 'Mediana',
+      },
+      {
+        'name': '12Manguito',
+        'birth': '2021-07-04 12:34:56',
+        'type': 'Gato',
+        'breed': 'Siamés',
+        'size': 'Mediana',
+      },
     ];
 
     return SafeArea(
@@ -122,28 +185,28 @@ class PetsPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 5.0,
                       ),
                       Text(
                         '${pet['name'] ?? ''}',
                         style: Font.titleStyle,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 25.0,
                       ),
                       Row(
                         children: [
                           Text('${calcularEdad(DateTime.parse(pet['birth']))}',
                               style: Font.textStyle),
-                          SizedBox(
+                          const SizedBox(
                             width: 20.0,
                           ),
                           Text('${pet['type'] + ' ' + pet['breed'] ?? ''}',
                               style: Font.textStyle)
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10.0,
                       ),
                       Text("Raza ${pet['size']}", style: Font.textStyle)

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:buddies_app/const.dart';
 
 class ButtonFormWidget extends StatelessWidget {
   final VoidCallback onPressed;

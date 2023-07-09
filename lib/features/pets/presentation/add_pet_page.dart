@@ -49,27 +49,27 @@ class AddPetPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Column(children: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 5.0),
-                child: Container(
-                  height: 150.0,
-                  width: 150.0,
-                  decoration: BoxDecoration(
-                      color: inputGrey,
-                      borderRadius: BorderRadius.circular(75.0)),
-                ),
-              ),
-            ),
-            Center(
-              child: TextButton(
-                onPressed: () {},
-                child: const Text(
-                  "Cambiar foto de la mascota",
-                  style: TextStyle(fontSize: 16.0, color: redColor),
-                ),
-              ),
-            ),
+            // Center(
+            //   child: Padding(
+            //     padding: const EdgeInsets.only(bottom: 5.0),
+            //     child: Container(
+            //       height: 150.0,
+            //       width: 150.0,
+            //       decoration: BoxDecoration(
+            //           color: inputGrey,
+            //           borderRadius: BorderRadius.circular(75.0)),
+            //     ),
+            //   ),
+            // ),
+            // Center(
+            //   child: TextButton(
+            //     onPressed: () {},
+            //     child: const Text(
+            //       "Cambiar foto de la mascota",
+            //       style: TextStyle(fontSize: 16.0, color: redColor),
+            //     ),
+            //   ),
+            // ),
             InputFormWidget(
               title: 'Nombre',
               controller: _nameController,

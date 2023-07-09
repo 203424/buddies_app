@@ -8,7 +8,7 @@ const Color inputGrey = Color(0xffF8F8F8);
 const Color primaryColor = Color(0xFFF3BCC8);
 const Color secondaryColor = Color(0xFFDFC7D3);
 const Color redColor = Color(0xFFFF4D4D);
-const Color greenColor = Color(0xFF4DFF62);
+const Color greenColor = Color(0xFF46E558);
 const Color yellowColor = Color(0xFFFBFF4D);
 const Color greyColor = Color(0xFFA3A3A3);
 const Color greyColorStatusBar = Color(0xFFC4C4C4);
@@ -66,48 +66,78 @@ class Font {
 //Icons
 class BuddiesIcons {
   static SvgPicture mascotasIcon({double? sizeIcon, Color? color}) {
-    color ??= black;
-    return SvgPicture.asset(
-      'assets/svg/mascotas_icon.svg',
-      height: sizeIcon,
-      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-    );
+    if (color != null) {
+      return SvgPicture.asset(
+        'assets/svg/mascotas_icon.svg',
+        height: sizeIcon,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      );
+    } else {
+      return SvgPicture.asset(
+        'assets/svg/mascotas_icon.svg',
+        height: sizeIcon,
+      );
+    }
   }
 
   static SvgPicture serviciosIcon({double? sizeIcon, Color? color}) {
-    color ??= black;
-    return SvgPicture.asset(
-      'assets/svg/servicios_icon.svg',
-      height: sizeIcon,
-      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-    );
+    if (color != null) {
+      return SvgPicture.asset(
+        'assets/svg/servicios_icon.svg',
+        height: sizeIcon,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      );
+    } else {
+      return SvgPicture.asset(
+        'assets/svg/servicios_icon.svg',
+        height: sizeIcon,
+      );
+    }
   }
 
   static SvgPicture paseoIcon({double? sizeIcon, Color? color}) {
-    color ??= black;
-    return SvgPicture.asset(
-      'assets/svg/paseo_icon.svg',
-      height: sizeIcon,
-      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-    );
+    if (color != null) {
+      return SvgPicture.asset(
+        'assets/svg/paseo_icon.svg',
+        height: sizeIcon,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      );
+    } else {
+      return SvgPicture.asset(
+        'assets/svg/paseo_icon.svg',
+        height: sizeIcon,
+      );
+    }
   }
 
   static SvgPicture logo({double? sizeIcon, Color? color}) {
-    color ??= black;
-    return SvgPicture.asset(
-      'assets/svg/logo.svg',
-      height: sizeIcon,
-      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-    );
+    if (color != null) {
+      return SvgPicture.asset(
+        'assets/svg/logo.svg',
+        height: sizeIcon,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      );
+    } else {
+      return SvgPicture.asset(
+        'assets/svg/logo.svg',
+        height: sizeIcon,
+      );
+    }
   }
 
   static SvgPicture logoRounded({double? sizeIcon, Color? color}) {
-    color ??= black;
-    return SvgPicture.asset(
-      'assets/svg/logo_rounded.svg',
-      height: sizeIcon,
-      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-    );
+    if (color != null) {
+      return SvgPicture.asset(
+        'assets/svg/logo_rounded.svg',
+        height: sizeIcon,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      );
+    } else {
+      return SvgPicture.asset(
+        'assets/svg/logo_rounded.svg',
+        height: sizeIcon,
+      );
+    }
   }
 }
 
@@ -116,4 +146,9 @@ class Pages {
   static const String signInPage = "signInPage";
   static const String signUpPage = "signUpPage";
   static const String addPetPage = "addPetPage";
+  static const String requestFormPage = "requestFormPage";
+  static const String historyListPage = "historyListPage";
+  static const String servicesListPage = "servicesListPage";
+  static const String serviceInProgressPage = "serviceInProgressPage";
+  static const String addPetToServicesPage = "addPetToServicesPage";
 }
