@@ -1,12 +1,129 @@
 import 'package:buddies_app/const.dart';
 import 'package:buddies_app/features/request/presentation/widgets/date_picker_widget.dart';
 import 'package:buddies_app/features/request/presentation/widgets/simple_pet_card.dart';
+import 'package:buddies_app/widgets/button_form_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
 
-class RequestFormPage extends StatelessWidget {
+class RequestFormPage extends StatefulWidget {
   final String title;
   const RequestFormPage({super.key, required this.title});
+
+  @override
+  State<RequestFormPage> createState() => _RequestFormPageState();
+}
+
+class _RequestFormPageState extends State<RequestFormPage> {
+  TimeOfDay _selectedTime = TimeOfDay.now();
+  bool _isValidTime = true;
+  late DateTime selectedDate;
+  String selectedLocation = '';
+
+  @override
+  void initState() {
+    super.initState();
+    selectedDate = DateTime.now();
+    _isValidTime = _isTimeWithinRange(_selectedTime);
+  }
+
+  bool _isTimeWithinRange(TimeOfDay time) {
+    final int pickedMinutes = time.hour * 60 + time.minute;
+    return pickedMinutes >= 7 * 60 && pickedMinutes <= 19 * 60;
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay now = TimeOfDay.now();
+    TimeOfDay? pickedTime;
+
+    pickedTime = await showTimePicker(
+      context: context,
+      initialTime: (selectedDate.year == DateTime.now().year &&
+              selectedDate.month == DateTime.now().month &&
+              selectedDate.day == DateTime.now().day)
+          ? now
+          : const TimeOfDay(hour: 7, minute: 0),
+    );
+
+    if (pickedTime != null) {
+      final int pickedMinutes = pickedTime.hour * 60 + pickedTime.minute;
+      final DateTime selectedDateTime = DateTime(
+        selectedDate.year,
+        selectedDate.month,
+        selectedDate.day,
+        pickedTime.hour,
+        pickedTime.minute,
+      );
+
+      final DateTime currentDateTime = DateTime.now();
+      const Duration margin = Duration(seconds: 30);
+
+      if (selectedDateTime.isBefore(currentDateTime.subtract(margin))) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Hora no válida'),
+              content: const Text(
+                  'No se puede seleccionar una hora anterior a la hora actual.'),
+              actions: [
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.pop(context); // Cerrar el diálogo
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else if (pickedMinutes < 7 * 60 || pickedMinutes > 19 * 60) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Hora no válida'),
+              content: const Text(
+                  'Solo se pueden seleccionar horas entre las 07:00 y las 19:00.'),
+              actions: [
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.pop(context); // Cerrar el diálogo
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        _isValidTime = true;
+        setState(() {
+          _selectedTime = pickedTime!;
+        });
+      }
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? selected = await _showDatePicker(context);
+    if (selected != null) {
+      setState(() {
+        selectedDate = selected;
+      });
+    }
+  }
+
+  Future<DateTime?> _showDatePicker(BuildContext context) async {
+    return await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+    );
+  }
+
+  void _selectLocation() {
+    // Implementar la lógica para seleccionar una ubicación
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,215 +144,169 @@ class RequestFormPage extends StatelessWidget {
         'breed': 'Salchicha',
         'size': 'Pequeño',
       },
-      {
-        'name': '3Manguito',
-        'birth': '2021-07-04 12:34:56',
-        'type': 'Gato',
-        'breed': 'Siamés',
-        'size': 'Mediana',
-      },
-      {
-        'name': '4Manguito',
-        'birth': '2021-07-04 12:34:56',
-        'type': 'Gato',
-        'breed': 'Siamés',
-        'size': 'Mediana',
-      },
-      {
-        'name': '5Manguito',
-        'birth': '2021-07-04 12:34:56',
-        'type': 'Gato',
-        'breed': 'Siamés',
-        'size': 'Mediana',
-      },
-      {
-        'name': '6Manguito',
-        'birth': '2021-07-04 12:34:56',
-        'type': 'Gato',
-        'breed': 'Siamés',
-        'size': 'Mediana',
-      },
-      {
-        'name': '7Manguito',
-        'birth': '2021-07-04 12:34:56',
-        'type': 'Gato',
-        'breed': 'Siamés',
-        'size': 'Mediana',
-      },
-      {
-        'name': '8Manguito',
-        'birth': '2021-07-04 12:34:56',
-        'type': 'Gato',
-        'breed': 'Siamés',
-        'size': 'Mediana',
-      },
-      {
-        'name': '9Manguito',
-        'birth': '2021-07-04 12:34:56',
-        'type': 'Gato',
-        'breed': 'Siamés',
-        'size': 'Mediana',
-      },
-      {
-        'name': '10Manguito',
-        'birth': '2021-07-04 12:34:56',
-        'type': 'Gato',
-        'breed': 'Siamés',
-        'size': 'Mediana',
-      },
-      {
-        'name': '11Manguito',
-        'birth': '2021-07-04 12:34:56',
-        'type': 'Gato',
-        'breed': 'Siamés',
-        'size': 'Mediana',
-      },
-      {
-        'name': '12Manguito',
-        'birth': '2021-07-04 12:34:56',
-        'type': 'Gato',
-        'breed': 'Siamés',
-        'size': 'Mediana',
-      },
     ];
     return SafeArea(
       child: Scaffold(
+        backgroundColor: white,
+        appBar: AppBar(
           backgroundColor: white,
-          appBar: AppBar(
-            backgroundColor: white,
-            title: Text('Solicitar ${title}', style: Font.pageTitleStyle),
-            shadowColor: const Color.fromARGB(0, 214, 58, 58),
-            iconTheme: const IconThemeData(color: black),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Mascota', style: Font.titleBoldStyle),
-                      const Text('Puedes agregar como máximo 2 mascotas',
-                          style: Font.textStyle),
-                      const SizedBox(
-                        height: 10.0,
+          title: Text('Solicitar ${widget.title}', style: Font.pageTitleStyle),
+          shadowColor: const Color.fromARGB(0, 214, 58, 58),
+          iconTheme: const IconThemeData(color: black),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Mascota', style: Font.titleBoldStyle),
+                    const Text('Puedes agregar como máximo 2 mascotas',
+                        style: Font.textStyle),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, Pages.addPetToServicesPage);
+                      },
+                      child: const Column(
+                        children: [
+                          CircleAvatar(
+                              backgroundColor: greyColor,
+                              radius: 30,
+                              child: Icon(
+                                Icons.add,
+                                color: white,
+                              )),
+                          Text(
+                            'Agregar',
+                            textAlign: TextAlign.center,
+                          )
+                        ],
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, Pages.addPetToServicesPage);
-                        },
-                        child: const Column(
+                    )
+                  ],
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    pet = pets[index];
+                    return SimplePetCard(
+                        name: pet['name'],
+                        type: pet['type'],
+                        breed: pet['breed'],
+                        size: pet['size']);
+                  },
+                  childCount: 2,
+                ),
+              ),
+              const SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Servicio',
+                      style: Font.titleBoldStyle,
+                    ),
+                  ],
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: ExpansionTile(
+                          backgroundColor: inputGrey,
+                          collapsedBackgroundColor: inputGrey,
+                          leading: const Icon(Icons.calendar_today_outlined),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Fecha'),
+                              Text(selectedDate.toString().substring(0, 10))
+                            ],
+                          ),
                           children: [
-                            CircleAvatar(
-                                backgroundColor: greyColor,
-                                radius: 30,
-                                child: Icon(
-                                  Icons.add,
-                                  color: white,
-                                )),
-                            Text(
-                              'Agregar',
-                              textAlign: TextAlign.center,
-                            )
+                            ListTile(
+                              title: DatePickerWidget(
+                                selectedDate: selectedDate,
+                                onDateSelected: (date) {
+                                  setState(() {
+                                    selectedDate = date;
+                                  });
+                                },
+                              ),
+                            ),
                           ],
                         ),
-                      )
-                    ],
-                  ),
-                ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      pet = pets[index];
-                      return SimplePetCard(
-                          name: pet['name'],
-                          type: pet['type'],
-                          breed: pet['breed'],
-                          size: pet['size']);
-                    },
-                    childCount: 2,
-                  ),
-                ),
-                const SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Servicio',
-                        style: Font.titleBoldStyle,
                       ),
-                      DatePicker()
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        tileColor: inputGrey,
+                        onTap: () {
+                          _selectTime(context);
+                        },
+                        leading: const Icon(Icons.access_time),
+                        trailing: const Icon(Icons.keyboard_arrow_down),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Hora'),
+                            if (_isValidTime)
+                              Text(_selectedTime.format(context))
+                            else
+                              const Text('-- : --'),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: const ExpansionTile(
+                          backgroundColor: inputGrey,
+                          collapsedBackgroundColor: inputGrey,
+                          leading: Icon(Icons.location_on_outlined),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [Text('Ubicación'), Text('---')],
+                          ),
+                          children: [
+                            ListTile(title: Text('Aca se selecciona la ubi')
+                                // Text(
+                                //     'Ubicación seleccionada: $selectedLocation'),
+                                // onTap: _selectLocation,
+                                ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          )),
-    );
-  }
-}
-
-class DatePicker extends StatefulWidget {
-  const DatePicker({super.key});
-
-  @override
-  State<DatePicker> createState() => _DatePickerState();
-}
-
-class _DatePickerState extends State<DatePicker> {
-  DateTime today = DateTime.now();
-
-  void _onDaySelected(DateTime day, DateTime focusedDay) {
-    setState(() {
-      today = day;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10.0),
-      child: ExpansionTile(
-        backgroundColor: inputGrey,
-        collapsedBackgroundColor: inputGrey,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Row(
-              children: [
-                Icon(Icons.date_range),
-                SizedBox(
-                  width: 10.0,
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  child: ButtonFormWidget(onPressed: () {}, text: 'Enviar'),
                 ),
-                Text('Fecha'),
-              ],
-            ),
-            Text(today.toString().split(' ')[0]),
-          ],
+              )
+            ],
+          ),
         ),
-        children: [
-          ListTile(
-              title: TableCalendar(
-            calendarStyle: const CalendarStyle(
-              todayTextStyle: TextStyle(color: black),
-              todayDecoration: BoxDecoration(color: Colors.transparent),
-              selectedDecoration:
-                  BoxDecoration(color: redColor, shape: BoxShape.circle),
-            ),
-            locale: "es_ES",
-            rowHeight: 43.0,
-            headerStyle: const HeaderStyle(
-                formatButtonVisible: false, titleCentered: true),
-            availableGestures: AvailableGestures.all,
-            selectedDayPredicate: (day) => isSameDay(day, today),
-            focusedDay: today,
-            firstDay: DateTime.now(),
-            lastDay: DateTime.utc(2023, 12, 31),
-            onDaySelected: _onDaySelected,
-          ))
-        ],
       ),
     );
   }

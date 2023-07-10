@@ -3,64 +3,41 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class DatePickerWidget extends StatefulWidget {
-  const DatePickerWidget({super.key});
+  final DateTime selectedDate;
+  final ValueChanged<DateTime> onDateSelected;
+
+  const DatePickerWidget({
+    Key? key,
+    required this.selectedDate,
+    required this.onDateSelected,
+  }) : super(key: key);
 
   @override
-  _DatePickerWidgetState createState() => _DatePickerWidgetState();
+  State<DatePickerWidget> createState() => _DatePickerState();
 }
 
-class _DatePickerWidgetState extends State<DatePickerWidget> {
-  bool _isExpanded = false;
+class _DatePickerState extends State<DatePickerWidget> {
+  late DateTime today;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: ListView(
-        children: [
-          ExpansionPanelList(
-            elevation: 1,
-            expandedHeaderPadding: const EdgeInsets.all(0),
-            expansionCallback: (int index, bool isExpanded) {
-              setState(() {
-                _isExpanded = !isExpanded;
-              });
-            },
-            children: [
-              ExpansionPanel(
-                headerBuilder: (BuildContext context, bool isExpanded) {
-                  return const ListTile(
-                    title: Text('Seleccionar fecha'),
-                  );
-                },
-                body: _isExpanded
-                    ? Container(
-                        height: MediaQuery.of(context).size.height * 0.6,
-                        child: const CalendarWidget(),
-                      )
-                    : const SizedBox(),
-                isExpanded: _isExpanded,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+  void initState() {
+    super.initState();
+    today = widget.selectedDate;
   }
-}
 
-class CalendarWidget extends StatelessWidget {
-  const CalendarWidget({super.key});
+  void _onDaySelected(DateTime day, DateTime focusedDay) {
+    setState(() {
+      today = day;
+    });
+    widget.onDateSelected(day);
+  }
 
   @override
   Widget build(BuildContext context) {
-    DateTime today = DateTime.now();
-
-    void _onDaySelected(DateTime day, DateTime focusedDay) {
-      today = day;
-    }
-
     return TableCalendar(
       calendarStyle: const CalendarStyle(
+        todayTextStyle: TextStyle(color: black),
+        todayDecoration: BoxDecoration(color: Colors.transparent),
         selectedDecoration:
             BoxDecoration(color: redColor, shape: BoxShape.circle),
       ),
@@ -71,7 +48,7 @@ class CalendarWidget extends StatelessWidget {
       availableGestures: AvailableGestures.all,
       selectedDayPredicate: (day) => isSameDay(day, today),
       focusedDay: today,
-      firstDay: today,
+      firstDay: DateTime.now(),
       lastDay: DateTime.utc(2023, 12, 31),
       onDaySelected: _onDaySelected,
     );
