@@ -4,7 +4,6 @@ import 'package:buddies_app/features/request/presentation/request_page.dart';
 import 'package:buddies_app/features/users/presentation/account_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
