@@ -219,7 +219,7 @@ class PetsPage extends StatelessWidget {
         ),
         InkWell(
           onTap: () {
-            _openConfirmDeleteDialog(context);
+            _openConfirmDeleteDialog(context, pet['name']);
           },
           child: const Padding(
             padding: EdgeInsets.only(right: 12.0),
@@ -234,7 +234,7 @@ class PetsPage extends StatelessWidget {
     );
   }
 
-  Future<dynamic> _openConfirmDeleteDialog(context) {
+  Future<dynamic> _openConfirmDeleteDialog(context, pet) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -248,7 +248,7 @@ class PetsPage extends StatelessWidget {
                 children: [
                   const TextSpan(text: '¿Desea eliminar el registro de '),
                   TextSpan(
-                    text: 'Kira',
+                    text: '$pet',
                     style: Font.textStyleBold(color: black),
                   ),
                   const TextSpan(
