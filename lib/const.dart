@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:latlong2/latlong.dart';
 
 //Paleta de colores
 const Color white = Color(0xFFECECEC);
@@ -140,6 +139,21 @@ class BuddiesIcons {
       );
     }
   }
+
+  static SvgPicture pinMascota({double? sizeIcon, Color? color}) {
+    if (color != null) {
+      return SvgPicture.asset(
+        'assets/svg/pin_mascota_icon.svg',
+        height: sizeIcon,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      );
+    } else {
+      return SvgPicture.asset(
+        'assets/svg/pin_mascota_icon.svg',
+        height: sizeIcon,
+      );
+    }
+  }
 }
 
 //pages
@@ -152,16 +166,5 @@ class Pages {
   static const String servicesListPage = "servicesListPage";
   static const String serviceInProgressPage = "serviceInProgressPage";
   static const String addPetToServicesPage = "addPetToServicesPage";
+  static const String selectLocationPage = "selectLocationPage";
 }
-
-//MapBox
-class MapBoxConst {
-  static const String mapBoxAccessToken =
-      'pk.eyJ1IjoicmVoaW4iLCJhIjoiY2xqcDlydzU0MW9wbDNmcGkxajZucHdvcyJ9.VRQS5BhgJ0MVEqMkZZs_xA';
-
-  static const String mapBoxStyleId = 'rehin/cljwhhw3k005601qx7cqs2nmn';
-
-  static const myLocation = LatLng(16.7027192, -93.1756261);
-}
-//https://api.mapbox.com/styles/v1/rehin/{mapStyleId}/wmts?access_token={accessToken}
-//https://api.mapbox.com/styles/v1/rehin/{mapStyleId}/tiles/256/{z}/{x}/{y}@2x?access_token={accessToken}

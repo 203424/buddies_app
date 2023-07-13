@@ -183,7 +183,7 @@ class RequestPage extends StatelessWidget {
       onPressed: () =>
           Navigator.pushNamed(context, page, arguments: {'title': title}),
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(white),
+        backgroundColor: MaterialStateProperty.all(inputGrey),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
@@ -204,3 +204,24 @@ class RequestPage extends StatelessWidget {
     );
   }
 }
+
+
+//   SizedBox(
+                                //     height: 55.0,
+                                //     width: double.infinity,
+                                //     child: ElevatedButton(
+                                //       style: ElevatedButton.styleFrom(
+                                //         shape: const RoundedRectangleBorder(
+                                //           borderRadius: BorderRadius.only(
+                                //             topLeft: Radius.circular(0.0),
+                                //             topRight: Radius.circular(0.0),
+                                //             bottomLeft: Radius.circular(10.0),
+                                //             bottomRight: Radius.circular(10.0),
+                                //           ),
+                                //         ),
+                                //       ),
+                                //       onPressed: () {},
+                                //       child: const Text(
+                                //           'Seleccionar esta ubicación'),
+                                //     ),
+                                //   )

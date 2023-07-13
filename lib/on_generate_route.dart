@@ -3,6 +3,7 @@ import 'package:buddies_app/features/pets/presentation/add_pet_page.dart';
 import 'package:buddies_app/features/request/presentation/add_pet_to_services_page.dart';
 import 'package:buddies_app/features/request/presentation/history_list_page.dart';
 import 'package:buddies_app/features/request/presentation/request_form_page.dart';
+import 'package:buddies_app/features/request/presentation/map/select_location_page.dart';
 import 'package:buddies_app/features/request/presentation/service_in_progress_page.dart';
 import 'package:buddies_app/features/request/presentation/services_list_page.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,10 @@ class OnGenerateRoute {
       case Pages.addPetToServicesPage:
         {
           return routeBuilder(const AddPetToServicesPage());
+        }
+      case Pages.selectLocationPage:
+        {
+          return routeBuilder(const SelectLocationPage());
         }
       case Pages.serviceInProgressPage:
         {

@@ -3,8 +3,6 @@ import 'package:buddies_app/features/request/presentation/widgets/date_picker_wi
 import 'package:buddies_app/features/request/presentation/widgets/simple_pet_card.dart';
 import 'package:buddies_app/widgets/button_form_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 
 class RequestFormPage extends StatefulWidget {
@@ -20,7 +18,6 @@ class _RequestFormPageState extends State<RequestFormPage> {
   bool _isValidTime = true;
   late DateTime selectedDate;
   String selectedLocation = '';
-  LatLng? myPosition;
   int _paymentMethod = 0;
 
   Future<Position> determinePosition() async {
@@ -35,20 +32,11 @@ class _RequestFormPageState extends State<RequestFormPage> {
     return await Geolocator.getCurrentPosition();
   }
 
-  void getCurrentLocation() async {
-    Position position = await determinePosition();
-    setState(() {
-      myPosition = LatLng(position.latitude, position.longitude);
-      print(myPosition);
-    });
-  }
-
   @override
   void initState() {
     super.initState();
     selectedDate = DateTime.now();
     _isValidTime = _isTimeWithinRange(_selectedTime);
-    getCurrentLocation();
   }
 
   bool _isTimeWithinRange(TimeOfDay time) {
@@ -180,9 +168,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
           shadowColor: const Color.fromARGB(0, 214, 58, 58),
           iconTheme: const IconThemeData(color: black),
         ),
-        body: myPosition == null
-            ? const Center(child: CircularProgressIndicator())
-            : Padding(
+        body: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: CustomScrollView(
                   slivers: [
@@ -303,62 +289,25 @@ class _RequestFormPageState extends State<RequestFormPage> {
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5.0),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: ExpansionTile(
-                                backgroundColor: inputGrey,
-                                collapsedBackgroundColor: inputGrey,
-                                leading: const Icon(Icons.location_on_outlined),
-                                title: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text('Ubicación'),
-                                    Text(
-                                      '(${myPosition?.latitude.toStringAsFixed(2)}, ${myPosition?.longitude.toStringAsFixed(2)})',
-                                    )
-                                  ],
-                                ),
+                            child: ListTile(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              tileColor: inputGrey,
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, Pages.selectLocationPage);
+                              },
+                              leading: const Icon(Icons.location_on_outlined),
+                              trailing: const Icon(Icons.keyboard_arrow_down),
+                              title: const Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
-                                    height: 400,
-                                    width: double.infinity,
-                                    child: FlutterMap(
-                                      options: MapOptions(
-                                        minZoom: 5,
-                                        maxZoom: 25,
-                                        zoom: 18,
-                                        center: myPosition,
-                                      ),
-                                      nonRotatedChildren: [
-                                        TileLayer(
-                                          urlTemplate:
-                                              'https://api.mapbox.com/styles/v1/{mapStyleId}/tiles/{z}/{x}/{y}?access_token={accessToken}',
-                                          additionalOptions: const {
-                                            'accessToken':
-                                                MapBoxConst.mapBoxAccessToken,
-                                            'mapStyleId':
-                                                MapBoxConst.mapBoxStyleId
-                                            // 'mapbox/streets-v12'
-                                          },
-                                        ),
-                                        MarkerLayer(
-                                          markers: [
-                                            Marker(
-                                              point: myPosition!,
-                                              builder: (context) {
-                                                return const Icon(
-                                                  Icons.person_pin_circle,
-                                                  color: redColor,
-                                                  size: 40,
-                                                );
-                                              },
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
+                                  Text('Ubicación'),
+                                  // Text(
+                                  //   '(${myPosition?.latitude.toStringAsFixed(2)}, ${myPosition?.longitude.toStringAsFixed(2)})',
+                                  // )
                                 ],
                               ),
                             ),
@@ -382,7 +331,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
                             },
                           ),
                           RadioListTile(
-                            title: const Text('Electronico'),
+                            title: const Text('Tarjeta'),
                             value: 1,
                             groupValue: _paymentMethod,
                             onChanged: (value) {
