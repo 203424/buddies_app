@@ -2,6 +2,7 @@ import 'package:buddies_app/features/pets/domain/entities/pet/pet_entity.dart';
 
 class PetModel extends PetEntity {
   PetModel({
+    int? owner_id,
     int? id,
     String? name,
     String? birthday,
@@ -11,6 +12,7 @@ class PetModel extends PetEntity {
     String? size,
     String? description,
   }) : super(
+            owner_id: owner_id,
             id: id,
             name: name,
             birthday: birthday,
@@ -22,6 +24,7 @@ class PetModel extends PetEntity {
 
   factory PetModel.fromJson(Map<String, dynamic> json) {
     return PetModel(
+      owner_id: json['owner_id'],
       id: json['id'],
       name: json['name'],
       birthday: json['birthday'],

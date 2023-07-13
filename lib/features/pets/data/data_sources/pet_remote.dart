@@ -3,7 +3,7 @@ import 'dart:convert' as convert;
 import 'package:buddies_app/features/pets/data/models/pet/pet_model.dart';
 import 'package:buddies_app/features/pets/domain/entities/pet/pet_entity.dart';
 
-String apiURL = '3.215.246.49';
+String apiURL = '54.147.179.0';
 
 abstract class PetRemoteDataSource {
   Future<List<PetModel>> getPets();
@@ -19,12 +19,12 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
 
   @override
   Future<List<PetModel>> createPet(PetEntity pet) async {
-    var url = Uri.https(apiURL, '/api/tareas/');
+    var url = Uri.https(apiURL, '/api/pets/post');
     var headers = {'Content-Type': 'application/json'};
-
     List<Map<String, dynamic>> body = [];
 
       var object = {
+        'owner_id': pet.owner_id,
         'name': pet.name,
         'description': pet.description,
         'breed': pet.breed,
@@ -66,14 +66,15 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
 
   @override
   Future<List<PetModel>> getPets() async {
-    var url = Uri.https(apiURL, '/api/tareas/');
+    var url = Uri.http(apiURL, '/api/pets/');
     var response = await http.get(url);
-
     if (response.statusCode == 200) {
       var dataPets = convert
           .jsonDecode(response.body)
           .map<PetModel>((data) => PetModel.fromJson(data))
           .toList();
+      print(dataPets);
+
       return dataPets;
     } else {
       throw Exception('Error');

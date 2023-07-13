@@ -2,6 +2,7 @@ import 'dart:io';
 
 class PetEntity {
   final int? id;
+  final int? owner_id;
   final String? name;
   final String? birthday;
   final String? type;
@@ -11,6 +12,7 @@ class PetEntity {
   final String? description;
 
   PetEntity({
+    this.owner_id,
     this.name,
     this.birthday,
     this.type,

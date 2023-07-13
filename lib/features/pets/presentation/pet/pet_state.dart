@@ -1,16 +1,21 @@
 part of 'pet_bloc.dart';
 
-@immutable
 abstract class PetState {}
 
 class PetInitialState extends PetState {}
 
 class PetLoadingState extends PetState {}
 
-class PetLoadedState extends PetState {
-  final List<PetModel> petList;
+class PetUpdatingState extends PetState {}
 
-  PetLoadedState(this.petList);
+class PetUpdatedState extends PetState {}
+
+class PetLoadedState extends PetState {
+  final List<PetEntity> pets; // Campo que contiene la lista de mascotas
+
+  PetLoadedState(this.pets);
+
+// Resto de la implementación de la clase
 }
 
 class PetEmptyState extends PetState {}

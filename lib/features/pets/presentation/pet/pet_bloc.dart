@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'dart:convert' as convert;
+
+import 'dart:developer' as developer;
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
-
 import '../../data/models/pet/pet_model.dart';
 import '../../domain/entities/pet/pet_entity.dart';
 import '../../domain/usecases/pet_usecases/create_pet_usecase.dart';
@@ -15,69 +16,80 @@ part 'pet_event.dart';
 part 'pet_state.dart';
 
 class PetBloc extends Bloc<PetEvent, PetState> {
-  final CreatePetUseCase createPetUseCase;
-  final DeletePetUseCase deletePetUseCase;
-  final GetPetsByIdUseCase getPetsByIdUseCase;
   final GetPetsUseCase getPetsUseCase;
-  final UpdatePetUseCase updatePetUseCase;
+  final GetPetsByIdUseCase getPetsByIdUseCase;
 
   PetBloc({
+    required this.getPetsUseCase,
+    required this.getPetsByIdUseCase,
+  }) : super(PetInitialState());
+
+  @override
+  Stream<PetState> mapEventToState(PetEvent event) async* {
+    if (event is GetPetsEvent) {
+      yield PetLoadingState();
+      try {
+        List<PetEntity> response = await getPetsUseCase.execute();
+        yield PetLoadedState(response);
+      } catch (e) {
+        developer.log("Algo salió mal");
+        yield PetErrorState(e.toString());
+      }
+    } else if (event is GetPetsByIdEvent) {
+      yield PetLoadingState();
+      try {
+        List<PetEntity> pets = await getPetsByIdUseCase.execute(event.petId);
+        yield PetLoadedState(pets);
+      } catch (e) {
+        developer.log("Algo salió mal");
+        yield PetErrorState(e.toString());
+      }
+    }
+  }
+}
+
+class PetBlocModify extends Bloc<PetEvent, PetState> {
+  final CreatePetUseCase createPetUseCase;
+  final DeletePetUseCase deletePetUseCase;
+  final UpdatePetUseCase updatePetUseCase;
+
+  PetBlocModify({
     required this.createPetUseCase,
     required this.deletePetUseCase,
-    required this.getPetsByIdUseCase,
-    required this.getPetsUseCase,
     required this.updatePetUseCase,
-  }) : super(PetInitialState());
+  }) : super(PetUpdatingState());
 
   @override
   Stream<PetState> mapEventToState(PetEvent event) async* {
     if (event is CreatePetEvent) {
       yield PetLoadingState();
-
       try {
-        await createPetUseCase.repository.createPet(event.pet);
-        yield PetSuccessState('Mascota creada exitosamente');
+        await createPetUseCase.execute(event.pet);
+        yield PetUpdatingState();
       } catch (e) {
-        yield PetErrorState('Error al crear la mascota');
+        developer.log("Algo salió mal al crear una mascota");
+        yield PetErrorState(e.toString());
       }
     } else if (event is DeletePetEvent) {
       yield PetLoadingState();
-
       try {
-        await deletePetUseCase.repository.deletePet(event.petId);
-        yield PetSuccessState('Mascota eliminada exitosamente');
+        await deletePetUseCase.execute(event.petId);
+        yield PetUpdatingState();
       } catch (e) {
-        yield PetErrorState('Error al eliminar la mascota');
-      }
-    } else if (event is GetPetsByIdEvent) {
-      yield PetLoadingState();
-
-      try {
-        final petList = await getPetsUseCase.repository.getPets();
-        final petModelList = petList.map((petEntity) => PetModel.fromEntity(petEntity)).toList();
-        yield PetLoadedState(petModelList);
-      } catch (e) {
-        yield PetErrorState('Error al obtener las mascotas');
-      }
-    } else if (event is GetPetsEvent) {
-      yield PetLoadingState();
-
-      try {
-        final petList = await getPetsUseCase.repository.getPets();
-        final petModelList = petList.map((petEntity) => PetModel.fromEntity(petEntity)).toList();
-        yield PetLoadedState(petModelList);
-      } catch (e) {
-        yield PetErrorState('Error al obtener las mascotas');
+        developer.log("Algo salió mal al eliminar una mascota");
+        yield PetErrorState(e.toString());
       }
     } else if (event is UpdatePetEvent) {
       yield PetLoadingState();
-
       try {
-        await updatePetUseCase.repository.updatePet(event.petId, event.pet);
-        yield PetSuccessState('Mascota actualizada exitosamente');
+        await updatePetUseCase.execute(event.petId, event.pet);
+        yield PetUpdatingState();
       } catch (e) {
-        yield PetErrorState('Error al actualizar la mascota');
+        developer.log("Algo salió mal al actualizar una mascota");
+        yield PetErrorState(e.toString());
       }
     }
   }
 }
+
+
