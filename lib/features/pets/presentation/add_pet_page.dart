@@ -8,12 +8,12 @@ class AddPetPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _nameController = TextEditingController();
-    TextEditingController _birthController = TextEditingController();
-    TextEditingController _typeController = TextEditingController();
-    TextEditingController _breedController = TextEditingController();
-    TextEditingController _genderController = TextEditingController();
-    TextEditingController _descriptionController = TextEditingController();
+    TextEditingController nameController = TextEditingController();
+    TextEditingController birthController = TextEditingController();
+    TextEditingController typeController = TextEditingController();
+    TextEditingController breedController = TextEditingController();
+    TextEditingController genderController = TextEditingController();
+    TextEditingController descriptionController = TextEditingController();
 
     return Scaffold(
       backgroundColor: white,
@@ -72,27 +72,27 @@ class AddPetPage extends StatelessWidget {
             // ),
             InputFormWidget(
               title: 'Nombre',
-              controller: _nameController,
+              controller: nameController,
             ),
             InputFormWidget(
               title: 'Fecha de nacimiento',
-              controller: _birthController,
+              controller: birthController,
             ),
             InputFormWidget(
               title: 'Tipo',
-              controller: _typeController,
+              controller: typeController,
             ),
             InputFormWidget(
               title: 'Raza',
-              controller: _breedController,
+              controller: breedController,
             ),
             InputFormWidget(
               title: 'Sexo',
-              controller: _genderController,
+              controller: genderController,
             ),
             InputFormWidget(
               title: 'Describe a tu mascota',
-              controller: _descriptionController,
+              controller: descriptionController,
               height: 100.0,
             ),
             ButtonFormWidget(

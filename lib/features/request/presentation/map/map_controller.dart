@@ -22,12 +22,12 @@ class MapController {
   }
 
   void onTap(LatLng position) {
-    final markerId = MarkerId('currentLocation');
+    const markerId = MarkerId('currentLocation');
     final marker = Marker(
       markerId: markerId,
       position: position,
       anchor: const Offset(0.2, 0.2),
-      infoWindow: InfoWindow(title: 'Tu ubicación'),
+      infoWindow: const InfoWindow(title: 'Tu ubicación'),
     );
 
     _markers[markerId] = marker;

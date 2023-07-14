@@ -30,9 +30,10 @@ const MaterialColor redColorSwatch = MaterialColor(0xFFFF4D4D, {
 class Font {
   static const TextStyle textStyle =
       TextStyle(fontSize: 14.0, fontWeight: FontWeight.w300, color: black);
-  static TextStyle textStyleBold({Color? color}) {
+
+  static TextStyle textStyleBold({Color? color, double? fontSize}) {
     return TextStyle(
-      fontSize: 14.0,
+      fontSize: fontSize ?? 14.0,
       fontWeight: FontWeight.w700,
       color: color,
     );
@@ -40,6 +41,7 @@ class Font {
 
   static const TextStyle titleBoldStyle =
       TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, color: black);
+
   static const TextStyle titleStyle =
       TextStyle(fontSize: 22.0, fontWeight: FontWeight.w900, color: black);
   static const TextStyle pageTitleStyle =

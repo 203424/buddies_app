@@ -24,7 +24,7 @@ class InputFormWidget extends StatelessWidget {
           ),
           Container(
             height: height ?? 55.0,
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
             decoration: BoxDecoration(
                 border: Border.all(width: 2.0, color: greyColor),
                 borderRadius: BorderRadius.circular(10.0)),
@@ -34,9 +34,6 @@ class InputFormWidget extends StatelessWidget {
               decoration: InputDecoration(
                   hintText: '$title',
                   border: InputBorder.none,
-                  // border: const OutlineInputBorder(
-                  //     borderSide: BorderSide(color: Colors.transparent),
-                  //     borderRadius: BorderRadius.all(Radius.circular(10.0))),
                   labelStyle: const TextStyle(color: black)),
             ),
           ),

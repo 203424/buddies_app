@@ -24,7 +24,7 @@ class PetsPage extends StatelessWidget {
         'size': 'Pequeño',
       },
       {
-        'name': '3anguito',
+        'name': '3Manguito',
         'birth': '2021-07-04 12:34:56',
         'type': 'Gato',
         'breed': 'Siamés',
@@ -111,8 +111,8 @@ class PetsPage extends StatelessWidget {
           onPressed: () {
             Navigator.pushNamed(context, Pages.addPetPage);
           },
-          child: const Icon(Icons.add),
           backgroundColor: redColor,
+          child: const Icon(Icons.add),
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -197,7 +197,7 @@ class PetsPage extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          Text('${calcularEdad(DateTime.parse(pet['birth']))}',
+                          Text(calcularEdad(DateTime.parse(pet['birth'])),
                               style: Font.textStyle),
                           const SizedBox(
                             width: 20.0,

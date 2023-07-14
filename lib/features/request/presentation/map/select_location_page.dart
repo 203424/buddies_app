@@ -37,7 +37,6 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
     Position position = await determinePosition();
     setState(() {
       myPosition = LatLng(position.latitude, position.longitude);
-      print(myPosition);
     });
   }
 
@@ -68,7 +67,6 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
       });
     } catch (error) {
       print('Error obtaining current position: $error');
-      // Manejar el error de obtener la posición actual
     }
   }
 
@@ -109,7 +107,6 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                           fillColor: white,
                           contentPadding: const EdgeInsets.symmetric(
                               vertical: 12.0, horizontal: 16.0),
-                          // Personaliza los estilos según tus necesidades
                         ),
                       ),
                     ),
@@ -120,9 +117,7 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                     child: FloatingActionButton(
                       backgroundColor: redColorSwatch.shade300,
                       onPressed: () {
-                        
-                          
-                        
+
                       },
                       child: const Icon(Icons.my_location),
                     ),

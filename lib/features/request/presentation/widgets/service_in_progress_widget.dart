@@ -10,7 +10,10 @@ class ServiceInProgressWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, Pages.serviceInProgressPage,
+              arguments: {'service': service});
+        },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(inputGrey),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(

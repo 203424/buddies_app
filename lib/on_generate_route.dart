@@ -34,15 +34,25 @@ class OnGenerateRoute {
         }
       case Pages.serviceInProgressPage:
         {
-          return routeBuilder(const ServiceInProgressPage());
+          args as Map<String, dynamic>;
+          return routeBuilder(ServiceInProgressPage(
+            service: args['service'],
+          ));
         }
       case Pages.servicesListPage:
         {
-          return routeBuilder(const ServicesListPage());
+          args as Map<String, dynamic>;
+
+          return routeBuilder(ServicesListPage(
+            list: args['list'],
+          ));
         }
       case Pages.historyListPage:
         {
-          return routeBuilder(const HistoryListPage());
+          args as Map<String, dynamic>;
+          return routeBuilder(HistoryListPage(
+            list: args['list'],
+          ));
         }
       default:
         {
