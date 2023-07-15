@@ -1,21 +1,16 @@
 part of 'pet_bloc.dart';
 
+
 abstract class PetState {}
 
 class PetInitialState extends PetState {}
 
 class PetLoadingState extends PetState {}
 
-class PetUpdatingState extends PetState {}
-
-class PetUpdatedState extends PetState {}
-
 class PetLoadedState extends PetState {
-  final List<PetEntity> pets; // Campo que contiene la lista de mascotas
+  final List<PetEntity> pets;
 
   PetLoadedState(this.pets);
-
-// Resto de la implementación de la clase
 }
 
 class PetEmptyState extends PetState {}
@@ -31,3 +26,4 @@ class PetSuccessState extends PetState {
 
   PetSuccessState(this.successMessage);
 }
+

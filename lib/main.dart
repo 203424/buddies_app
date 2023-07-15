@@ -1,10 +1,54 @@
+import 'package:buddies_app/const.dart';
+import 'package:buddies_app/features/users/presentation/main_page.dart';
+import 'package:buddies_app/usecase_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class app extends StatelessWidget {
-  const app({super.key});
+import 'package:buddies_app/features/pets/presentation/pet/pet_bloc.dart';
+import 'on_generate_route.dart';
+
+void main() {
+  initializeDateFormatting().then((_) => runApp(const MainApp()));
+}
+
+class MainApp extends StatelessWidget {
+  const MainApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarColor: greyColorStatusBar),
+    );
+
+    final useCaseConfig = UseCaseConfig();
+    final petBloc = PetBloc(
+      getPetsUseCase: useCaseConfig.getPetsUseCase!,
+      getPetsByIdUseCase: useCaseConfig.getPetsByIdUseCase!,
+      deletePetUseCase: useCaseConfig.deletePetUseCase!,
+      updatePetUseCase: useCaseConfig.updatePetUseCase!,
+      createPetUseCase: useCaseConfig.createPetUseCase!,
+    );
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<PetBloc>.value(value: petBloc),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        onGenerateRoute: OnGenerateRoute.route,
+        theme: ThemeData(
+          fontFamily: 'Montserrat',
+          primarySwatch: redColorSwatch,
+        ),
+        initialRoute: '/',
+        routes: {
+          '/': (context) {
+            return MainPage();
+          },
+        },
+      ),
+    );
   }
 }

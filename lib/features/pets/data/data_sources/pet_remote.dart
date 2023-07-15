@@ -1,46 +1,44 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:buddies_app/features/pets/data/models/pet/pet_model.dart';
 import 'package:buddies_app/features/pets/domain/entities/pet/pet_entity.dart';
 
-String apiURL = '54.147.179.0';
+String apiURL = '3.130.221.228';
 
 abstract class PetRemoteDataSource {
   Future<List<PetModel>> getPets();
   Future<List<PetModel>> getPetsById( int petid);
 
-  Future<List<PetModel>> createPet(PetEntity pet);
+  Future<PetModel> createPet(PetEntity pet);
   Future<List<PetModel>> updatePet(PetEntity pet, int petid);
-  Future<List<PetModel>> deletePet(int petid);
+  Future<void>deletePet(int petid);
 }
 
 class PetRemoteDataSourceImpl implements PetRemoteDataSource {
 
 
   @override
-  Future<List<PetModel>> createPet(PetEntity pet) async {
-    var url = Uri.https(apiURL, '/api/pets/post');
+  Future<PetModel> createPet(PetEntity pet) async {
+    var url = Uri.http(apiURL, '/api/pets/');
     var headers = {'Content-Type': 'application/json'};
-    List<Map<String, dynamic>> body = [];
-
-      var object = {
-        'owner_id': pet.owner_id,
-        'name': pet.name,
-        'description': pet.description,
-        'breed': pet.breed,
-        'type': pet.type,
-        'birthday': pet.birthday,
-        'gender': pet.gender,
-        'size': pet.size,
-      };
-      body.add(object);
-
+    var body = {
+      'name': pet.name,
+      'birthday': pet.birthday,
+      'type': pet.type,
+      'breed': pet.breed,
+      'gender': pet.gender,
+      'size': pet.size,
+      'description': pet.description,
+      'owner_id': pet.owner_id,
+    };
     var response = await http.post(url, body: convert.jsonEncode(body), headers: headers);
-    if (response.statusCode == 200) {
-      // Si la solicitud fue exitosa, parsea la respuesta y devuelve una lista de PetModel
-      List<dynamic> responseData = convert.jsonDecode(response.body);
-      List<PetModel> petModels = responseData.map((data) => PetModel.fromJson(data)).toList();
-      return petModels;
+    if (response.statusCode == 201) {
+      // Si la solicitud fue exitosa, parsea la respuesta y devuelve un objeto PetModel
+      var responseData = convert.jsonDecode(response.body);
+      var petModel = PetModel.fromJson(responseData);
+      return petModel;
     } else {
       // Si la solicitud falló, puedes lanzar una excepción o manejar el error de alguna otra manera
       throw Exception('Error al crear la mascota');
@@ -49,17 +47,13 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
 
 
   @override
-  Future<List<PetModel>> deletePet(int petid) async {
-    var url = Uri.https(apiURL, '/api/tareas/$petid');
-    var headers = {'Content-Type': 'application/json'};
+  Future<void> deletePet(int petId) async {
+    final url = Uri.http(apiURL, '/api/pets/$petId');
+    final headers = {'Content-Type': 'application/json'};
 
-    var response = await http.delete(url, headers: headers);
+    final response = await http.delete(url, headers: headers);
 
-    if (response.statusCode == 200) {
-      // Si la solicitud de eliminación fue exitosa, puedes devolver una lista vacía o cualquier otro resultado deseado.
-      return [];
-    } else {
-      // Si la solicitud falló, puedes lanzar una excepción o manejar el error de alguna otra manera.
+    if (response.statusCode != 200) {
       throw Exception('Error al eliminar la mascota');
     }
   }
@@ -101,14 +95,11 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
     }
   }
 
-  @override
-  Future<List<PetModel>> updatePet(PetEntity pet, int petid) async {
-    var url = Uri.https(apiURL, '/api/tareas/$petid');
+  Future<List<PetModel>> updatePet(PetEntity pet, int petId) async {
+    var url = Uri.http(apiURL, '/api/pets/$petId'); // Asegurarse de incluir el id de la mascota en la ruta
     var headers = {'Content-Type': 'application/json'};
 
-    List<Map<String, dynamic>> body = [];
-
-    var object = {
+    var body = {
       'name': pet.name,
       'description': pet.description,
       'breed': pet.breed,
@@ -117,7 +108,6 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
       'gender': pet.gender,
       'size': pet.size,
     };
-    body.add(object);
 
     var response = await http.put(url, body: convert.jsonEncode(body), headers: headers);
     if (response.statusCode == 200) {

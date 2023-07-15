@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:buddies_app/features/pets/presentation/pet/pet_bloc.dart';
 
-class MainPage extends StatefulWidget {
-  final PetBloc petBloc;
+import '../../../usecase_config.dart';
 
-  MainPage({Key? key, required this.petBloc}) : super(key: key);
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -96,7 +96,7 @@ class _MainPageState extends State<MainPage> {
         onPageChanged: onPageChanged,
         children: [
           BlocProvider.value(
-            value: widget.petBloc, // Pasamos el petBloc aquí
+            value: BlocProvider.of<PetBloc>(context),
             child: PetsPage(),
           ),
           RequestPage(),

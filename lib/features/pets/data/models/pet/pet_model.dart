@@ -2,7 +2,6 @@ import 'package:buddies_app/features/pets/domain/entities/pet/pet_entity.dart';
 
 class PetModel extends PetEntity {
   PetModel({
-    int? owner_id,
     int? id,
     String? name,
     String? birthday,
@@ -11,8 +10,9 @@ class PetModel extends PetEntity {
     String? gender,
     String? size,
     String? description,
+    int? owner_id,
+
   }) : super(
-            owner_id: owner_id,
             id: id,
             name: name,
             birthday: birthday,
@@ -20,11 +20,13 @@ class PetModel extends PetEntity {
             breed: breed,
             gender: gender,
             size: size,
-            description: description);
+            description: description,
+            owner_id: owner_id,
+  );
+
 
   factory PetModel.fromJson(Map<String, dynamic> json) {
     return PetModel(
-      owner_id: json['owner_id'],
       id: json['id'],
       name: json['name'],
       birthday: json['birthday'],
@@ -33,6 +35,8 @@ class PetModel extends PetEntity {
       gender: json['gender'],
       size: json['size'],
       description: json['description'],
+      owner_id: json['owner_id'],
+
     );
   }
 
@@ -45,22 +49,28 @@ class PetModel extends PetEntity {
         breed: pet.breed,
         gender: pet.gender,
         size: pet.size,
-        description: pet.description);
+        description: pet.description,
+        owner_id: pet.owner_id,
+
+    );
   }
     static Map<String, dynamic> fromEntityToJsonCreate(PetEntity pet) {
       return {
+        'id': pet.id,
         'name': pet.name,
         'birthday': pet.birthday,
         'type': pet.type,
         'breed': pet.breed,
         'gender': pet.gender,
         'size': pet.size,
-        'description': pet.description
+        'description': pet.description,
+        'owner_id': pet.owner_id,
+
       };
     }
   @override
   String toString() {
-    return 'PetModel(id: $id, name: $name, birthday: $birthday, type: $type, breed: $breed, gender: $gender, size: $size, description: $description)';
+    return 'PetModel(id: $id, name: $name, birthday: $birthday, type: $type, breed: $breed, gender: $gender, size: $size, description: $description, owner_id: $owner_id)';
   }
 }
 

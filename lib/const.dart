@@ -147,6 +147,7 @@ class Pages {
   static const String signInPage = "signInPage";
   static const String signUpPage = "signUpPage";
   static const String addPetPage = "addPetPage";
+  static const String updatePetPage = "updatePetPage";
   static const String requestFormPage = "requestFormPage";
   static const String historyListPage = "historyListPage";
   static const String servicesListPage = "servicesListPage";

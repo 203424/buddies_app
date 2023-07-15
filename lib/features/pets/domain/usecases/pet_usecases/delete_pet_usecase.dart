@@ -6,7 +6,7 @@ class DeletePetUseCase {
 
   DeletePetUseCase(this.repository);
 
-  Future<List<PetEntity>> execute(int petid) async {
+  Future<void> execute(int petid) async {
     return await repository.deletePet(petid);
   }
 }

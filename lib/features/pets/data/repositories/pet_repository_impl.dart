@@ -9,13 +9,12 @@ class PetRepositoryImpl implements PetRepository {
   PetRepositoryImpl({required this.petRemoteDataSource});
 
   @override
-  Future<List<PetEntity>> createPet(PetEntity pet) async {
-    return await  petRemoteDataSource.createPet(pet);
-
+  Future<PetEntity> createPet(PetEntity pet) async {
+    return await petRemoteDataSource.createPet(pet);
   }
 
   @override
-  Future<List<PetEntity>> deletePet(int petid) async {
+  Future<void> deletePet(int petid) async {
     return await petRemoteDataSource.deletePet(petid);
 
   }

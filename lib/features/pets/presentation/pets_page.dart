@@ -3,66 +3,166 @@ import 'package:buddies_app/widgets/button_form_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:buddies_app/features/pets/presentation/pet/pet_bloc.dart';
+import 'package:buddies_app/features/pets/domain/entities/pet/pet_entity.dart';
 
 class PetsPage extends StatefulWidget {
+  const PetsPage({Key? key}) : super(key: key);
+
   @override
   _PetsPageState createState() => _PetsPageState();
 }
 
 class _PetsPageState extends State<PetsPage> {
   @override
+  void initState() {
+    super.initState();
+    // Disparar el evento para obtener la lista de mascotas
+    context.read<PetBloc>().add(GetPetsEvent());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: white,
+      appBar: AppBar(
         backgroundColor: white,
-        appBar: AppBar(
-          backgroundColor: white,
-          centerTitle: true,
-          title: const Text(
-            'Mascotas',
-            style: Font.pageTitleStyle,
-          ),
-          shadowColor: Colors.transparent,
+        centerTitle: true,
+        title: const Text(
+          'Mascotas',
+          style: Font.pageTitleStyle,
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.pushNamed(context, Pages.addPetPage);
-          },
-          child: const Icon(Icons.add),
-          backgroundColor: redColor,
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: CustomScrollView(
-            slivers: [
-              BlocBuilder<PetBloc, PetState>(
-                builder: (context, state) {
-                  if (state is PetLoadedState) {
-                    final pets = state.pets;
-
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                          final pet = pets[index];
-
-                          return petCard(context, pet);
-                        },
-                        childCount: pets.length,
-                      ),
-                    );
-                  } else {
-                    return SliverFillRemaining(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  }
-                },
-              ),
-            ],
-          ),
-        ),
+        shadowColor: Colors.transparent,
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navegar a la página de agregar mascota
+          Navigator.pushNamed(context, Pages.addPetPage);
+        },
+        child: const Icon(Icons.add),
+        backgroundColor: redColor,
+      ),
+      body: BlocBuilder<PetBloc, PetState>(
+        builder: (context, state) {
+          if (state is PetLoadingState) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is PetLoadedState) {
+            final List<PetEntity> pets = state.pets;
+            return _buildPetsList(pets);
+          } else if (state is PetErrorState) {
+            return Center(child: Text(state.errorMessage));
+          } else {
+            return const SizedBox();
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildPetsList(List<PetEntity> pets) {
+    if (pets.isEmpty) {
+      return Center(child: Text('No se encontraron mascotas'));
+    }
+
+    return ListView.builder(
+      itemCount: pets.length,
+      itemBuilder: (context, index) {
+        final PetEntity pet = pets[index];
+        return InkWell(
+          onTap: () {
+            // Navegar a la página de actualización y pasar los datos de la mascota
+            Navigator.pushNamed(
+              context,
+              Pages.updatePetPage,
+              arguments: {
+                'petId': pet.id,
+                'petEntity': pet,
+              },
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
+            child: Stack(
+              alignment: Alignment.centerRight,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // Acción al presionar el botón (esto se puede mantener si deseas mantener alguna acción aquí)
+                  },
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    backgroundColor: MaterialStateProperty.all(inputGrey),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 14.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 100.0,
+                          height: 100.0,
+                          decoration: BoxDecoration(
+                            color: primaryColor,
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                        const SizedBox(width: 10.0),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 5.0),
+                              Text(
+                                pet.name ?? '',
+                                style: Font.titleStyle,
+                              ),
+                              const SizedBox(height: 25.0),
+                              Row(
+                                children: [
+                                  //  Text(
+                                  // '${calcularEdad(DateTime.parse(pet.birthday!))}',
+                                  //style: Font.textStyle,
+                                  // ),
+                                  const SizedBox(width: 20.0),
+                                  Text(
+                                    '${pet.type ?? ''} ${pet.breed ?? ''}',
+                                    style: Font.textStyle,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10.0),
+                              Text(
+                                'Raza ${pet.size ?? ''}',
+                                style: Font.textStyle,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    _openConfirmDeleteDialog(context, pet);
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.only(right: 12.0),
+                    child: Icon(
+                      Icons.backspace_outlined,
+                      color: black,
+                      size: 35.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -84,120 +184,22 @@ class _PetsPageState extends State<PetsPage> {
     }
   }
 
-  Widget petCard(context, pet) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: Stack(
-        alignment: Alignment.centerRight,
-        children: [
-          ElevatedButton(
-            onPressed: () => Navigator.pushNamed(context, Pages.addPetPage),
-            style: ButtonStyle(
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-              ),
-              backgroundColor: MaterialStateProperty.all<Color>(inputGrey),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 14.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 100.0,
-                    height: 100.0,
-                    decoration: BoxDecoration(
-                      color: primaryColor,
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10.0,
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 5.0,
-                        ),
-                        Text(
-                          '${pet['name'] ?? ''}',
-                          style: Font.titleStyle,
-                        ),
-                        const SizedBox(
-                          height: 25.0,
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              '${calcularEdad(DateTime.parse(pet['birth']))}',
-                              style: Font.textStyle,
-                            ),
-                            const SizedBox(
-                              width: 20.0,
-                            ),
-                            Text(
-                              '${pet['type'] + ' ' + pet['breed'] ?? ''}',
-                              style: Font.textStyle,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10.0,
-                        ),
-                        Text(
-                          "Raza ${pet['size']}",
-                          style: Font.textStyle,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              _openConfirmDeleteDialog(context);
-            },
-            child: const Padding(
-              padding: EdgeInsets.only(right: 12.0),
-              child: Icon(
-                Icons.backspace_outlined,
-                color: black,
-                size: 35.0,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<dynamic> _openConfirmDeleteDialog(context) {
+  Future<dynamic> _openConfirmDeleteDialog(BuildContext context, PetEntity pet) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text(
-            'Eliminar mascota',
-          ),
+          title: const Text('Eliminar mascota'),
           content: RichText(
             text: TextSpan(
               style: Font.textStyle,
               children: [
                 const TextSpan(text: '¿Desea eliminar el registro de '),
                 TextSpan(
-                  text: 'Kira',
+                  text: '${pet.name}',
                   style: Font.textStyleBold(color: black),
                 ),
-                const TextSpan(
-                  text: '?',
-                  style: Font.textStyle,
-                ),
+                const TextSpan(text: '?'),
               ],
             ),
           ),
@@ -217,6 +219,10 @@ class _PetsPageState extends State<PetsPage> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
+                print(pet.id);
+                context.read<PetBloc>().add(DeletePetEvent(petId: pet.id ?? 0));
+                // Disparar el evento para obtener la lista de mascotas actualizada después de eliminar una mascota
+                context.read<PetBloc>().add(GetPetsEvent());
               },
             ),
           ],

@@ -5,8 +5,9 @@ abstract class PetEvent {}
 class CreatePetEvent extends PetEvent {
   final PetEntity pet;
 
-  CreatePetEvent( {required this.pet} );
+  CreatePetEvent({required this.pet});
 }
+
 class DeletePetEvent extends PetEvent {
   final int petId;
 
@@ -25,5 +26,5 @@ class UpdatePetEvent extends PetEvent {
   final int petId;
   final PetEntity pet;
 
-  UpdatePetEvent({required this.pet, required this.petId});
+  UpdatePetEvent({required this.petId, required this.pet});
 }
