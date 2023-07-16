@@ -67,99 +67,94 @@ class _PetsPageState extends State<PetsPage> {
       itemCount: pets.length,
       itemBuilder: (context, index) {
         final PetEntity pet = pets[index];
-        return InkWell(
-          onTap: () {
-            // Navegar a la página de actualización y pasar los datos de la mascota
-            Navigator.pushNamed(
-              context,
-              Pages.updatePetPage,
-              arguments: {
-                'petId': pet.id,
-                'petEntity': pet,
-              },
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5.0),
-            child: Stack(
-              alignment: Alignment.centerRight,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // Acción al presionar el botón (esto se puede mantener si deseas mantener alguna acción aquí)
-                  },
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: Stack(
+            alignment: Alignment.centerRight,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  // Acción al presionar el botón (esto se puede mantener si deseas mantener alguna acción aquí)
+                  Navigator.pushNamed(
+                    context,
+                    Pages.updatePetPage,
+                    arguments: {
+                      'petId': pet.id,
+                      'petEntity': pet,
+                    },
+                  );
+                },
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  backgroundColor: MaterialStateProperty.all(inputGrey),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 14.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 100.0,
+                        height: 100.0,
+                        decoration: BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
                       ),
-                    ),
-                    backgroundColor: MaterialStateProperty.all(inputGrey),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 14.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 100.0,
-                          height: 100.0,
-                          decoration: BoxDecoration(
-                            color: primaryColor,
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
+                      const SizedBox(width: 10.0),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 5.0),
+                            Text(
+                              pet.name ?? '',
+                              style: Font.titleStyle,
+                            ),
+                            const SizedBox(height: 25.0),
+                            Row(
+                              children: [
+                                //  Text(
+                                // '${calcularEdad(DateTime.parse(pet.birthday!))}',
+                                //style: Font.textStyle,
+                                // ),
+                                const SizedBox(width: 20.0),
+                                Text(
+                                  '${pet.type ?? ''} ${pet.breed ?? ''}',
+                                  style: Font.textStyle,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10.0),
+                            Text(
+                              'Raza ${pet.size ?? ''}',
+                              style: Font.textStyle,
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 10.0),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 5.0),
-                              Text(
-                                pet.name ?? '',
-                                style: Font.titleStyle,
-                              ),
-                              const SizedBox(height: 25.0),
-                              Row(
-                                children: [
-                                  //  Text(
-                                  // '${calcularEdad(DateTime.parse(pet.birthday!))}',
-                                  //style: Font.textStyle,
-                                  // ),
-                                  const SizedBox(width: 20.0),
-                                  Text(
-                                    '${pet.type ?? ''} ${pet.breed ?? ''}',
-                                    style: Font.textStyle,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10.0),
-                              Text(
-                                'Raza ${pet.size ?? ''}',
-                                style: Font.textStyle,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    _openConfirmDeleteDialog(context, pet);
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.only(right: 12.0),
-                    child: Icon(
-                      Icons.backspace_outlined,
-                      color: black,
-                      size: 35.0,
-                    ),
+              ),
+              InkWell(
+                onTap: () {
+                  _openConfirmDeleteDialog(context, pet);
+                },
+                child: const Padding(
+                  padding: EdgeInsets.only(right: 12.0),
+                  child: Icon(
+                    Icons.backspace_outlined,
+                    color: black,
+                    size: 35.0,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
@@ -184,7 +179,8 @@ class _PetsPageState extends State<PetsPage> {
     }
   }
 
-  Future<dynamic> _openConfirmDeleteDialog(BuildContext context, PetEntity pet) {
+  Future<dynamic> _openConfirmDeleteDialog(
+      BuildContext context, PetEntity pet) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
