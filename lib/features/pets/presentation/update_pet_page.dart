@@ -5,6 +5,8 @@ import 'package:buddies_app/widgets/input_form_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../widgets/date_picker_widget.dart';
+import '../../../widgets/dropdown_picker_widget.dart';
 import '../domain/entities/pet/pet_entity.dart';
 
 class UpdatePetPage extends StatefulWidget {
@@ -24,6 +26,7 @@ class _UpdatePetPageState extends State<UpdatePetPage> {
   final TextEditingController _breedController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _sizeController = TextEditingController();
 
   @override
   void initState() {
@@ -35,6 +38,9 @@ class _UpdatePetPageState extends State<UpdatePetPage> {
     _breedController.text = widget.pet.breed ?? '';
     _genderController.text = widget.pet.gender ?? '';
     _descriptionController.text = widget.pet.description ?? '';
+    _sizeController.text = widget.pet.description ?? '';
+
+
   }
 
   @override
@@ -45,6 +51,8 @@ class _UpdatePetPageState extends State<UpdatePetPage> {
     _breedController.dispose();
     _genderController.dispose();
     _descriptionController.dispose();
+    _sizeController.dispose();
+
     super.dispose();
   }
 
@@ -90,21 +98,36 @@ class _UpdatePetPageState extends State<UpdatePetPage> {
                 title: 'Nombre',
                 controller: _nameController,
               ),
-              InputFormWidget(
-                title: 'Fecha de nacimiento',
+              DatePickerWidget(
                 controller: _birthController,
               ),
-              InputFormWidget(
+              DropdownPickerWidget(
                 title: 'Tipo',
-                controller: _typeController,
+                value: _typeController.text,
+                options: ['Perro', 'Gato'],
+                onChanged: (newValue) {
+                  setState(() {
+                    _typeController.text = newValue;
+                  });
+                },
+              ),
+              InputFormWidget(
+                title: 'Tamaño',
+                controller: _sizeController,
               ),
               InputFormWidget(
                 title: 'Raza',
                 controller: _breedController,
               ),
-              InputFormWidget(
+              DropdownPickerWidget(
                 title: 'Sexo',
-                controller: _genderController,
+                value: _genderController.text,
+                options: ['Macho', 'Hembra'],
+                onChanged: (newValue) {
+                  setState(() {
+                    _genderController.text = newValue;
+                  });
+                },
               ),
               InputFormWidget(
                 title: 'Describe a tu mascota',
@@ -121,9 +144,10 @@ class _UpdatePetPageState extends State<UpdatePetPage> {
                     type: _typeController.text,
                     breed: _breedController.text,
                     gender: _genderController.text,
-                    size: 'aa',
+                    size: _sizeController.text,
                     description: _descriptionController.text,
                     owner_id: 1,
+
                   );
                   // Y luego, disparar el evento para actualizar la mascota en el bloc
                   context.read<PetBloc>().add(UpdatePetEvent(pet: updatedPet, petId: updatedPet.id ?? 0));
