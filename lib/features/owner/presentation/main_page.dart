@@ -1,13 +1,14 @@
 import 'package:buddies_app/const.dart';
 import 'package:buddies_app/features/pets/presentation/pets_page.dart';
 import 'package:buddies_app/features/request/presentation/request_page.dart';
-import 'package:buddies_app/features/users/presentation/account_page.dart';
+import 'package:buddies_app/features/owner/presentation/account_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:buddies_app/features/pets/presentation/pet/pet_bloc.dart';
 
 import '../../../usecase_config.dart';
+import 'account_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);

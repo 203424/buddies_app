@@ -1,5 +1,5 @@
 import 'package:buddies_app/const.dart';
-import 'package:buddies_app/features/users/presentation/main_page.dart';
+import 'package:buddies_app/features/owner/presentation/main_page.dart';
 import 'package:buddies_app/usecase_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
