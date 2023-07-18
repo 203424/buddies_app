@@ -8,8 +8,9 @@ class RequestEntity {
   final String? hour;
   final int? cost;
   final String? status;
-  final int? petId;
+  final List<int>? petId;
   final int? userId;
+  final int? caretakerId;
 
   RequestEntity({
     this.id,
@@ -21,9 +22,6 @@ class RequestEntity {
     this.status,
     this.petId,
     this.userId,
+    this.caretakerId
   });
-
-  @override
-  List<Object?> get props =>
-      [id, type, start_date, end_date, hour, cost, status, petId, userId];
 }

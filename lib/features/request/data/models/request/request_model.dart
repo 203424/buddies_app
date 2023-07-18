@@ -9,8 +9,9 @@ class RequestModel extends RequestEntity {
     String? hour,
     int? cost,
     String? status,
-    int? petId,
+    List<int>? petId,
     int? userId,
+    int? caretakerId,
   }) : super(
             id: id,
             type: type,
@@ -20,7 +21,8 @@ class RequestModel extends RequestEntity {
             cost: cost,
             status: status,
             petId: petId,
-            userId: userId);
+            userId: userId,
+            caretakerId: caretakerId);
 
   factory RequestModel.fromJson(Map<String, dynamic> json) {
     return RequestModel(
@@ -33,6 +35,7 @@ class RequestModel extends RequestEntity {
       status: json['status'],
       petId: json['petId'],
       userId: json['userId'],
+      caretakerId: json['caretakerId'],
     );
   }
 
@@ -47,7 +50,7 @@ class RequestModel extends RequestEntity {
       status: request.status,
       petId: request.petId,
       userId: request.userId,
-
+      caretakerId: request.caretakerId,
     );
   }
 }
