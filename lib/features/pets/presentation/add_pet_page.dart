@@ -1,14 +1,14 @@
 import 'package:buddies_app/const.dart';
+import 'package:buddies_app/features/pets/domain/entities/pet/pet_entity.dart';
 import 'package:buddies_app/features/pets/presentation/pet/pet_bloc.dart';
-import 'package:buddies_app/widgets/button_form_widget.dart';
-import 'package:buddies_app/widgets/input_form_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../widgets/breed_picker_widget.dart';
-import '../../../widgets/date_picker_widget.dart';
-import '../../../widgets/dropdown_picker_widget.dart';
-import '../domain/entities/pet/pet_entity.dart';
+import 'package:buddies_app/widgets/button_form_widget.dart';
+import 'package:buddies_app/widgets/input_form_widget.dart';
+import 'package:buddies_app/widgets/breed_picker_widget.dart';
+import 'package:buddies_app/widgets/date_picker_widget.dart';
+import 'package:buddies_app/widgets/dropdown_picker_widget.dart';
 
 class AddPetPage extends StatefulWidget {
   const AddPetPage({Key? key}) : super(key: key);
@@ -16,6 +16,7 @@ class AddPetPage extends StatefulWidget {
   @override
   _AddPetPageState createState() => _AddPetPageState();
 }
+
 class _AddPetPageState extends State<AddPetPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _birthController = TextEditingController();
@@ -36,9 +37,6 @@ class _AddPetPageState extends State<AddPetPage> {
     _sizeController.dispose();
     super.dispose();
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +102,6 @@ class _AddPetPageState extends State<AddPetPage> {
                   BreedPickerWidget(
                     petType: _typeController.text.toLowerCase(),
                     selectedBreed: _breedController.text,
-
                     onChanged: (breed) {
                       setState(() {
                         print(_breedController.text);
@@ -113,7 +110,6 @@ class _AddPetPageState extends State<AddPetPage> {
                       });
                     },
                   ),
-
                   DropdownPickerWidget(
                     title: 'Sexo',
                     value: _genderController.text,
@@ -130,7 +126,7 @@ class _AddPetPageState extends State<AddPetPage> {
                     height: 100.0,
                   ),
                   ButtonFormWidget(
-                    onPressed: ()  {
+                    onPressed: () {
                       final pet = PetEntity(
                         name: _nameController.text,
                         birthday: _birthController.text,
@@ -143,9 +139,9 @@ class _AddPetPageState extends State<AddPetPage> {
                       );
                       print(pet.size);
                       context.read<PetBloc>().add(CreatePetEvent(pet: pet));
-                      Navigator.pop(context); // Regresar a la página anterior (PetsPage)
+                      Navigator.pop(
+                          context); // Regresar a la página anterior (PetsPage)
                       context.read<PetBloc>().add(GetPetsEvent());
-
                     },
                     text: 'Guardar',
                     height: 50.0,
@@ -158,7 +154,4 @@ class _AddPetPageState extends State<AddPetPage> {
       ),
     );
   }
-
-
 }
-

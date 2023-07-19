@@ -31,15 +31,57 @@ class RequestPage extends StatelessWidget {
         'service': 'Hospedaje - 3d',
         'status': 'Pendiente',
       },
-      // {
-      //   'name': 'Kira',
-      //   'time': '2021-07-04 12:34:56',
-      //   'service': 'Paseo individual - 1h',
-      //   'status': 'Por terminar',
-      // },
+      {
+        'name': 'Kira',
+        'time': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'status': 'Por terminar',
+      },
     ];
     List<Map<String, dynamic>> history = [
       //lista de prueba
+      {
+        'name': 'Kira',
+        'date': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': 34,
+      },
+      {
+        'name': 'Kira',
+        'date': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': 34,
+      },
+      {
+        'name': 'Kira',
+        'date': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': 34,
+      },
+      {
+        'name': 'Kira',
+        'date': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': 34,
+      },
+      {
+        'name': 'Kira',
+        'date': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': 34,
+      },
+      {
+        'name': 'Kira',
+        'date': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': 34,
+      },
+      {
+        'name': 'Kira',
+        'date': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': 34,
+      },
       {
         'name': 'Kira',
         'date': '2021-07-04 12:34:56',
@@ -58,12 +100,12 @@ class RequestPage extends StatelessWidget {
         'service': 'Hospedaje - 3d',
         'price': 250,
       },
-      // {
-      //   'name': 'Manguito',
-      //   'date': '2021-07-06 12:34:56',
-      //   'service': 'Hospedaje - 3d',
-      //   'price': 250,
-      // },
+      {
+        'name': 'Manguito',
+        'date': '2021-07-06 12:34:56',
+        'service': 'Hospedaje - 3d',
+        'price': 250,
+      },
     ];
     return SafeArea(
       child: Scaffold(
@@ -115,7 +157,11 @@ class RequestPage extends StatelessWidget {
                     ),
                     servicesInProgress.length > 3
                         ? TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, Pages.servicesListPage,
+                                  arguments: {'list': servicesInProgress});
+                            },
                             child: Text(
                               "Ver todos",
                               style: Font.textStyleBold(color: redColor),
@@ -149,7 +195,11 @@ class RequestPage extends StatelessWidget {
                     ),
                     history.length > 3
                         ? TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, Pages.historyListPage,
+                                  arguments: {'list': history});
+                            },
                             child: Text(
                               "Ver todos",
                               style: Font.textStyleBold(color: redColor),
@@ -183,7 +233,7 @@ class RequestPage extends StatelessWidget {
       onPressed: () =>
           Navigator.pushNamed(context, page, arguments: {'title': title}),
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(white),
+        backgroundColor: MaterialStateProperty.all(inputGrey),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),

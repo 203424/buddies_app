@@ -118,10 +118,10 @@ class _PetsPageState extends State<PetsPage> {
                             const SizedBox(height: 25.0),
                             Row(
                               children: [
-                                  Text(
-                                 '${calcularEdad(DateTime.parse(pet.birthday!))}',
-                                style: Font.textStyle,
-                                 ),
+                                Text(
+                                  '${calcularEdad(DateTime.parse(pet.birthday!))}',
+                                  style: Font.textStyle,
+                                ),
                                 const SizedBox(width: 20.0),
                                 Text(
                                   '${pet.type ?? ''} ${pet.breed ?? ''}',

@@ -1,19 +1,21 @@
-import 'package:buddies_app/const.dart';
-import 'package:buddies_app/features/pets/presentation/pet/pet_bloc.dart';
-import 'package:buddies_app/widgets/button_form_widget.dart';
-import 'package:buddies_app/widgets/input_form_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:buddies_app/const.dart';
+import 'package:buddies_app/features/pets/domain/entities/pet/pet_entity.dart';
+import 'package:buddies_app/features/pets/presentation/pet/pet_bloc.dart';
 
-import '../../../widgets/date_picker_widget.dart';
-import '../../../widgets/dropdown_picker_widget.dart';
-import '../domain/entities/pet/pet_entity.dart';
+import 'package:buddies_app/widgets/button_form_widget.dart';
+import 'package:buddies_app/widgets/input_form_widget.dart';
+import 'package:buddies_app/widgets/date_picker_widget.dart';
+import 'package:buddies_app/widgets/dropdown_picker_widget.dart';
 
 class UpdatePetPage extends StatefulWidget {
   final int petId; // Se recibe el ID de la mascota que se va a actualizar
-  final PetEntity pet; // Se recibe el objeto PetEntity con los datos de la mascota que se va a actualizar
+  final PetEntity
+      pet; // Se recibe el objeto PetEntity con los datos de la mascota que se va a actualizar
 
-  const UpdatePetPage({Key? key, required this.petId, required this.pet}) : super(key: key);
+  const UpdatePetPage({Key? key, required this.petId, required this.pet})
+      : super(key: key);
 
   @override
   _UpdatePetPageState createState() => _UpdatePetPageState();
@@ -39,8 +41,6 @@ class _UpdatePetPageState extends State<UpdatePetPage> {
     _genderController.text = widget.pet.gender ?? '';
     _descriptionController.text = widget.pet.description ?? '';
     _sizeController.text = widget.pet.description ?? '';
-
-
   }
 
   @override
@@ -147,11 +147,12 @@ class _UpdatePetPageState extends State<UpdatePetPage> {
                     size: _sizeController.text,
                     description: _descriptionController.text,
                     owner_id: 1,
-
                   );
                   // Y luego, disparar el evento para actualizar la mascota en el bloc
-                  context.read<PetBloc>().add(UpdatePetEvent(pet: updatedPet, petId: updatedPet.id ?? 0));
-                  Navigator.pop(context); // Regresar a la página anterior (PetsPage)
+                  context.read<PetBloc>().add(UpdatePetEvent(
+                      pet: updatedPet, petId: updatedPet.id ?? 0));
+                  Navigator.pop(
+                      context); // Regresar a la página anterior (PetsPage)
                   context.read<PetBloc>().add(GetPetsEvent());
                 },
                 text: 'Guardar',

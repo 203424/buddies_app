@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class DatePickerWidget extends StatefulWidget {
   final TextEditingController controller;
 
-  const DatePickerWidget({Key? key, required this.controller}) : super(key: key);
+  const DatePickerWidget({Key? key, required this.controller})
+      : super(key: key);
 
   @override
   _DatePickerWidgetState createState() => _DatePickerWidgetState();
@@ -29,7 +30,7 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
       setState(() {
         _selectedDate = picked;
         widget.controller.text =
-        '${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}';
+            '${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}';
       });
     }
   }

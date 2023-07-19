@@ -3,13 +3,13 @@ import 'package:buddies_app/features/pets/presentation/add_pet_page.dart';
 import 'package:buddies_app/features/request/presentation/add_pet_to_services_page.dart';
 import 'package:buddies_app/features/request/presentation/history_list_page.dart';
 import 'package:buddies_app/features/request/presentation/request_form_page.dart';
+import 'package:buddies_app/features/request/presentation/map/select_location_page.dart';
 import 'package:buddies_app/features/request/presentation/service_in_progress_page.dart';
 import 'package:buddies_app/features/request/presentation/services_list_page.dart';
-import 'package:buddies_app/features/pets/presentation/update_pet_page.dart';
-
 import 'package:flutter/material.dart';
 
 import 'features/pets/domain/entities/pet/pet_entity.dart';
+import 'features/pets/presentation/update_pet_page.dart';
 
 class OnGenerateRoute {
   static Route<dynamic>? route(RouteSettings settings) {
@@ -19,7 +19,7 @@ class OnGenerateRoute {
         {
           return routeBuilder(const AddPetPage());
         }
-      case Pages.updatePetPage: // Agregamos la ruta updatePetPage
+         case Pages.updatePetPage: // Agregamos la ruta updatePetPage
         {
           // Verificamos que los argumentos sean válidos antes de usarlos
           if (args is Map<String, dynamic>) {
@@ -44,17 +44,31 @@ class OnGenerateRoute {
         {
           return routeBuilder(const AddPetToServicesPage());
         }
+      case Pages.selectLocationPage:
+        {
+          return routeBuilder(const SelectLocationPage());
+        }
       case Pages.serviceInProgressPage:
         {
-          return routeBuilder(const ServiceInProgressPage());
+          args as Map<String, dynamic>;
+          return routeBuilder(ServiceInProgressPage(
+            service: args['service'],
+          ));
         }
       case Pages.servicesListPage:
         {
-          return routeBuilder(const ServicesListPage());
+          args as Map<String, dynamic>;
+
+          return routeBuilder(ServicesListPage(
+            list: args['list'],
+          ));
         }
       case Pages.historyListPage:
         {
-          return routeBuilder(const HistoryListPage());
+          args as Map<String, dynamic>;
+          return routeBuilder(HistoryListPage(
+            list: args['list'],
+          ));
         }
       default:
         {

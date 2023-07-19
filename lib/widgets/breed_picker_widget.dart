@@ -38,7 +38,8 @@ class _BreedPickerWidgetState extends State<BreedPickerWidget> {
     }
     if (widget.selectedBreed != _selectedBreed) {
       setState(() {
-        _selectedBreed = widget.selectedBreed.isNotEmpty ? widget.selectedBreed : _breeds[0];
+        _selectedBreed =
+            widget.selectedBreed.isNotEmpty ? widget.selectedBreed : _breeds[0];
       });
     }
   }
@@ -46,7 +47,8 @@ class _BreedPickerWidgetState extends State<BreedPickerWidget> {
   Future<void> _loadBreeds() async {
     if (widget.petType == 'perro') {
       // Fetch dog breeds from API
-      final response = await http.get(Uri.parse('https://dog.ceo/api/breeds/list/all'));
+      final response =
+          await http.get(Uri.parse('https://dog.ceo/api/breeds/list/all'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         _breeds = data['message'].keys.toList();
@@ -65,7 +67,8 @@ class _BreedPickerWidgetState extends State<BreedPickerWidget> {
     }
 
     setState(() {
-      _selectedBreed = widget.selectedBreed.isNotEmpty ? widget.selectedBreed : _breeds[0];
+      _selectedBreed =
+          widget.selectedBreed.isNotEmpty ? widget.selectedBreed : _breeds[0];
     });
   }
 
