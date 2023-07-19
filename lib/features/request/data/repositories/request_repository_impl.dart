@@ -64,7 +64,7 @@ class RequestRepositoryImpl implements RequestRepository{
   }
 
   @override
-  Future<List<RequestEntity>> updateRequest(RequestEntity request) async {
+  Future<RequestEntity> updateRequest(RequestEntity request) async {
     return await requestRemoteDataSource.updateRequest(request);
 
   }

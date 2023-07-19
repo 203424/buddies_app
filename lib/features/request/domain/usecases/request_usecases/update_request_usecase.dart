@@ -6,7 +6,7 @@ class UpdateRequestUseCase {
 
   UpdateRequestUseCase(this.repository);
 
-  Future<List<RequestEntity>> execute(RequestEntity request) async {
+  Future<RequestEntity> execute(RequestEntity request) async {
     return await repository.updateRequest(request);
   }
 }

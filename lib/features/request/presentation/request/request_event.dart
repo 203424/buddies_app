@@ -3,60 +3,60 @@ part of 'request_bloc.dart';
 @immutable
 abstract class RequestEvent {}
 
-class CreateRequest extends RequestEvent {
+class CreateRequestEvent extends RequestEvent {
   final RequestEntity request;
 
-  CreateRequest(this.request);
+  CreateRequestEvent(this.request);
 }
 
-class UpdateRequest extends RequestEvent {
+class UpdateRequestEvent extends RequestEvent {
   final RequestEntity request;
 
-  UpdateRequest(this.request);
+  UpdateRequestEvent(this.request);
 }
 
-class DeleteRequest extends RequestEvent {
+class DeleteRequestEvent extends RequestEvent {
   final int requestId;
 
-  DeleteRequest(this.requestId);
+  DeleteRequestEvent(this.requestId);
 }
 
-class GetById extends RequestEvent {
+class GetByIdEvent extends RequestEvent {
   final int requestId;
 
-  GetById(this.requestId);
+  GetByIdEvent(this.requestId);
 }
 
-class GetByUserId extends RequestEvent {
+class GetByUserIdEvent extends RequestEvent {
   final int userId;
 
-  GetByUserId(this.userId);
+  GetByUserIdEvent(this.userId);
 }
 
-class GetAllRequests extends RequestEvent {}
+class GetAllRequestsEvent extends RequestEvent {}
 
-class GetByStatus extends RequestEvent {
+class GetByStatusEvent extends RequestEvent {
   final String status;
 
-  GetByStatus(this.status);
+  GetByStatusEvent(this.status);
 }
 
-class GetInProgress extends RequestEvent {
+class GetInProgressEvent extends RequestEvent {
   final int userId;
 
-  GetInProgress(this.userId);
+  GetInProgressEvent(this.userId);
 }
 
-class GetHistory extends RequestEvent {
+class GetHistoryEvent extends RequestEvent {
   final int userId;
 
-  GetHistory(this.userId);
+  GetHistoryEvent(this.userId);
 }
 
-class GetByCaretakerId extends RequestEvent {
+class GetByCaretakerIdEvent extends RequestEvent {
   final int caretakerId;
 
-  GetByCaretakerId(this.caretakerId);
+  GetByCaretakerIdEvent(this.caretakerId);
 }
 
 

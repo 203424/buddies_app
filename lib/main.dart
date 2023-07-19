@@ -35,13 +35,7 @@ class MainApp extends StatelessWidget {
       updatePetUseCase: useCaseConfig.updatePetUseCase!,
       createPetUseCase: useCaseConfig.createPetUseCase!,
     );
-    final useCaseConfig1 = UseCaseConfig();
-    final getAllRequestUseCase = useCaseConfig1.getAllRequestUseCase!;
 
-    getAllRequestUseCase.repository.getAllRequests().then((listaMascotas) {
-      print(listaMascotas);
-
-    });
     final requestBloc = RequestBloc(
       createRequestUseCase: useCaseConfig.createRequestUseCase!,
       updateRequestUseCase: useCaseConfig.updateRequestUseCase!,

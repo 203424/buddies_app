@@ -12,7 +12,7 @@ abstract class PetRemoteDataSource {
   Future<List<PetModel>> getPetsById( int petid);
 
   Future<PetModel> createPet(PetEntity pet);
-  Future<List<PetModel>> updatePet(PetEntity pet, int petid);
+  Future<PetModel> updatePet(PetEntity pet, int petid);
   Future<void>deletePet(int petid);
 }
 
@@ -95,7 +95,7 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
     }
   }
 
-  Future<List<PetModel>> updatePet(PetEntity pet, int petId) async {
+  Future<PetModel> updatePet(PetEntity pet, int petId) async {
     var url = Uri.http(apiURL, '/api/pets/$petId'); // Asegurarse de incluir el id de la mascota en la ruta
     var headers = {'Content-Type': 'application/json'};
 
@@ -110,11 +110,12 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
     };
 
     var response = await http.put(url, body: convert.jsonEncode(body), headers: headers);
+    print(response.statusCode);
     if (response.statusCode == 200) {
-      // Si la solicitud fue exitosa, parsea la respuesta y devuelve una lista de PetModel
-      List<dynamic> responseData = convert.jsonDecode(response.body);
-      List<PetModel> petModels = responseData.map((data) => PetModel.fromJson(data)).toList();
-      return petModels;
+      // Si la solicitud fue exitosa, parsea la respuesta y devuelve un objeto PetModel
+      var responseData = convert.jsonDecode(response.body);
+      var petModel = PetModel.fromJson(responseData);
+      return petModel;
     } else {
       // Si la solicitud falló, puedes lanzar una excepción o manejar el error de alguna otra manera
       throw Exception('Error al actualizar la mascota');

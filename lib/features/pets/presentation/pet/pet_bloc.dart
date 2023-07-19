@@ -52,7 +52,7 @@ class PetBloc extends Bloc<PetEvent, PetState> {
     });
 
     on<CreatePetEvent>((event, emit) async {
-      emit(PetLoadingState());
+      emit(PetCreatedState(event.pet));
       try {
         await createPetUseCase.execute(event.pet);
         emit(PetSuccessState("Mascota creada exitosamente"));
@@ -62,7 +62,7 @@ class PetBloc extends Bloc<PetEvent, PetState> {
     });
 
     on<DeletePetEvent>((event, emit) async {
-      emit(PetLoadingState());
+      emit(PetDeletedState(event.petId));
       try {
         await deletePetUseCase.execute(event.petId);
         emit(PetSuccessState("Mascota eliminada exitosamente"));
@@ -74,7 +74,7 @@ class PetBloc extends Bloc<PetEvent, PetState> {
     });
 
     on<UpdatePetEvent>((event, emit) async {
-      emit(PetLoadingState());
+      emit(PetUpdatedState(event.pet, event.petId));
       try {
         await updatePetUseCase.execute(event.petId, event.pet);
         emit(PetSuccessState("Mascota actualizada exitosamente"));

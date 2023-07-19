@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:buddies_app/const.dart';
 import 'package:buddies_app/widgets/button_form_widget.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,7 @@ class PetsPage extends StatefulWidget {
 
   @override
   _PetsPageState createState() => _PetsPageState();
+
 }
 
 class _PetsPageState extends State<PetsPage> {
@@ -20,41 +23,61 @@ class _PetsPageState extends State<PetsPage> {
     context.read<PetBloc>().add(GetPetsEvent());
   }
 
+  Timer? _fetchPetsTimer;
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void _fetchPetsWithDelay() {
+    _fetchPetsTimer = Timer(Duration(seconds: 1), () {
+      context.read<PetBloc>().add(GetPetsEvent());
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: white,
-      appBar: AppBar(
         backgroundColor: white,
-        centerTitle: true,
-        title: const Text(
-          'Mascotas',
-          style: Font.pageTitleStyle,
+        appBar: AppBar(
+          backgroundColor: white,
+          centerTitle: true,
+          title: const Text(
+            'Mascotas',
+            style: Font.pageTitleStyle,
+          ),
+          shadowColor: Colors.transparent,
         ),
-        shadowColor: Colors.transparent,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navegar a la página de agregar mascota
-          Navigator.pushNamed(context, Pages.addPetPage);
-        },
-        child: const Icon(Icons.add),
-        backgroundColor: redColor,
-      ),
-      body: BlocBuilder<PetBloc, PetState>(
-        builder: (context, state) {
-          if (state is PetLoadingState) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is PetLoadedState) {
-            final List<PetEntity> pets = state.pets;
-            return _buildPetsList(pets);
-          } else if (state is PetErrorState) {
-            return Center(child: Text(state.errorMessage));
-          } else {
-            return const SizedBox();
-          }
-        },
-      ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // Navegar a la página de agregar mascota
+            Navigator.pushNamed(context, Pages.addPetPage);
+          },
+          child: const Icon(Icons.add),
+          backgroundColor: redColor,
+        ),
+        body: BlocListener<PetBloc, PetState>(
+          listener: (context, state) {
+            if (state is PetUpdatedState || state is PetCreatedState || state is PetDeletedState) {
+              _fetchPetsWithDelay();
+            }
+          },
+          child: BlocBuilder<PetBloc, PetState>(
+            builder: (context, state) {
+              if (state is PetLoadingState) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is PetLoadedState) {
+                final List<PetEntity> pets = state.pets;
+                return _buildPetsList(pets);
+              } else if (state is PetErrorState) {
+                return Center(child: Text(state.errorMessage));
+              } else {
+                return const SizedBox();
+              }
+            },
+          ),
+        )
     );
   }
 
@@ -118,10 +141,10 @@ class _PetsPageState extends State<PetsPage> {
                             const SizedBox(height: 25.0),
                             Row(
                               children: [
-                                Text(
-                                  '${calcularEdad(DateTime.parse(pet.birthday!))}',
-                                  style: Font.textStyle,
-                                ),
+                                //Text(
+                                //  '${calcularEdad(DateTime.parse(pet.birthday!))}',
+                                //  style: Font.textStyle,
+                                //),
                                 const SizedBox(width: 20.0),
                                 Text(
                                   '${pet.type ?? ''} ${pet.breed ?? ''}',
@@ -215,10 +238,8 @@ class _PetsPageState extends State<PetsPage> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                print(pet.id);
                 context.read<PetBloc>().add(DeletePetEvent(petId: pet.id ?? 0));
                 // Disparar el evento para obtener la lista de mascotas actualizada después de eliminar una mascota
-                context.read<PetBloc>().add(GetPetsEvent());
               },
             ),
           ],

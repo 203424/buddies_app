@@ -141,7 +141,6 @@ class _AddPetPageState extends State<AddPetPage> {
                       context.read<PetBloc>().add(CreatePetEvent(pet: pet));
                       Navigator.pop(
                           context); // Regresar a la página anterior (PetsPage)
-                      context.read<PetBloc>().add(GetPetsEvent());
                     },
                     text: 'Guardar',
                     height: 50.0,

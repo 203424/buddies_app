@@ -1,19 +1,60 @@
 part of 'request_bloc.dart';
 
 abstract class RequestState {}
+class RequestEmptyState extends RequestState {}
 
-class RequestInitial extends RequestState {}
+class RequestInitialState extends RequestState {}
 
-class RequestLoading extends RequestState {}
+class RequestLoadingState extends RequestState {}
 
-class RequestLoaded extends RequestState {
+class RequestLoadedState extends RequestState {
   final List<RequestEntity> requests;
 
-  RequestLoaded(this.requests);
+  RequestLoadedState(this.requests);
 }
 
-class RequestError extends RequestState {
+class RequestSuccessState extends RequestState {
+  final String successMessage;
+
+  RequestSuccessState(this.successMessage);
+}
+
+class RequestErrorState extends RequestState {
   final String message;
 
-  RequestError(this.message);
+  RequestErrorState(this.message);
+}
+
+class RequestCreatedState extends RequestState{
+  RequestEntity requestEntity;
+
+  RequestCreatedState(this.requestEntity);
+}
+
+class RequestUpdatedState extends RequestState{
+  RequestEntity requestEntity;
+
+  RequestUpdatedState(this.requestEntity);
+}
+
+class RequestDeletedState extends RequestState{
+  int id;
+
+  RequestDeletedState(this.id);
+}
+
+
+class RequestGetState extends RequestState{
+  int id;
+
+  RequestGetState(this.id);
+}
+
+
+
+
+class RequestStatusState extends RequestState{
+  final String status;
+
+  RequestStatusState(this.status);
 }

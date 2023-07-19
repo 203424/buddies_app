@@ -3,8 +3,8 @@ import 'dart:io';
 class RequestEntity {
   final int? id;
   final String? type;
-  final DateTime? start_date;
-  final DateTime? end_date;
+  final String? start_date;
+  final String? end_date;
   final String? hour;
   final int? cost;
   final String? status;

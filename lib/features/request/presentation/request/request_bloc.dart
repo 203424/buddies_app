@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -43,84 +42,146 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
     required this.getHistoryUseCase,
     required this.getByCaretakerIdUseCase,
 
-  }) : super(RequestInitial());
+  }) : super(RequestInitialState())
+  {
+
+    on<GetAllRequestsEvent>((event, emit) async {
+      emit(RequestLoadingState());
+      try {
+        List<RequestEntity> request = await getAllRequestUseCase.execute();
+        if (request.isEmpty) {
+          emit(RequestEmptyState());
+        } else {
+          emit(RequestLoadedState(request));
+        }
+      } catch (e) {
+        emit(RequestErrorState(e.toString()));
+      }
+    });
+
+    on<GetByUserIdEvent>((event, emit) async {
+      emit(RequestGetState(event.userId));
+      try {
+        List<RequestEntity> request = await getByUserIdUseCase.execute(event.userId
+        );
+        if (request.isEmpty) {
+          emit(RequestEmptyState());
+        } else {
+          emit(RequestLoadedState(request));
+        }
+      } catch (e) {
+        emit(RequestErrorState(e.toString()));
+      }
+    });
+
+    on<GetInProgressEvent>((event, emit) async {
+      emit(RequestGetState(event.userId));
+      try {
+        List<RequestEntity> request = await getInProgressUseCase.execute(event.userId);
+        if (request.isEmpty) {
+          emit(RequestEmptyState());
+        } else {
+          emit(RequestLoadedState(request));
+        }
+      } catch (e) {
+        emit(RequestErrorState(e.toString()));
+      }
+    });
+
+    on<GetHistoryEvent>((event, emit) async {
+      emit(RequestGetState(event.userId));
+      try {
+        List<RequestEntity> request = await getHistoryUseCase.execute(event.userId);
+        if (request.isEmpty) {
+          emit(RequestEmptyState());
+        } else {
+          emit(RequestLoadedState(request));
+        }
+      } catch (e) {
+        emit(RequestErrorState(e.toString()));
+      }
+    });
+
+    on<GetByCaretakerIdEvent>((event, emit) async {
+      emit(RequestGetState(event.caretakerId));
+      try {
+        List<RequestEntity> request = await getByCaretakerIdUseCase.execute(event.caretakerId);
+        if (request.isEmpty) {
+          emit(RequestEmptyState());
+        } else {
+          emit(RequestLoadedState(request));
+        }
+      } catch (e) {
+        emit(RequestErrorState(e.toString()));
+      }
+    });
+
+    on<GetByStatusEvent>((event, emit) async {
+      emit(RequestStatusState(event.status));
+      try {
+        List<RequestEntity> request = await getByStatusUseCase.execute(event.status);
+        if (request.isEmpty) {
+          emit(RequestEmptyState());
+        } else {
+          emit(RequestLoadedState(request));
+        }
+      } catch (e) {
+        emit(RequestErrorState(e.toString()));
+      }
+    });
 
 
-  @override
-  Stream<RequestState> mapEventToState(RequestEvent event) async* {
-    if (event is CreateRequest) {
+
+
+
+    on<GetByIdEvent>((event, emit) async {
+      emit(RequestGetState(event.requestId));
+      try {
+        await getByIdUseCase.execute(event.requestId);
+        emit(RequestSuccessState("Request creada exitosamente"));
+      } catch (e) {
+        emit(RequestErrorState('Error al crear la Request: $e'));
+      }
+    });
+
+
+
+    on<CreateRequestEvent>((event, emit) async {
+      emit(RequestCreatedState(event.request));
       try {
         await createRequestUseCase.execute(event.request);
-        final requests = await getAllRequestUseCase.execute();
-        yield RequestLoaded(requests);
+        emit(RequestSuccessState("Request creada exitosamente"));
       } catch (e) {
-        yield RequestError('Error al crear la solicitud');
+        emit(RequestErrorState('Error al crear la Request: $e'));
       }
-    } else if (event is UpdateRequest) {
-      try {
-        await updateRequestUseCase.execute(event.request);
-        final requests = await getAllRequestUseCase.execute();
-        yield RequestLoaded(requests);
-      } catch (e) {
-        yield RequestError('Error al actualizar la solicitud');
-      }
-    } else if (event is DeleteRequest) {
+    });
+
+
+    on<DeleteRequestEvent>((event, emit) async {
+      emit(RequestDeletedState(event.requestId));
       try {
         await deleteRequestUseCase.execute(event.requestId);
-        final requests = await getAllRequestUseCase.execute();
-        yield RequestLoaded(requests);
+        emit(RequestSuccessState("Request eliminada exitosamente"));
+        print('Request deleted successfully');
       } catch (e) {
-        yield RequestError('Error al eliminar la solicitud');
+        emit(RequestErrorState(e.toString()));
+        print('Request didnt delete successfully' + e.toString());
       }
-    } else if (event is GetById) {
+    });
+
+    on<UpdateRequestEvent>((event, emit) async {
+      emit(RequestUpdatedState(event.request));
       try {
-        final request = await getByIdUseCase.execute(event.requestId);
-        yield RequestLoaded([request]);
+        await updateRequestUseCase.execute(event.request);
+        emit(RequestSuccessState("Request actualizada exitosamente"));
+        print('Request actualizada successfully');
       } catch (e) {
-        yield RequestError('Error al obtener la solicitud por ID');
+        emit(RequestErrorState(e.toString()));
+        print('Request didnt update successfully' + e.toString());
       }
-    } else if (event is GetByUserId) {
-      try {
-        final requests = await getByUserIdUseCase.execute(event.userId);
-        yield RequestLoaded(requests);
-      } catch (e) {
-        yield RequestError('Error al obtener las solicitudes por ID de usuario');
-      }
-    } else if (event is GetAllRequests) {
-      try {
-        final requests = await getAllRequestUseCase.execute();
-        yield RequestLoaded(requests);
-      } catch (e) {
-        yield RequestError('Error al obtener todas las solicitudes');
-      }
-    } else if (event is GetByStatus) {
-      try {
-        final requests = await getByStatusUseCase.execute(event.status);
-        yield RequestLoaded(requests);
-      } catch (e) {
-        yield RequestError('Error al obtener las solicitudes por estado');
-      }
-    } else if (event is GetInProgress) {
-      try {
-        final requests = await getInProgressUseCase.execute(event.userId);
-        yield RequestLoaded(requests);
-      } catch (e) {
-        yield RequestError('Error al obtener las solicitudes en progreso');
-      }
-    } else if (event is GetHistory) {
-      try {
-        final requests = await getHistoryUseCase.execute(event.userId);
-        yield RequestLoaded(requests);
-      } catch (e) {
-        yield RequestError('Error al obtener las solicitudes históricas');
-      }
-    } else if (event is GetByCaretakerId) {
-      try {
-        final requests = await getByCaretakerIdUseCase.execute(event.caretakerId);
-        yield RequestLoaded(requests);
-      } catch (e) {
-        yield RequestError('Error al obtener las solicitudes por ID de cuidador');
-      }
-    }
+    });
+
+
+
   }
 }

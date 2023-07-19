@@ -31,7 +31,7 @@ class PetRepositoryImpl implements PetRepository {
   }
 
   @override
-  Future<List<PetEntity>> updatePet( int petid, PetEntity pet,) async {
+  Future<PetEntity> updatePet( int petid, PetEntity pet,) async {
     return await petRemoteDataSource.updatePet(pet, petid);
   }
 

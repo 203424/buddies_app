@@ -1,5 +1,6 @@
 import 'package:buddies_app/const.dart';
 import 'package:buddies_app/features/pets/presentation/pets_page.dart';
+import 'package:buddies_app/features/request/presentation/request/request_bloc.dart';
 import 'package:buddies_app/features/request/presentation/request_page.dart';
 import 'package:buddies_app/features/owner/presentation/account_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -100,7 +101,13 @@ class _MainPageState extends State<MainPage> {
             value: BlocProvider.of<PetBloc>(context),
             child: PetsPage(),
           ),
-          RequestPage(),
+          MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: BlocProvider.of<PetBloc>(context)),
+              BlocProvider.value(value: BlocProvider.of<RequestBloc>(context)),
+            ],
+            child: RequestPage(),
+          ),
           AccountPage(),
         ],
       ),

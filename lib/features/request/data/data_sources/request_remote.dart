@@ -5,11 +5,11 @@ import 'package:buddies_app/features/request/data/models/request/request_model.d
 
 import '../../domain/entities/request/request_entity.dart';
 
-String apiURL = '3.12.237.96';
+String apiURL = '3.17.237.96';
 
 abstract class RequestRemoteDataSource {
   Future<RequestModel> createRequest(RequestEntity request);
-  Future <List<RequestModel>> updateRequest(RequestEntity request);
+  Future<RequestModel> updateRequest(RequestEntity request);
   Future<void> deleteRequest(int id);
   Future<RequestModel> getById(int id);
   Future<List<RequestModel>> getByUserId(int id);
@@ -192,7 +192,7 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
   }
 
   @override
-  Future<List<RequestModel>> updateRequest(RequestEntity request) async {
+  Future<RequestModel> updateRequest(RequestEntity request) async {
     var url = Uri.http(apiURL, '/api/requests/');
     var headers = {'Content-Type': 'application/json'};
     var body = {
@@ -209,13 +209,13 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
     };
     var response = await http.put(url, body: convert.jsonEncode(body), headers: headers);
     if (response.statusCode == 200) {
-      // Si la solicitud fue exitosa, parsea la respuesta y devuelve una lista de PetModel
-      List<dynamic> responseData = convert.jsonDecode(response.body);
-      List<RequestModel> requestModel = responseData.map((data) => RequestModel.fromJson(data)).toList();
+      // Si la solicitud fue exitosa, parsea la respuesta y devuelve un objeto PetModel
+      var responseData = convert.jsonDecode(response.body);
+      var requestModel = RequestModel.fromJson(responseData);
       return requestModel;
     } else {
       // Si la solicitud falló, puedes lanzar una excepción o manejar el error de alguna otra manera
-      throw Exception('Error al actualizar la mascota');
+      throw Exception('Error al crear la mascota');
     }
   }
   

@@ -4,8 +4,8 @@ class RequestModel extends RequestEntity {
   RequestModel({
     int? id,
     String? type,
-    DateTime? start_date,
-    DateTime? end_date,
+    String? start_date,
+    String? end_date,
     String? hour,
     int? cost,
     String? status,

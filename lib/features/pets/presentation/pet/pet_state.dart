@@ -26,4 +26,21 @@ class PetSuccessState extends PetState {
 
   PetSuccessState(this.successMessage);
 }
+class PetDeletedState extends PetState {
+  int id;
+  PetDeletedState(this.id);
+}
+class PetCreatedState extends PetState {
+  final PetEntity pet;
+  PetCreatedState(this.pet);
+
+}
+class PetUpdatedState extends PetState {
+  final PetEntity pet;
+  final int petId;
+  PetUpdatedState(this.pet, this.petId);
+
+
+}
+
 

@@ -6,7 +6,7 @@ class UpdatePetUseCase {
 
   UpdatePetUseCase(this.repository);
 
-  Future<List<PetEntity>> execute(int petid, PetEntity pet) async {
+  Future<PetEntity> execute(int petid, PetEntity pet) async {
     return await repository.updatePet(petid, pet);
   }
 }
