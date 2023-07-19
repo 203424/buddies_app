@@ -1,5 +1,6 @@
 import 'package:buddies_app/const.dart';
 import 'package:buddies_app/features/owner/presentation/main_page.dart';
+import 'package:buddies_app/features/request/presentation/request/request_bloc.dart';
 import 'package:buddies_app/usecase_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +23,10 @@ class MainApp extends StatelessWidget {
       const SystemUiOverlayStyle(statusBarColor: greyColorStatusBar),
     );
 
+
+
+
+
     final useCaseConfig = UseCaseConfig();
     final petBloc = PetBloc(
       getPetsUseCase: useCaseConfig.getPetsUseCase!,
@@ -30,10 +35,30 @@ class MainApp extends StatelessWidget {
       updatePetUseCase: useCaseConfig.updatePetUseCase!,
       createPetUseCase: useCaseConfig.createPetUseCase!,
     );
+    final useCaseConfig1 = UseCaseConfig();
+    final getAllRequestUseCase = useCaseConfig1.getAllRequestUseCase!;
+
+    getAllRequestUseCase.repository.getAllRequests().then((listaMascotas) {
+      print(listaMascotas);
+
+    });
+    final requestBloc = RequestBloc(
+      createRequestUseCase: useCaseConfig.createRequestUseCase!,
+      updateRequestUseCase: useCaseConfig.updateRequestUseCase!,
+      deleteRequestUseCase: useCaseConfig.deleteRequestUseCase!,
+      getByIdUseCase: useCaseConfig.getByIdUseCase!,
+      getByUserIdUseCase: useCaseConfig.getByUserIdUseCase!,
+      getAllRequestUseCase: useCaseConfig.getAllRequestUseCase!,
+      getByStatusUseCase: useCaseConfig.getByStatusUseCase!,
+      getInProgressUseCase: useCaseConfig.getInProgressUseCase!,
+      getHistoryUseCase: useCaseConfig.getHistoryUseCase!,
+      getByCaretakerIdUseCase: useCaseConfig.getByCaretakerIdUseCase!,
+    );
 
     return MultiBlocProvider(
       providers: [
         BlocProvider<PetBloc>.value(value: petBloc),
+        BlocProvider<RequestBloc>.value(value: requestBloc),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -46,6 +71,7 @@ class MainApp extends StatelessWidget {
         routes: {
           '/': (context) {
             return MainPage();
+
           },
         },
       ),
