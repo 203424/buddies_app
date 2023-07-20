@@ -81,6 +81,11 @@ class _PetsPageState extends State<PetsPage> {
     );
   }
 
+
+
+
+
+
   Widget _buildPetsList(List<PetEntity> pets) {
     if (pets.isEmpty) {
       return Center(child: Text('No se encontraron mascotas'));

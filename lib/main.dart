@@ -23,10 +23,6 @@ class MainApp extends StatelessWidget {
       const SystemUiOverlayStyle(statusBarColor: greyColorStatusBar),
     );
 
-
-
-
-
     final useCaseConfig = UseCaseConfig();
     final petBloc = PetBloc(
       getPetsUseCase: useCaseConfig.getPetsUseCase!,

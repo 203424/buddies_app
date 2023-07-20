@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:buddies_app/const.dart';
 import 'package:buddies_app/features/pets/presentation/pet/pet_bloc.dart';
 import 'package:buddies_app/features/request/domain/entities/request/request_entity.dart';
@@ -24,8 +26,12 @@ class _RequestPageState extends State<RequestPage> {
     super.initState();
     // Disparar el evento para obtener la lista de mascotas
     context.read<RequestBloc>().add(GetAllRequestsEvent());
+    context.read<PetBloc>().add(GetPetsByIdEvent(petId: 1));
     context.read<PetBloc>().add(GetPetsEvent());
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,92 +49,89 @@ class _RequestPageState extends State<RequestPage> {
 
         }
       },
-      child: BlocBuilder<RequestBloc, RequestState>(
-        builder: (context, state) {
-          if (state is RequestLoadingState) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is RequestLoadedState) {
-
-            final List<RequestEntity> requests = state.requests;
-            print(requests);
-
-            return _buildRequestPageWidget(context, requests);
-          } else if (state is RequestErrorState) {
-            return Center(child: Text(state.message));
-          } else {
-            return const SizedBox();
-          }
-        },
-      ),
-      )
-      ),
-    );
-  }
-
-
-  @override
-  Widget buildPet(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          backgroundColor: white,
-          appBar: AppBar(
-            backgroundColor: white,
-            title: BuddiesIcons.logoRounded(sizeIcon: 50.0),
-            shadowColor: Colors.transparent,
-          ),
-          body: BlocListener<PetBloc, PetState>(
-            listener: (context, state) {
-              if (state is PetUpdatedState || state is PetCreatedState || state is PetDeletedState) {
+          child: BlocBuilder<RequestBloc, RequestState>(
+            builder: (context, state) {
+              if (state is RequestLoadingState) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is RequestLoadedState) {
+                if (state.requests.isEmpty) {
+                  // Aquí puedes llamar al evento GetAllRequestsEvent
+                  BlocProvider.of<RequestBloc>(context).add(GetAllRequestsEvent());
+                  // Puedes dejar el indicador de carga mientras esperas la respuesta
+                  return Center(child: CircularProgressIndicator());
+                } else {
+                  final List<RequestEntity> requests = state.requests;
+                  return _buildRequestPageWidget(context, requests);
+                }
+              } else if (state is RequestErrorState) {
+                return Center(child: Text(state.message));
+              } else {
+                return const SizedBox();
               }
             },
-            child: BlocBuilder<PetBloc, PetState>(
-              builder: (context, state) {
-                if (state is PetLoadingState) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (state is PetLoadedState) {
-                  final List<PetEntity> pets = state.pets;
-                  return null;
-                } else if (state is PetErrorState) {
-                  return Center(child: Text(state.errorMessage));
-                } else {
-                  return const SizedBox();
-                }
-              },
-            ),
-          )
+          ),
+        ),
       ),
     );
   }
-  Widget _buildRequestPageWidget(BuildContext context, List<RequestEntity> requests ) {
-    print(requests);
 
-    List<Map<String, String>> servicesInProgress = [
-      //lista de prueba
-      {
-        'name': 'Kira',
-        'time': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'status': 'Por terminar',
-      },
-      {
-        'name': 'Eevee',
-        'time': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'status': 'Activo',
-      },
-      {
-        'name': 'Manguito',
-        'time': '2021-07-04 12:34:56',
-        'service': 'Hospedaje - 3d',
-        'status': 'Pendiente',
-      },
-      {
-        'name': 'Kira',
-        'time': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'status': 'Por terminar',
-      },
-    ];
+
+
+
+  List<PetEntity> getAllPets(BuildContext context) {
+    final petBloc = context.read<PetBloc>();
+    petBloc.add(GetPetsEvent()); // Disparar el evento para obtener todas las mascotas
+    final state = petBloc.state;
+    if (state is PetLoadedState) {
+      return state.pets;
+    } else {
+      return [];
+    }
+  }
+
+  List<PetEntity> getAllPetsById(BuildContext context, int id) {
+    final petBloc = context.read<PetBloc>();
+    petBloc.add(GetPetsByIdEvent(petId: id)); // Disparar el evento para obtener mascotas por su ID
+    final state = petBloc.state;
+    if (state is PetLoadedState) {
+      final List<PetEntity> allPets = state.pets;
+      final List<PetEntity> petsById = allPets.where((pet) => pet.id == id).toList();
+      return petsById;
+    } else {
+      return [];
+    }
+  }
+
+  Widget _buildRequestPageWidget(BuildContext context, List<RequestEntity> requests ) {
+    List<PetEntity> listPetsId = getAllPetsById(context, 251);
+    List<PetEntity> listPets = getAllPets(context);
+    List<Map<String, String>> newList = [];
+
+// Verificar la longitud de ambas listas (listPetsId y requests) para determinar el tamaño de la nueva lista
+    int maxLength = listPetsId.length > requests.length ? listPetsId.length : requests.length;
+
+// Recorrer ambas listas y generar los objetos para la nueva lista
+    for (int i = 0; i < maxLength; i++) {
+      String name = i < listPetsId.length ? listPetsId[i].name ?? ' ' : '';
+      String service = i < requests.length ? requests[i].type ?? ' ' : '';
+      String time = i < requests.length ? requests[i].hour ?? ' ' : '';
+      String status = i < requests.length ? requests[i].status ?? ' ' : '';
+
+
+      Map<String, String> newObject = {
+        'name': name,
+        'time': '', // Puedes agregar el tiempo aquí si lo necesitas
+        'service': service,
+        'status': '', // Puedes agregar el estado aquí si lo necesitas
+      };
+
+      newList.add(newObject);
+    }
+
+// Imprimir la nueva lista generada
+    print(newList);
+
+
     List<Map<String, dynamic>> history = [
       //lista de prueba
 
@@ -222,13 +225,13 @@ class _RequestPageState extends State<RequestPage> {
                     "Servicios en curso",
                     style: Font.titleStyle,
                   ),
-                  servicesInProgress.length > 3
+                  newList.length > 3
                       ? TextButton(
                     onPressed: () {
                       Navigator.pushNamed(
                         context,
                         Pages.servicesListPage,
-                        arguments: {'list': servicesInProgress},
+                        arguments: {'list': newList},
                       );
                     },
                     child: Text(
@@ -244,10 +247,10 @@ class _RequestPageState extends State<RequestPage> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                final service = servicesInProgress[index];
+                final service = newList[index];
                 return ServiceInProgressWidget(service: service);
               },
-              childCount: servicesInProgress.length > 3 ? 3 : servicesInProgress.length,
+              childCount: newList.length > 3 ? 3 : newList.length,
             ),
           ),
           SliverToBoxAdapter(

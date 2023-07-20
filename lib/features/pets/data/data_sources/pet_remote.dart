@@ -67,8 +67,6 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
           .jsonDecode(response.body)
           .map<PetModel>((data) => PetModel.fromJson(data))
           .toList();
-      print(dataPets);
-
       return dataPets;
     } else {
       throw Exception('Error');
