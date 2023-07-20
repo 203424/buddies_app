@@ -26,10 +26,12 @@ const MaterialColor redColorSwatch = MaterialColor(0xFFFF4D4D, {
   900: Color(0xFF990000),
 });
 
+const String apiKey = "AIzaSyASkPsefLaxzMFcDhw-dEdImunjNSr0Ais";
+
 //Estilos (fuentes)
 class Font {
   static const TextStyle textStyle =
-      TextStyle(fontSize: 14.0, fontWeight: FontWeight.w300, color: black);
+      TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: black);
 
   static TextStyle textStyleBold({Color? color, double? fontSize}) {
     return TextStyle(
