@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart' as googleMaps;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:location/location.dart';
+import 'package:intl/intl.dart';
 
 class ServiceInProgressPage extends StatefulWidget {
   final Map<String, dynamic> service;
@@ -307,9 +308,10 @@ class _ServiceInProgressPageState extends State<ServiceInProgressPage> {
   }
 
   String formatTime(String dateTimeString) {
-    final dateTime = DateTime.parse(dateTimeString);
-    final formattedTime =
-        '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+    //la hora es insignificante es solo para el formateo
+    DateTime dateTime = DateTime.parse("2023-01-01 $dateTimeString");
+    String formattedTime = DateFormat.Hm().format(dateTime);
+
     return formattedTime;
   }
 

@@ -30,9 +30,6 @@ class _RequestPageState extends State<RequestPage> {
     context.read<PetBloc>().add(GetPetsEvent());
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -44,11 +41,9 @@ class _RequestPageState extends State<RequestPage> {
           shadowColor: Colors.transparent,
         ),
         body: BlocListener<RequestBloc, RequestState>(
-      listener: (context, state) {
-        if (state is CreateRequestEvent  ){
-
-        }
-      },
+          listener: (context, state) {
+            if (state is CreateRequestEvent) {}
+          },
           child: BlocBuilder<RequestBloc, RequestState>(
             builder: (context, state) {
               if (state is RequestLoadingState) {
@@ -56,7 +51,8 @@ class _RequestPageState extends State<RequestPage> {
               } else if (state is RequestLoadedState) {
                 if (state.requests.isEmpty) {
                   // Aquí puedes llamar al evento GetAllRequestsEvent
-                  BlocProvider.of<RequestBloc>(context).add(GetAllRequestsEvent());
+                  BlocProvider.of<RequestBloc>(context)
+                      .add(GetAllRequestsEvent());
                   // Puedes dejar el indicador de carga mientras esperas la respuesta
                   return Center(child: CircularProgressIndicator());
                 } else {
@@ -75,12 +71,10 @@ class _RequestPageState extends State<RequestPage> {
     );
   }
 
-
-
-
   List<PetEntity> getAllPets(BuildContext context) {
     final petBloc = context.read<PetBloc>();
-    petBloc.add(GetPetsEvent()); // Disparar el evento para obtener todas las mascotas
+    petBloc.add(
+        GetPetsEvent()); // Disparar el evento para obtener todas las mascotas
     final state = petBloc.state;
     if (state is PetLoadedState) {
       return state.pets;
@@ -91,24 +85,29 @@ class _RequestPageState extends State<RequestPage> {
 
   List<PetEntity> getAllPetsById(BuildContext context, int id) {
     final petBloc = context.read<PetBloc>();
-    petBloc.add(GetPetsByIdEvent(petId: id)); // Disparar el evento para obtener mascotas por su ID
+    petBloc.add(GetPetsByIdEvent(
+        petId: id)); // Disparar el evento para obtener mascotas por su ID
     final state = petBloc.state;
     if (state is PetLoadedState) {
       final List<PetEntity> allPets = state.pets;
-      final List<PetEntity> petsById = allPets.where((pet) => pet.id == id).toList();
+      final List<PetEntity> petsById =
+          allPets.where((pet) => pet.id == id).toList();
       return petsById;
     } else {
       return [];
     }
   }
 
-  Widget _buildRequestPageWidget(BuildContext context, List<RequestEntity> requests ) {
+  Widget _buildRequestPageWidget(
+      BuildContext context, List<RequestEntity> requests) {
     List<PetEntity> listPetsId = getAllPetsById(context, 251);
     List<PetEntity> listPets = getAllPets(context);
     List<Map<String, String>> newList = [];
 
 // Verificar la longitud de ambas listas (listPetsId y requests) para determinar el tamaño de la nueva lista
-    int maxLength = listPetsId.length > requests.length ? listPetsId.length : requests.length;
+    int maxLength = listPetsId.length > requests.length
+        ? listPetsId.length
+        : requests.length;
 
 // Recorrer ambas listas y generar los objetos para la nueva lista
     for (int i = 0; i < maxLength; i++) {
@@ -116,13 +115,14 @@ class _RequestPageState extends State<RequestPage> {
       String service = i < requests.length ? requests[i].type ?? ' ' : '';
       String time = i < requests.length ? requests[i].hour ?? ' ' : '';
       String status = i < requests.length ? requests[i].status ?? ' ' : '';
-
+      String date = i < requests.length ? requests[i].start_date ?? ' ' : '';
 
       Map<String, String> newObject = {
-        'name': name,
-        'time': '', // Puedes agregar el tiempo aquí si lo necesitas
-        'service': service,
-        'status': '', // Puedes agregar el estado aquí si lo necesitas
+        'name': name, //Nombre de la mascota
+        'date': date, //fecha en la que se pidio el servicio
+        'time': time, //hora programada
+        'service': service, //servicio que se da
+        'status': status, // Estado del servicio
       };
 
       newList.add(newObject);
@@ -130,7 +130,6 @@ class _RequestPageState extends State<RequestPage> {
 
 // Imprimir la nueva lista generada
     print(newList);
-
 
     List<Map<String, dynamic>> history = [
       //lista de prueba
@@ -203,13 +202,15 @@ class _RequestPageState extends State<RequestPage> {
                     context: context,
                     title: 'Paseo',
                     page: Pages.requestFormPage,
-                    icon: BuddiesIcons.paseoIcon(sizeIcon: 100.0, color: primaryColor),
+                    icon: BuddiesIcons.paseoIcon(
+                        sizeIcon: 100.0, color: primaryColor),
                   ),
                   botonServicio(
                     context: context,
                     page: Pages.requestFormPage,
                     title: 'Hospedaje',
-                    icon: BuddiesIcons.serviciosIcon(sizeIcon: 100.0, color: primaryColor),
+                    icon: BuddiesIcons.serviciosIcon(
+                        sizeIcon: 100.0, color: primaryColor),
                   ),
                 ],
               ),
@@ -227,18 +228,18 @@ class _RequestPageState extends State<RequestPage> {
                   ),
                   newList.length > 3
                       ? TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        Pages.servicesListPage,
-                        arguments: {'list': newList},
-                      );
-                    },
-                    child: Text(
-                      "Ver todos",
-                      style: Font.textStyleBold(color: redColor),
-                    ),
-                  )
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              Pages.servicesListPage,
+                              arguments: {'list': newList},
+                            );
+                          },
+                          child: Text(
+                            "Ver todos",
+                            style: Font.textStyleBold(color: redColor),
+                          ),
+                        )
                       : Container(),
                 ],
               ),
@@ -246,7 +247,7 @@ class _RequestPageState extends State<RequestPage> {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
+              (BuildContext context, int index) {
                 final service = newList[index];
                 return ServiceInProgressWidget(service: service);
               },
@@ -265,18 +266,18 @@ class _RequestPageState extends State<RequestPage> {
                   ),
                   history.length > 3
                       ? TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        Pages.historyListPage,
-                        arguments: {'list': history},
-                      );
-                    },
-                    child: Text(
-                      "Ver todos",
-                      style: Font.textStyleBold(color: redColor),
-                    ),
-                  )
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              Pages.historyListPage,
+                              arguments: {'list': history},
+                            );
+                          },
+                          child: Text(
+                            "Ver todos",
+                            style: Font.textStyleBold(color: redColor),
+                          ),
+                        )
                       : Container(),
                 ],
               ),
@@ -284,7 +285,7 @@ class _RequestPageState extends State<RequestPage> {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
+              (BuildContext context, int index) {
                 final entry = history[index];
                 return HistoryWidget(history: entry);
               },
@@ -303,7 +304,8 @@ class _RequestPageState extends State<RequestPage> {
     required BuildContext context,
   }) {
     return ElevatedButton(
-      onPressed: () => Navigator.pushNamed(context, page, arguments: {'title': title}),
+      onPressed: () =>
+          Navigator.pushNamed(context, page, arguments: {'title': title}),
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(inputGrey),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
