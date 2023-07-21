@@ -1,4 +1,5 @@
 import 'package:buddies_app/const.dart';
+import 'package:buddies_app/widgets/button_form_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'widgets/text_button_account_widget.dart';
@@ -8,6 +9,14 @@ class AccountPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //lista de prueba
+    Map<String, dynamic> user = {
+      "id": 1,
+      "name": "Gabriel",
+      "email": "gabriel@gmail.com",
+      "password": "gabriel26!",
+    };
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: white,
@@ -43,7 +52,10 @@ class AccountPage extends StatelessWidget {
                     ),
                     TextButtonAccountWidget(
                       texto: "Mis datos",
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, Pages.accountFormPage,
+                            arguments: {'user': user});
+                      },
                       mostrarBorde: true,
                       redondearSuperior: true,
                       redondearInferior: false,
@@ -57,7 +69,9 @@ class AccountPage extends StatelessWidget {
                     ),
                     TextButtonAccountWidget(
                       texto: "Eliminar cuenta",
-                      onPressed: () {},
+                      onPressed: () {
+                        _confirmDeleteAccount(context);
+                      },
                       colorText: redColor,
                       mostrarBorde: false,
                       redondearSuperior: false,
@@ -115,6 +129,49 @@ class AccountPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Future<dynamic> _confirmDeleteAccount(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: RichText(
+            text: TextSpan(
+              style: Font.textStyleBold(color: black, fontSize: 16),
+              children: [
+                const TextSpan(text: '¿Estas seguro de eliminar '),
+                TextSpan(
+                  text: 'permanentemente',
+                  style: Font.textStyleBold(color: redColor, fontSize: 16),
+                ),
+                const TextSpan(text: ' tu cuenta?'),
+              ],
+            ),
+          ),
+          content: const Text("Esta acción no se puede revertir"),
+          actions: [
+            ButtonFormWidget(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              text: 'Cancelar',
+              width: 90.0,
+              height: 40.0,
+            ),
+            TextButton(
+              child: Text(
+                'Confirmar',
+                style: Font.textStyleBold(color: redColor),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

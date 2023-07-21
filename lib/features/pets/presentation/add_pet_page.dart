@@ -85,6 +85,9 @@ class _AddPetPageState extends State<AddPetPage> {
                   DatePickerWidget(
                     controller: _birthController,
                   ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
                   DropdownPickerWidget(
                     title: 'Tipo',
                     value: _typeController.text,
@@ -94,6 +97,9 @@ class _AddPetPageState extends State<AddPetPage> {
                         _typeController.text = newValue;
                       });
                     },
+                  ),
+                  SizedBox(
+                    height: 10.0,
                   ),
                   InputFormWidget(
                     title: 'Tamaño',
@@ -109,6 +115,9 @@ class _AddPetPageState extends State<AddPetPage> {
                         _breedController.text = breed;
                       });
                     },
+                  ),
+                  SizedBox(
+                    height: 10.0,
                   ),
                   DropdownPickerWidget(
                     title: 'Sexo',

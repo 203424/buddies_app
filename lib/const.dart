@@ -172,4 +172,5 @@ class Pages {
   static const String addPetToServicesPage = "addPetToServicesPage";
   static const String selectLocationPage = "selectLocationPage";
   static const String updatePetPage = "updatePetPage";
+  static const String accountFormPage = "accountFormPage";
 }

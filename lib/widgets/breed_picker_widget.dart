@@ -21,7 +21,7 @@ class BreedPickerWidget extends StatefulWidget {
 }
 
 class _BreedPickerWidgetState extends State<BreedPickerWidget> {
-  List<String> _breeds = [];
+  List<String> _breeds = [''];
   String _selectedBreed = '';
 
   @override
@@ -76,7 +76,7 @@ class _BreedPickerWidgetState extends State<BreedPickerWidget> {
   Widget build(BuildContext context) {
     return DropdownPickerWidget(
       title: 'Raza',
-      value: _selectedBreed,
+      value: widget.petType == '' ? 'Selecciona un tipo' : _selectedBreed,
       options: _breeds,
       onChanged: (newValue) {
         setState(() {

@@ -8,6 +8,7 @@ import 'package:buddies_app/features/request/presentation/service_in_progress_pa
 import 'package:buddies_app/features/request/presentation/services_list_page.dart';
 import 'package:flutter/material.dart';
 
+import 'features/owner/presentation/account_form_page.dart';
 import 'features/pets/domain/entities/pet/pet_entity.dart';
 import 'features/pets/presentation/update_pet_page.dart';
 
@@ -19,7 +20,7 @@ class OnGenerateRoute {
         {
           return routeBuilder(const AddPetPage());
         }
-         case Pages.updatePetPage: // Agregamos la ruta updatePetPage
+      case Pages.updatePetPage: // Agregamos la ruta updatePetPage
         {
           // Verificamos que los argumentos sean válidos antes de usarlos
           if (args is Map<String, dynamic>) {
@@ -68,6 +69,13 @@ class OnGenerateRoute {
           args as Map<String, dynamic>;
           return routeBuilder(HistoryListPage(
             list: args['list'],
+          ));
+        }
+      case Pages.accountFormPage:
+        {
+          args as Map<String, dynamic>;
+          return routeBuilder(AccountFormPage(
+            user: args['user'],
           ));
         }
       default:
