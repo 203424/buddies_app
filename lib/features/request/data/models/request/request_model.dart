@@ -9,9 +9,9 @@ class RequestModel extends RequestEntity {
     String? hour,
     int? cost,
     String? status,
-    List<int>? petId,
-    int? userId,
-    int? caretakerId,
+    List<int>? pet_id,
+    int? user_id,
+    int? caretaker_id,
   }) : super(
             id: id,
             type: type,
@@ -20,9 +20,9 @@ class RequestModel extends RequestEntity {
             hour: hour,
             cost: cost,
             status: status,
-            petId: petId,
-            userId: userId,
-            caretakerId: caretakerId);
+            pet_id: pet_id,
+            user_id: user_id,
+            caretaker_id: caretaker_id);
 
   factory RequestModel.fromJson(Map<String, dynamic> json) {
     return RequestModel(
@@ -33,9 +33,11 @@ class RequestModel extends RequestEntity {
       hour: json['hour'],
       cost: json['cost'],
       status: json['status'],
-      petId: json['petId'],
-      userId: json['userId'],
-      caretakerId: json['caretakerId'],
+      pet_id: json['pet_id'] != null
+          ? List<int>.from(json['pet_id']) // Convierte el valor a List<int>? si no es nulo
+          : null, // Si es nulo, deja pet_id como null
+      user_id: json['user_id'], // Si user_id también es un entero, utiliza int? aquí
+      caretaker_id: json['caretaker_id'], // Si caretaker_id también es un entero, utiliza int? aquí
     );
   }
 
@@ -48,9 +50,9 @@ class RequestModel extends RequestEntity {
       hour: request.hour,
       cost: request.cost,
       status: request.status,
-      petId: request.petId,
-      userId: request.userId,
-      caretakerId: request.caretakerId,
+      pet_id  : request.pet_id,
+      user_id: request.user_id,
+      caretaker_id: request.caretaker_id,
     );
   }
 }

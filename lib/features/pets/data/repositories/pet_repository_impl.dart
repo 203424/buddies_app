@@ -25,8 +25,8 @@ class PetRepositoryImpl implements PetRepository {
   }
 
   @override
-  Future<List<PetEntity>> getPetsById(int petid) async {
-    return await petRemoteDataSource.getPetsById(petid);
+  Future<List<PetEntity>> getPetsById(List<int> petsId) async {
+    return await petRemoteDataSource.getPetsById(petsId);
 
   }
 

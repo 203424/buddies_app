@@ -9,7 +9,7 @@ String apiURL = '3.130.221.228';
 
 abstract class PetRemoteDataSource {
   Future<List<PetModel>> getPets();
-  Future<List<PetModel>> getPetsById( int petid);
+  Future<List<PetModel>> getPetsById( List<int> petsId);
 
   Future<PetModel> createPet(PetEntity pet);
   Future<PetModel> updatePet(PetEntity pet, int petid);
@@ -48,8 +48,8 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
 
   @override
   Future<void> deletePet(int petId) async {
-    final url = Uri.http(apiURL, '/api/pets/$petId');
-    final headers = {'Content-Type': 'application/json'};
+    final url = Uri.http(apiURL, '/api/pets/');
+    final headers = {'Content-Type': 'petId'};
 
     final response = await http.delete(url, headers: headers);
 
@@ -73,12 +73,17 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
     }
   }
   @override
-  Future<List<PetModel>> getPetsById(int petid) async {
-    var url = Uri.https(apiURL, '/api/tareas/$petid');
+  Future<List<PetModel>> getPetsById(List<int> petsId) async {
+    // Formatear la lista de identificadores como una cadena JSON
+    String petsIdJson = jsonEncode(petsId);
+    // Escapar la cadena JSON para que se transmita correctamente en la URL
+    String escapedPetsIdJson = Uri.encodeQueryComponent(petsIdJson);
+
+    // Construir la URL con los parámetros correctamente formateados
+    var url = Uri.https(apiURL, "/api/pets/getByIdMultiple", {"array": escapedPetsIdJson});
     var headers = {'Content-Type': 'application/json'};
 
     var response = await http.get(url, headers: headers);
-
     if (response.statusCode == 200) {
       // Si la solicitud fue exitosa, parsea la respuesta y devuelve una lista con la mascota encontrada
       dynamic responseData = convert.jsonDecode(response.body);

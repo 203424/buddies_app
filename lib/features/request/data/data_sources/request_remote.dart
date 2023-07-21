@@ -35,9 +35,9 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
       'hour': request.hour,
       'cost': request.cost,
       'status': request.status,
-      'petId': request.petId,
-      'userId': request.userId,
-      'caretakerId': request.caretakerId,
+      'pet_id': request.pet_id,
+      'user_id': request.user_id,
+      'caretaker_id': request.caretaker_id,
     };
     var response = await http.post(url, body: convert.jsonEncode(body), headers: headers);
     if (response.statusCode == 201) {
@@ -69,7 +69,6 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
     final headers = {'Content-Type': 'application/json'};
 
     final response = await http.get(url, headers: headers);
-
     if (response.statusCode == 200) {
       final responseData = convert.jsonDecode(response.body);
       final List<RequestModel> requestModels = (responseData as List)
@@ -203,9 +202,9 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
       'hour': request.hour,
       'cost': request.cost,
       'status': request.status,
-      'petId': request.petId,
-      'userId': request.userId,
-      'caretakerId': request.caretakerId,
+      'pet_id': request.pet_id,
+      'user_id': request.user_id,
+      'caretaker_id': request.caretaker_id,
     };
     var response = await http.put(url, body: convert.jsonEncode(body), headers: headers);
     if (response.statusCode == 200) {

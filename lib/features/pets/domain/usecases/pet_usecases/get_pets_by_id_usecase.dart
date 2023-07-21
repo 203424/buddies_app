@@ -6,7 +6,7 @@ class GetPetsByIdUseCase {
 
   GetPetsByIdUseCase(this.repository);
 
-  Future<List<PetEntity>> execute(int petid) async{
-    return repository.getPetsById(petid);
+  Future<List<PetEntity>> execute(List<int> petsId) async{
+    return repository.getPetsById(petsId);
   }
 }
