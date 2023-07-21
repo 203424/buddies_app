@@ -23,7 +23,7 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
   Future<PetModel> createPet(PetEntity pet) async {
     var url = Uri.http(apiURL, '/api/pets/');
     var headers = {'Content-Type': 'application/json'};
-    var body = {
+    var body = [{
       'name': pet.name,
       'birthday': pet.birthday,
       'type': pet.type,
@@ -32,7 +32,7 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
       'size': pet.size,
       'description': pet.description,
       'owner_id': pet.owner_id,
-    };
+    }];
     var response = await http.post(url, body: convert.jsonEncode(body), headers: headers);
     if (response.statusCode == 201) {
       // Si la solicitud fue exitosa, parsea la respuesta y devuelve un objeto PetModel
@@ -48,8 +48,11 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
 
   @override
   Future<void> deletePet(int petId) async {
-    final url = Uri.http(apiURL, '/api/pets/');
-    final headers = {'Content-Type': 'petId'};
+    String petsIdJson = jsonEncode(petId);
+    String escapedPetsIdJson = Uri.encodeQueryComponent(petsIdJson);
+    var url = Uri.http(apiURL, "/api/pets/", {"array": escapedPetsIdJson});
+    var headers = {'Content-Type': 'application/json'};
+    print( http.get(url, headers: headers));
 
     final response = await http.delete(url, headers: headers);
 
@@ -99,21 +102,27 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
   }
 
   Future<PetModel> updatePet(PetEntity pet, int petId) async {
-    var url = Uri.http(apiURL, '/api/pets/$petId'); // Asegurarse de incluir el id de la mascota en la ruta
+    String petsIdJson = jsonEncode(petId);
+    String escapedPetsIdJson = Uri.encodeQueryComponent(petsIdJson);
+    var url = Uri.http(apiURL, "/api/pets/", {"array": escapedPetsIdJson});
+    print(url);
     var headers = {'Content-Type': 'application/json'};
 
-    var body = {
+    var body = [{
+      'id':pet.id,
       'name': pet.name,
-      'description': pet.description,
-      'breed': pet.breed,
-      'type': pet.type,
       'birthday': pet.birthday,
+      'type': pet.type,
+      'breed': pet.breed,
       'gender': pet.gender,
       'size': pet.size,
-    };
+      'description': pet.description,
+      'owner_id': pet.owner_id,
+    }];
 
     var response = await http.put(url, body: convert.jsonEncode(body), headers: headers);
-    print(response.statusCode);
+    print(response.body);
+
     if (response.statusCode == 200) {
       // Si la solicitud fue exitosa, parsea la respuesta y devuelve un objeto PetModel
       var responseData = convert.jsonDecode(response.body);
