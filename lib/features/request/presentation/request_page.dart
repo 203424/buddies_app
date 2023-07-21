@@ -41,7 +41,9 @@ class _RequestPageState extends State<RequestPage> {
         ),
         body: BlocListener<RequestBloc, RequestState>(
           listener: (context, state) {
-            if (state is CreateRequestEvent) {}
+            if (state is CreateRequestEvent) {
+              context.read<PetBloc>().add(GetPetsEvent());
+            }
           },
           child: BlocBuilder<RequestBloc, RequestState>(
             builder: (context, state) {
@@ -180,6 +182,7 @@ class _RequestPageState extends State<RequestPage> {
                     page: Pages.requestFormPage,
                     icon: BuddiesIcons.paseoIcon(
                         sizeIcon: 100.0, color: primaryColor),
+
                   ),
                   botonServicio(
                     context: context,

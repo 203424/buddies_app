@@ -47,7 +47,7 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
       return requestModel;
     } else {
       // Si la solicitud falló, puedes lanzar una excepción o manejar el error de alguna otra manera
-      throw Exception('Error al crear la mascota');
+      throw Exception('Error al crear la request');
     }
   }
 
@@ -59,7 +59,7 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
     final response = await http.delete(url, headers: headers);
 
     if (response.statusCode != 200) {
-      throw Exception('Error al eliminar la mascota');
+      throw Exception('Error al eliminar la request');
     }
   }
 
