@@ -1,4 +1,5 @@
 import 'package:buddies_app/const.dart';
+import 'package:buddies_app/features/owner/presentation/login_page.dart';
 import 'package:buddies_app/features/owner/presentation/main_page.dart';
 import 'package:buddies_app/features/request/presentation/request/request_bloc.dart';
 import 'package:buddies_app/usecase_config.dart';
@@ -60,7 +61,7 @@ class MainApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) {
-            return MainPage();
+            return LoginPage();
 
           },
         },
