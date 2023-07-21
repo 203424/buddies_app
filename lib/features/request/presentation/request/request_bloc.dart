@@ -56,14 +56,14 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
         }
       } catch (e) {
         emit(RequestErrorState(e.toString()));
+        print('object');
       }
     });
 
     on<GetByUserIdEvent>((event, emit) async {
       emit(RequestGetState(event.userId));
       try {
-        List<RequestEntity> request = await getByUserIdUseCase.execute(event.userId
-        );
+        List<RequestEntity> request = await getByUserIdUseCase.execute(event.userId);
         if (request.isEmpty) {
           emit(RequestEmptyState());
         } else {

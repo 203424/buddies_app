@@ -26,7 +26,6 @@ class _RequestPageState extends State<RequestPage> {
     super.initState();
     // Disparar el evento para obtener la lista de mascotas
     context.read<RequestBloc>().add(GetAllRequestsEvent());
-    context.read<PetBloc>().add(GetPetsByIdEvent(petId: 1));
     context.read<PetBloc>().add(GetPetsEvent());
   }
 
@@ -50,13 +49,16 @@ class _RequestPageState extends State<RequestPage> {
                 return Center(child: CircularProgressIndicator());
               } else if (state is RequestLoadedState) {
                 if (state.requests.isEmpty) {
+
                   // Aquí puedes llamar al evento GetAllRequestsEvent
                   BlocProvider.of<RequestBloc>(context)
                       .add(GetAllRequestsEvent());
                   // Puedes dejar el indicador de carga mientras esperas la respuesta
                   return Center(child: CircularProgressIndicator());
                 } else {
+
                   final List<RequestEntity> requests = state.requests;
+
                   return _buildRequestPageWidget(context, requests);
                 }
               } else if (state is RequestErrorState) {
@@ -83,39 +85,50 @@ class _RequestPageState extends State<RequestPage> {
     }
   }
 
-  List<PetEntity> getAllPetsById(BuildContext context, int id) {
+
+
+  String getAllPetsById(BuildContext context, List<int> ids) {
     final petBloc = context.read<PetBloc>();
-    petBloc.add(GetPetsByIdEvent(
-        petId: id)); // Disparar el evento para obtener mascotas por su ID
+    // Disparar el evento para obtener mascotas por su ID
+    petBloc.add(GetPetsByIdEvent(petsId: ids));
+
     final state = petBloc.state;
     if (state is PetLoadedState) {
       final List<PetEntity> allPets = state.pets;
-      final List<PetEntity> petsById =
-          allPets.where((pet) => pet.id == id).toList();
-      return petsById;
+
+      // Filtrar las mascotas por los ids proporcionados
+      final List<PetEntity> petsById = allPets.where((pet) => ids.contains(pet.id)).toList();
+
+      if (petsById.isNotEmpty) {
+        // Si hay mascotas con los ids proporcionados, combinamos los nombres en una cadena separada por ' - '
+        String combinedNames = petsById.map((pet) => pet.name).join(' - ');
+        return combinedNames;
+      } else {
+        // Si no se encontraron mascotas con los ids proporcionados, devolvemos un mensaje de error o una cadena vacía
+        return 'Error de mascota';
+      }
     } else {
-      return [];
+      return 'No se encontraron listas';
     }
   }
 
   Widget _buildRequestPageWidget(
       BuildContext context, List<RequestEntity> requests) {
-    List<PetEntity> listPetsId = getAllPetsById(context, 251);
     List<PetEntity> listPets = getAllPets(context);
     List<Map<String, String>> newList = [];
+    List<Map<String, dynamic>> finalized = [];
 
 // Verificar la longitud de ambas listas (listPetsId y requests) para determinar el tamaño de la nueva lista
-    int maxLength = listPetsId.length > requests.length
-        ? listPetsId.length
-        : requests.length;
+    int maxLength = requests.length;
 
 // Recorrer ambas listas y generar los objetos para la nueva lista
     for (int i = 0; i < maxLength; i++) {
-      String name = i < listPetsId.length ? listPetsId[i].name ?? ' ' : '';
+      String name = i < requests.length ? getAllPetsById(context, requests[i].pet_id ?? []) ?? ' ' : '';
       String service = i < requests.length ? requests[i].type ?? ' ' : '';
       String time = i < requests.length ? requests[i].hour ?? ' ' : '';
       String status = i < requests.length ? requests[i].status ?? ' ' : '';
       String date = i < requests.length ? requests[i].start_date ?? ' ' : '';
+      int cost = i < requests.length ? requests[i].cost ?? 0 : 0;
 
       Map<String, String> newObject = {
         'name': name, //Nombre de la mascota
@@ -125,64 +138,27 @@ class _RequestPageState extends State<RequestPage> {
         'status': status, // Estado del servicio
       };
 
+      Map<String, dynamic> finalizedObject = {
+        'name': name, //Nombre de la mascota
+        'date': date, //fecha en la que se pidio el servicio
+        'service': service, //servicio que se da
+        'price': cost, // Estado del servicio
+      };
+
       newList.add(newObject);
+      if(status=='FINALIZADO'){
+        finalized.add(finalizedObject);
+
+      }
     }
 
+
+
+
+
 // Imprimir la nueva lista generada
-    print(newList);
 
-    List<Map<String, dynamic>> history = [
-      //lista de prueba
 
-      {
-        'name': 'Kira',
-        'date': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': 34,
-      },
-      {
-        'name': 'Kira',
-        'date': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': 34,
-      },
-      {
-        'name': 'Kira',
-        'date': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': 34,
-      },
-      {
-        'name': 'Kira',
-        'date': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': 34,
-      },
-      {
-        'name': 'Kira',
-        'date': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': 34,
-      },
-      {
-        'name': 'Eevee',
-        'date': '2021-07-05 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': 34,
-      },
-      {
-        'name': 'Manguito',
-        'date': '2021-07-06 12:34:56',
-        'service': 'Hospedaje - 3d',
-        'price': 250,
-      },
-      {
-        'name': 'Manguito',
-        'date': '2021-07-06 12:34:56',
-        'service': 'Hospedaje - 3d',
-        'price': 250,
-      },
-    ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: CustomScrollView(
@@ -264,13 +240,13 @@ class _RequestPageState extends State<RequestPage> {
                     "Historial",
                     style: Font.titleStyle,
                   ),
-                  history.length > 3
+                  finalized.length > 3
                       ? TextButton(
                           onPressed: () {
                             Navigator.pushNamed(
                               context,
                               Pages.historyListPage,
-                              arguments: {'list': history},
+                              arguments: {'list': finalized},
                             );
                           },
                           child: Text(
@@ -286,10 +262,10 @@ class _RequestPageState extends State<RequestPage> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                final entry = history[index];
+                final entry = finalized[index];
                 return HistoryWidget(history: entry);
               },
-              childCount: history.length > 3 ? 3 : history.length,
+              childCount: finalized.length > 3 ? 3 : finalized.length,
             ),
           ),
         ],

@@ -40,7 +40,7 @@ class PetBloc extends Bloc<PetEvent, PetState> {
     on<GetPetsByIdEvent>((event, emit) async {
       emit(PetLoadingState());
       try {
-        List<PetEntity> pets = await getPetsByIdUseCase.execute(event.petId);
+        List<PetEntity> pets = await getPetsByIdUseCase.execute(event.petsId);
         if (pets.isEmpty) {
           emit(PetEmptyState());
         } else {

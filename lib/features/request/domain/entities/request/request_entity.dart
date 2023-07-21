@@ -8,9 +8,9 @@ class RequestEntity {
   final String? hour;
   final int? cost;
   final String? status;
-  final List<int>? petId;
-  final int? userId;
-  final int? caretakerId;
+  final List<int>? pet_id;
+  final int? user_id;
+  final int? caretaker_id;
 
   RequestEntity({
     this.id,
@@ -20,8 +20,8 @@ class RequestEntity {
     this.hour,
     this.cost,
     this.status,
-    this.petId,
-    this.userId,
-    this.caretakerId
+    this.pet_id,
+    this.user_id,
+    this.caretaker_id
   });
 }
