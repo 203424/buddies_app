@@ -75,7 +75,9 @@ class ServiceInProgressWidget extends StatelessWidget {
                             ? greenColor
                             : service['status'] == 'Por terminar'
                                 ? yellowColor
-                                : greyColor),
+                                : service['status'] == 'Pendiente'
+                                    ? greyColor
+                                    : redColor),
                   )
                 ],
               )

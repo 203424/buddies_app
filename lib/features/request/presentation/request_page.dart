@@ -17,25 +17,29 @@ class RequestPage extends StatelessWidget {
         'name': 'Kira',
         'time': '2021-07-04 12:34:56',
         'service': 'Paseo individual - 1h',
+        'price': '34',
         'status': 'Por terminar',
       },
       {
         'name': 'Eevee',
         'time': '2021-07-04 12:34:56',
         'service': 'Paseo individual - 1h',
+        'price': '34',
         'status': 'Activo',
       },
       {
         'name': 'Manguito',
         'time': '2021-07-04 12:34:56',
         'service': 'Hospedaje - 3d',
+        'price': '250',
         'status': 'Pendiente',
       },
       {
         'name': 'Kira',
         'time': '2021-07-04 12:34:56',
         'service': 'Paseo individual - 1h',
-        'status': 'Por terminar',
+        'price': '34',
+        'status': 'Por Pagar',
       },
     ];
     List<Map<String, dynamic>> history = [
