@@ -206,7 +206,7 @@ class _AddPetToServicesPageState extends State<AddPetToServicesPage> {
                 content: Text(
                     'Solo se permiten seleccionar $maxSelectedPets mascotas.',
                     style: Font.textStyleBold(color: white, fontSize: 20)),
-                duration: Duration(seconds: 2),
+                duration: const Duration(seconds: 2),
               ));
             } else {
               selectedPets[index] = !selectedPets[index];

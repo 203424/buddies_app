@@ -177,8 +177,6 @@ class _RequestFormPageState extends State<RequestFormPage> {
                                   receivedPets as List<Map<String, String>>
                               : selectedPets = [];
                         });
-
-                        print(selectedPets);
                       },
                       child: const Column(
                         children: [
