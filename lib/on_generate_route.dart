@@ -7,6 +7,7 @@ import 'package:buddies_app/features/request/presentation/map/select_location_pa
 import 'package:buddies_app/features/request/presentation/service_in_progress_page.dart';
 import 'package:buddies_app/features/request/presentation/services_list_page.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class OnGenerateRoute {
   static Route<dynamic>? route(RouteSettings settings) {
@@ -30,7 +31,11 @@ class OnGenerateRoute {
         }
       case Pages.selectLocationPage:
         {
-          return routeBuilder(const SelectLocationPage());
+          print(args);
+          
+          return routeBuilder(SelectLocationPage(
+            initialLocation: args as LatLng,
+          ));
         }
       case Pages.serviceInProgressPage:
         {

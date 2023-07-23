@@ -3,7 +3,8 @@ import 'package:buddies_app/features/request/presentation/widgets/date_picker_wi
 import 'package:buddies_app/features/request/presentation/widgets/simple_pet_card.dart';
 import 'package:buddies_app/widgets/button_form_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 class RequestFormPage extends StatefulWidget {
   final String title;
@@ -17,27 +18,46 @@ class _RequestFormPageState extends State<RequestFormPage> {
   TimeOfDay _selectedTime = TimeOfDay.now();
   bool _isValidTime = true;
   late DateTime selectedDate;
-  String selectedLocation = '';
   int _paymentMethod = 0;
-  Position? myPosition;
-
-  Future<Position> determinePosition() async {
-    LocationPermission permission;
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('error');
-      }
-    }
-    return await Geolocator.getCurrentPosition();
-  }
+  Location location = Location();
+  LocationData? currentLocation;
+  late LatLng selectedLocation;
 
   @override
   void initState() {
     super.initState();
+    _getLocation();
+    selectedLocation = LatLng(0, 0);
     selectedDate = DateTime.now();
     _isValidTime = _isTimeWithinRange(_selectedTime);
+  }
+
+  Future<void> _getLocation() async {
+    try {
+      var serviceEnabled = await location.serviceEnabled();
+      if (!serviceEnabled) {
+        serviceEnabled = await location.requestService();
+        if (!serviceEnabled) {
+          return;
+        }
+      }
+
+      var permissionGranted = await location.hasPermission();
+      if (permissionGranted == PermissionStatus.denied) {
+        permissionGranted = await location.requestPermission();
+        if (permissionGranted != PermissionStatus.granted) {
+          return;
+        }
+      }
+
+      await location.getLocation().then((currentLocationData) => setState(() {
+            currentLocation = currentLocationData;
+            selectedLocation = LatLng(currentLocationData.latitude ?? 0,
+                currentLocationData.longitude ?? 0);
+          }));
+    } catch (e) {
+      print("Error al obtener la ubicación: $e");
+    }
   }
 
   bool _isTimeWithinRange(TimeOfDay time) {
@@ -268,9 +288,13 @@ class _RequestFormPageState extends State<RequestFormPage> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         tileColor: inputGrey,
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, Pages.selectLocationPage);
+                        onTap: () async {
+                          final receivedLocation = await Navigator.pushNamed(
+                              context, Pages.selectLocationPage,
+                              arguments: selectedLocation);
+                          setState(() {
+                            selectedLocation = receivedLocation as LatLng;
+                          });
                         },
                         leading: const Icon(Icons.location_on_outlined),
                         trailing: const Icon(Icons.keyboard_arrow_down),
@@ -279,7 +303,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
                           children: [
                             const Text('Ubicación'),
                             Text(
-                              '(${myPosition?.latitude.toStringAsFixed(2)}, ${myPosition?.longitude.toStringAsFixed(2)})',
+                              '(${selectedLocation.latitude.toStringAsFixed(2)}, ${selectedLocation.longitude.toStringAsFixed(2)})',
                             )
                           ],
                         ),
