@@ -94,14 +94,14 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                     initialCameraPosition: initialPosition,
                     circles: {
                       Circle(
-                          circleId: CircleId('center'),
+                          circleId: const CircleId('center'),
                           center: LatLng(currentLocation!.latitude ?? 0,
                               currentLocation!.longitude ?? 0),
                           radius: 0.25,
                           strokeColor: redColor,
                           fillColor: redColor),
                       Circle(
-                          circleId: CircleId('radius'),
+                          circleId: const CircleId('radius'),
                           center: LatLng(currentLocation!.latitude ?? 0,
                               currentLocation!.longitude ?? 0),
                           radius: 10,

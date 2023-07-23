@@ -15,6 +15,7 @@ class RequestFormPage extends StatefulWidget {
 }
 
 class _RequestFormPageState extends State<RequestFormPage> {
+  late List<Map<String, String>> selectedPets;
   TimeOfDay _selectedTime = TimeOfDay.now();
   bool _isValidTime = true;
   late DateTime selectedDate;
@@ -27,7 +28,8 @@ class _RequestFormPageState extends State<RequestFormPage> {
   void initState() {
     super.initState();
     _getLocation();
-    selectedLocation = LatLng(0, 0);
+    selectedPets = [];
+    selectedLocation = const LatLng(0, 0);
     selectedDate = DateTime.now();
     _isValidTime = _isTimeWithinRange(_selectedTime);
   }
@@ -140,24 +142,6 @@ class _RequestFormPageState extends State<RequestFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    var pet;
-    List<Map<String, String>> pets = [
-      //lista de prueba
-      {
-        'name': '1Kira',
-        'birth': '2021-01-04 12:34:56',
-        'type': 'Perro',
-        'breed': 'Pastor',
-        'size': 'Mediana',
-      },
-      {
-        'name': '2Eevee',
-        'birth': '2019-07-04 12:34:56',
-        'type': 'Perro',
-        'breed': 'Salchicha',
-        'size': 'Pequeño',
-      },
-    ];
     return SafeArea(
       child: Scaffold(
         backgroundColor: white,
@@ -182,9 +166,19 @@ class _RequestFormPageState extends State<RequestFormPage> {
                       height: 10.0,
                     ),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(
-                            context, Pages.addPetToServicesPage);
+                      onTap: () async {
+                        final receivedPets = await Navigator.pushNamed(
+                            context, Pages.addPetToServicesPage,
+                            arguments: selectedPets);
+
+                        setState(() {
+                          receivedPets != null
+                              ? selectedPets =
+                                  receivedPets as List<Map<String, String>>
+                              : selectedPets = [];
+                        });
+
+                        print(selectedPets);
                       },
                       child: const Column(
                         children: [
@@ -208,20 +202,23 @@ class _RequestFormPageState extends State<RequestFormPage> {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    pet = pets[index];
+                    final dynamic pet = selectedPets[index];
                     return SimplePetCard(
                         name: pet['name'],
                         type: pet['type'],
                         breed: pet['breed'],
                         size: pet['size']);
                   },
-                  childCount: 2,
+                  childCount: selectedPets.length,
                 ),
               ),
               const SliverToBoxAdapter(
-                child: Text(
-                  'Servicio',
-                  style: Font.titleBoldStyle,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 10.0),
+                  child: Text(
+                    'Servicio',
+                    style: Font.titleBoldStyle,
+                  ),
                 ),
               ),
               SliverList(

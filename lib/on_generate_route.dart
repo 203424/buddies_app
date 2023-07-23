@@ -27,12 +27,12 @@ class OnGenerateRoute {
         }
       case Pages.addPetToServicesPage:
         {
-          return routeBuilder(const AddPetToServicesPage());
+          return routeBuilder(AddPetToServicesPage(
+            markedPets: args as List<Map<String, String>>,
+          ));
         }
       case Pages.selectLocationPage:
         {
-          print(args);
-          
           return routeBuilder(SelectLocationPage(
             initialLocation: args as LatLng,
           ));
