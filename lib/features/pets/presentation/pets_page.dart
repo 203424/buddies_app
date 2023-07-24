@@ -12,7 +12,6 @@ class PetsPage extends StatefulWidget {
 
   @override
   _PetsPageState createState() => _PetsPageState();
-
 }
 
 class _PetsPageState extends State<PetsPage> {
@@ -41,6 +40,7 @@ class _PetsPageState extends State<PetsPage> {
     return Scaffold(
         backgroundColor: white,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: white,
           centerTitle: true,
           title: const Text(
@@ -59,7 +59,9 @@ class _PetsPageState extends State<PetsPage> {
         ),
         body: BlocListener<PetBloc, PetState>(
           listener: (context, state) {
-            if (state is PetUpdatedState || state is PetCreatedState || state is PetDeletedState) {
+            if (state is PetUpdatedState ||
+                state is PetCreatedState ||
+                state is PetDeletedState) {
               _fetchPetsWithDelay();
             }
           },
@@ -77,14 +79,8 @@ class _PetsPageState extends State<PetsPage> {
               }
             },
           ),
-        )
-    );
+        ));
   }
-
-
-
-
-
 
   Widget _buildPetsList(List<PetEntity> pets) {
     if (pets.isEmpty) {

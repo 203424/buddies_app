@@ -135,6 +135,7 @@ class _RequestPageState extends State<RequestPage> {
       child: Scaffold(
         backgroundColor: white,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: white,
           title: BuddiesIcons.logoRounded(sizeIcon: 50.0),
           shadowColor: Colors.transparent,
@@ -151,14 +152,12 @@ class _RequestPageState extends State<RequestPage> {
                 return Center(child: CircularProgressIndicator());
               } else if (state is RequestLoadedState) {
                 if (state.requests.isEmpty) {
-
                   // Aquí puedes llamar al evento GetAllRequestsEvent
                   BlocProvider.of<RequestBloc>(context)
                       .add(GetAllRequestsEvent());
                   // Puedes dejar el indicador de carga mientras esperas la respuesta
                   return Center(child: CircularProgressIndicator());
                 } else {
-
                   final List<RequestEntity> requests = state.requests;
 
                   return _buildRequestPageWidget(context, requests);
@@ -187,8 +186,6 @@ class _RequestPageState extends State<RequestPage> {
     }
   }
 
-
-
   String getAllPetsById(BuildContext context, List<int> ids) {
     final petBloc = context.read<PetBloc>();
     // Disparar el evento para obtener mascotas por su ID
@@ -199,7 +196,8 @@ class _RequestPageState extends State<RequestPage> {
       final List<PetEntity> allPets = state.pets;
 
       // Filtrar las mascotas por los ids proporcionados
-      final List<PetEntity> petsById = allPets.where((pet) => ids.contains(pet.id)).toList();
+      final List<PetEntity> petsById =
+          allPets.where((pet) => ids.contains(pet.id)).toList();
 
       if (petsById.isNotEmpty) {
         // Si hay mascotas con los ids proporcionados, combinamos los nombres en una cadena separada por ' - '
@@ -225,7 +223,9 @@ class _RequestPageState extends State<RequestPage> {
 
 // Recorrer ambas listas y generar los objetos para la nueva lista
     for (int i = 0; i < maxLength; i++) {
-      String name = i < requests.length ? getAllPetsById(context, requests[i].pet_id ?? []) ?? ' ' : '';
+      String name = i < requests.length
+          ? getAllPetsById(context, requests[i].pet_id ?? []) ?? ' '
+          : '';
       String service = i < requests.length ? requests[i].type ?? ' ' : '';
       String time = i < requests.length ? requests[i].hour ?? ' ' : '';
       String status = i < requests.length ? requests[i].status ?? ' ' : '';
@@ -248,18 +248,12 @@ class _RequestPageState extends State<RequestPage> {
       };
 
       newList.add(newObject);
-      if(status=='FINALIZADO'){
+      if (status == 'FINALIZADO') {
         finalized.add(finalizedObject);
-
       }
     }
 
-
-
-
-
 // Imprimir la nueva lista generada
-
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -282,7 +276,6 @@ class _RequestPageState extends State<RequestPage> {
                     page: Pages.requestFormPage,
                     icon: BuddiesIcons.paseoIcon(
                         sizeIcon: 100.0, color: primaryColor),
-
                   ),
                   botonServicio(
                     context: context,
