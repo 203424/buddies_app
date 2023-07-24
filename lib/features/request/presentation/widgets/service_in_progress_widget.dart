@@ -88,7 +88,7 @@ class ServiceInProgressWidget extends StatelessWidget {
               ),
             ),
           )
-        : SizedBox();
+        : const SizedBox();
   }
 
   String formatTime(String dateTimeString) {

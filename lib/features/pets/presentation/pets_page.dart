@@ -54,8 +54,8 @@ class _PetsPageState extends State<PetsPage> {
             // Navegar a la página de agregar mascota
             Navigator.pushNamed(context, Pages.addPetPage);
           },
-          child: const Icon(Icons.add),
           backgroundColor: redColor,
+          child: const Icon(Icons.add),
         ),
         body: BlocListener<PetBloc, PetState>(
           listener: (context, state) {

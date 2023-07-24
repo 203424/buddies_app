@@ -3,7 +3,8 @@ import 'package:buddies_app/widgets/button_form_widget.dart';
 import 'package:flutter/material.dart';
 
 class AddPetToServicesPage extends StatefulWidget {
-  const AddPetToServicesPage({super.key});
+  final List<Map<String, String>> markedPets;
+  const AddPetToServicesPage({super.key, required this.markedPets});
 
   @override
   State<AddPetToServicesPage> createState() => _AddPetToServicesPageState();
@@ -99,10 +100,29 @@ class _AddPetToServicesPageState extends State<AddPetToServicesPage> {
   ];
   List<bool> selectedPets = [];
 
+  int maxSelectedPets = 2;
+
+  void markSelectedPets() {
+    if (widget.markedPets.isEmpty) {
+      selectedPets = List.filled(pets.length, false);
+    } else {
+      int indexUno = 0;
+      for (int i = 0; i < pets.length; i++) {
+        if (indexUno < widget.markedPets.length &&
+            pets[i]['name'] == widget.markedPets[indexUno]['name']) {
+          selectedPets.add(true);
+          indexUno++;
+        } else {
+          selectedPets.add(false);
+        }
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    selectedPets = List<bool>.filled(pets.length, false);
+    markSelectedPets();
   }
 
   @override
@@ -117,7 +137,9 @@ class _AddPetToServicesPageState extends State<AddPetToServicesPage> {
           style: Font.pageTitleStyle,
         ),
         leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
+          onTap: () => widget.markedPets.isNotEmpty
+              ? Navigator.pop(context, widget.markedPets)
+              : Navigator.pop(context),
           child: const Icon(
             Icons.close,
             color: black,
@@ -137,7 +159,6 @@ class _AddPetToServicesPageState extends State<AddPetToServicesPage> {
                   }
                 }
                 Navigator.pop(context, selected);
-
               },
               child: const Icon(
                 Icons.done,
@@ -176,7 +197,20 @@ class _AddPetToServicesPageState extends State<AddPetToServicesPage> {
       child: ElevatedButton(
         onPressed: () {
           setState(() {
-            selectedPets[index] = !selectedPets[index];
+            if (selectedPets.where((selected) => selected).length >=
+                    maxSelectedPets &&
+                !selectedPets[index]) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                
+                backgroundColor: redColor,
+                content: Text(
+                    'Solo se permiten seleccionar $maxSelectedPets mascotas.',
+                    style: Font.textStyleBold(color: white, fontSize: 20)),
+                duration: const Duration(seconds: 2),
+              ));
+            } else {
+              selectedPets[index] = !selectedPets[index];
+            }
           });
         },
         style: ButtonStyle(

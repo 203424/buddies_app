@@ -13,8 +13,6 @@ const Color yellowColor = Color(0xFFFBFF4D);
 const Color greyColor = Color(0xFFA3A3A3);
 const Color greyColorStatusBar = Color(0xFFC4C4C4);
 
-const String apiKey = "AIzaSyASkPsefLaxzMFcDhw-dEdImunjNSr0Ais";
-
 const MaterialColor redColorSwatch = MaterialColor(0xFFFF4D4D, {
   50: Color(0xFFFFE0E0),
   100: Color(0xFFFFB3B3),
@@ -28,10 +26,12 @@ const MaterialColor redColorSwatch = MaterialColor(0xFFFF4D4D, {
   900: Color(0xFF990000),
 });
 
+const String apiKey = "AIzaSyASkPsefLaxzMFcDhw-dEdImunjNSr0Ais";
+
 //Estilos (fuentes)
 class Font {
   static const TextStyle textStyle =
-      TextStyle(fontSize: 14.0, fontWeight: FontWeight.w300, color: black);
+      TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: black);
 
   static TextStyle textStyleBold({Color? color, double? fontSize}) {
     return TextStyle(

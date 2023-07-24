@@ -2,8 +2,6 @@ import 'package:buddies_app/features/owner/presentation/main_page.dart';
 import 'package:buddies_app/widgets/input_form_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:buddies_app/const.dart';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginPage extends StatefulWidget {

@@ -4,7 +4,7 @@ import 'package:buddies_app/const.dart';
 import 'package:buddies_app/widgets/button_form_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart' as googleMaps;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:location/location.dart';
@@ -19,14 +19,14 @@ class ServiceInProgressPage extends StatefulWidget {
 }
 
 class _ServiceInProgressPageState extends State<ServiceInProgressPage> {
-  final Completer<googleMaps.GoogleMapController> _controller = Completer();
+  final Completer<GoogleMapController> _controller = Completer();
 
-  static const googleMaps.LatLng sourceLocation =
-      googleMaps.LatLng(16.703837, -93.1711162);
-  static const googleMaps.LatLng destination =
-      googleMaps.LatLng(16.704463, -93.171241);
+  static const LatLng sourceLocation =
+      LatLng(16.703837, -93.1711162);
+  static const LatLng destination =
+      LatLng(16.704463, -93.171241);
 
-  List<googleMaps.LatLng> polylineCordinates = [];
+  List<LatLng> polylineCordinates = [];
   LocationData? currentLocation;
 
   void getPolyPoints() async {
@@ -42,10 +42,11 @@ class _ServiceInProgressPageState extends State<ServiceInProgressPage> {
     if (result.points.isNotEmpty) {
       for (var point in result.points) {
         polylineCordinates.add(
-          googleMaps.LatLng(point.latitude, point.longitude),
+          LatLng(point.latitude, point.longitude),
         );
       }
     }
+
     setState(() {});
   }
 
@@ -130,47 +131,39 @@ class _ServiceInProgressPageState extends State<ServiceInProgressPage> {
                                 ? greenColor
                                 : widget.service['status'] == 'Por terminar'
                                     ? yellowColor
-                                    : greyColor),
+                                    : widget.service['status'] == 'Pendiente'
+                                        ? greyColor
+                                        : redColor),
                       )
                     ],
                   ),
                 ],
               ),
               Container(
-                child: widget.service['status'] == 'Pendiente'
+                child: widget.service['status'] == 'Pendiente' ||
+                        widget.service['status'] == 'Por Pagar'
                     ? const SizedBox(
                         height: 10.0,
                       )
-                    // : currentLocation == null
-                    //     ? const Center(
-                    //         child: Text('Cargando vista previa'),
-                    //       )
                     : Container(
                         height: MediaQuery.of(context).size.width - 20,
-                        child: googleMaps.GoogleMap(
-                          zoomGesturesEnabled: true,
-                          scrollGesturesEnabled: true,
-                          rotateGesturesEnabled: true,
-                          initialCameraPosition: googleMaps.CameraPosition(
-                              target: googleMaps.LatLng(sourceLocation.latitude,
+                        child: GoogleMap(
+                          myLocationEnabled: true,
+                          initialCameraPosition: CameraPosition(
+                              target: LatLng(sourceLocation.latitude,
                                   sourceLocation.longitude),
                               zoom: 15),
                           polylines: {
-                            googleMaps.Polyline(
-                              polylineId: const googleMaps.PolylineId('route'),
+                            Polyline(
+                              polylineId: const PolylineId('route'),
                               points: polylineCordinates,
                               color: redColor,
                               width: 6,
                             )
                           },
                           markers: {
-                            googleMaps.Marker(
-                                markerId: const googleMaps.MarkerId('source'),
-                                position: googleMaps.LatLng(
-                                    sourceLocation.latitude,
-                                    sourceLocation.longitude)),
-                            const googleMaps.Marker(
-                                markerId: googleMaps.MarkerId('destination'),
+                            const Marker(
+                                markerId: MarkerId('destination'),
                                 position: destination)
                           },
                           onMapCreated: (mapController) {
@@ -186,123 +179,79 @@ class _ServiceInProgressPageState extends State<ServiceInProgressPage> {
                   style: Font.titleStyle,
                 ),
               ),
+              carerCard(context, paseador),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.0),
+                child: Text(
+                  'Detalles de pago',
+                  style: Font.titleStyle,
+                ),
+              ),
               ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        content: const Text(
-                            'Esta opción aún se encuentra en desarrollo.'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Aceptar'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(inputGrey),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                  onPressed: () {},
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(inputGrey),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
                     ),
                   ),
-                ),
-                child: widget.service['status'] == 'Pendiente'
-                    ? const Center(
-                        heightFactor: 6.0,
-                        child: Text(
-                          'Estamos buscando al cuidador ideal para ti',
-                          style: Font.textStyle,
-                        ),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 15.0),
+                    child: Column(
+                      children: [
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  paseador['name'],
-                                  style: Font.textStyleBold(
-                                      fontSize: 18.0, color: black),
-                                ),
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        final Uri cellphone = Uri.parse(
-                                            "tel:${paseador['cellphone']}");
-                                        launchUrl(cellphone);
-                                      },
-                                      icon: const Icon(
-                                        Icons.phone,
-                                        color: redColor,
-                                        size: 35.0,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 10.0,
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        final Uri whatsapp = Uri.parse(
-                                            "https://wa.me/${paseador['cellphone'].toString().replaceAll(RegExp(r'[+ -]'), '')}");
-                                        launchUrl(whatsapp,
-                                            mode:
-                                                LaunchMode.externalApplication);
-                                      },
-                                      icon: const Icon(
-                                        FontAwesome.whatsapp,
-                                        color: redColor,
-                                        size: 35.0,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                            Text(
+                              "Método de pago",
+                              style: Font.textStyle,
                             ),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text(
-                                  "${paseador['walks']}\nPaseos",
-                                  style: Font.textStyle,
-                                  textAlign: TextAlign.center,
-                                ),
-                                Text(
-                                  "${paseador['rating']}\nCalificación",
-                                  style: Font.textStyle,
-                                  textAlign: TextAlign.center,
-                                ),
-                                Text(
-                                  calcularAntiguedadCuenta(
-                                      paseador['registration_date']),
-                                  style: Font.textStyle,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
+                            Text(
+                              "Monto",
+                              style: Font.textStyle,
                             ),
                           ],
                         ),
-                      ),
-              ),
-              // ButtonFormWidget(onPressed: () {}, text: 'Cancelar servicio')
+                        Divider(
+                          color: greyColor,
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Efectivo",
+                              style: Font.textStyle,
+                            ),
+                            Text(
+                              "\$${widget.service['price']}.00",
+                              style: Font.numberStyle(
+                                  fontSize: 12, fontWeight: FontWeight.w700),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )),
             ],
           )),
         ),
+        floatingActionButton: widget.service['status'] == 'Pendiente' ||
+                widget.service['status'] == 'Por Pagar'
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: ButtonFormWidget(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    text: widget.service['status'] == 'Por Pagar'
+                        ? 'Pagar' //deberia mandar a una vista del monto a pagar
+                        : 'Cancelar servicio'), //elimina el request
+              )
+            : const SizedBox(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
   }
@@ -311,8 +260,125 @@ class _ServiceInProgressPageState extends State<ServiceInProgressPage> {
     //la hora es insignificante es solo para el formateo
     DateTime dateTime = DateTime.parse("2023-01-01 $dateTimeString");
     String formattedTime = DateFormat.Hm().format(dateTime);
-
     return formattedTime;
+  }
+
+  ElevatedButton carerCard(
+      BuildContext context, Map<String, dynamic> paseador) {
+    return ElevatedButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content:
+                  const Text('Esta opción aún se encuentra en desarrollo.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Aceptar'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(inputGrey),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+      ),
+      child: widget.service['status'] == 'Pendiente'
+          ? const Center(
+              heightFactor: 6.0,
+              child: Text(
+                'Estamos buscando al cuidador ideal para ti',
+                style: Font.textStyle,
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        paseador['name'],
+                        style: Font.textStyleBold(fontSize: 18.0, color: black),
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              final Uri cellphone =
+                                  Uri.parse("tel:${paseador['cellphone']}");
+                              launchUrl(cellphone);
+                            },
+                            icon: const Icon(
+                              Icons.phone,
+                              color: redColor,
+                              size: 35.0,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10.0,
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              final Uri whatsapp = Uri.parse(
+                                  "https://wa.me/${paseador['cellphone'].toString().replaceAll(RegExp(r'[+ -]'), '')}");
+                              launchUrl(whatsapp,
+                                  mode: LaunchMode.externalApplication);
+                            },
+                            icon: const Icon(
+                              FontAwesome.whatsapp,
+                              color: redColor,
+                              size: 35.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  const Divider(
+                    color: greyColorStatusBar,
+                    height: 1,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        "${paseador['walks']}\nPaseos",
+                        style: Font.textStyle,
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        "${paseador['rating']}\nCalificación",
+                        style: Font.textStyle,
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        calcularAntiguedadCuenta(paseador['registration_date']),
+                        style: Font.textStyle,
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+    );
   }
 
   String calcularAntiguedadCuenta(String fechaRegistro) {

@@ -7,6 +7,7 @@ import 'package:buddies_app/features/request/presentation/map/select_location_pa
 import 'package:buddies_app/features/request/presentation/service_in_progress_page.dart';
 import 'package:buddies_app/features/request/presentation/services_list_page.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'features/owner/presentation/account_form_page.dart';
 import 'features/pets/domain/entities/pet/pet_entity.dart';
@@ -43,11 +44,15 @@ class OnGenerateRoute {
         }
       case Pages.addPetToServicesPage:
         {
-          return routeBuilder(const AddPetToServicesPage());
+          return routeBuilder(AddPetToServicesPage(
+            markedPets: args as List<Map<String, String>>,
+          ));
         }
       case Pages.selectLocationPage:
         {
-          return routeBuilder(const SelectLocationPage());
+          return routeBuilder(SelectLocationPage(
+            initialLocation: args as LatLng,
+          ));
         }
       case Pages.serviceInProgressPage:
         {

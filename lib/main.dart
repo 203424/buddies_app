@@ -1,6 +1,6 @@
 import 'package:buddies_app/const.dart';
 import 'package:buddies_app/features/owner/presentation/login_page.dart';
-import 'package:buddies_app/features/owner/presentation/main_page.dart';
+// import 'package:buddies_app/features/owner/presentation/main_page.dart';
 import 'package:buddies_app/features/request/presentation/request/request_bloc.dart';
 import 'package:buddies_app/usecase_config.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +9,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:buddies_app/features/pets/presentation/pet/pet_bloc.dart';
+
 import 'on_generate_route.dart';
 
 void main() {

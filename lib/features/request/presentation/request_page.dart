@@ -31,6 +31,106 @@ class _RequestPageState extends State<RequestPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Map<String, String>> servicesInProgress = [
+      //lista de prueba
+      {
+        'name': 'Kira',
+        'time': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': '34',
+        'status': 'Por terminar',
+      },
+      {
+        'name': 'Eevee',
+        'time': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': '34',
+        'status': 'Activo',
+      },
+      {
+        'name': 'Manguito',
+        'time': '2021-07-04 12:34:56',
+        'service': 'Hospedaje - 3d',
+        'price': '250',
+        'status': 'Pendiente',
+      },
+      {
+        'name': 'Kira',
+        'time': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': '34',
+        'status': 'Por Pagar',
+      },
+    ];
+    List<Map<String, dynamic>> history = [
+      //lista de prueba
+      {
+        'name': 'Kira',
+        'date': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': 34,
+      },
+      {
+        'name': 'Kira',
+        'date': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': 34,
+      },
+      {
+        'name': 'Kira',
+        'date': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': 34,
+      },
+      {
+        'name': 'Kira',
+        'date': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': 34,
+      },
+      {
+        'name': 'Kira',
+        'date': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': 34,
+      },
+      {
+        'name': 'Kira',
+        'date': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': 34,
+      },
+      {
+        'name': 'Kira',
+        'date': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': 34,
+      },
+      {
+        'name': 'Kira',
+        'date': '2021-07-04 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': 34,
+      },
+      {
+        'name': 'Eevee',
+        'date': '2021-07-05 12:34:56',
+        'service': 'Paseo individual - 1h',
+        'price': 34,
+      },
+      {
+        'name': 'Manguito',
+        'date': '2021-07-06 12:34:56',
+        'service': 'Hospedaje - 3d',
+        'price': 250,
+      },
+      {
+        'name': 'Manguito',
+        'date': '2021-07-06 12:34:56',
+        'service': 'Hospedaje - 3d',
+        'price': 250,
+      },
+    ];
     return SafeArea(
       child: Scaffold(
         backgroundColor: white,

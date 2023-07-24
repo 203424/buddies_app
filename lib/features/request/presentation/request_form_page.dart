@@ -6,7 +6,8 @@ import 'package:buddies_app/features/request/presentation/widgets/simple_pet_car
 import 'package:buddies_app/widgets/button_form_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 class RequestFormPage extends StatefulWidget {
   final String title;
@@ -17,30 +18,51 @@ class RequestFormPage extends StatefulWidget {
 }
 
 class _RequestFormPageState extends State<RequestFormPage> {
+  late List<Map<String, String>> selectedPets;
   TimeOfDay _selectedTime = TimeOfDay.now();
   bool _isValidTime = true;
   late DateTime selectedDate;
-  String selectedLocation = '';
   int _paymentMethod = 0;
-  Position? myPosition;
-
-  Future<Position> determinePosition() async {
-    LocationPermission permission;
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('error');
-      }
-    }
-    return await Geolocator.getCurrentPosition();
-  }
+  Location location = Location();
+  LocationData? currentLocation;
+  late LatLng selectedLocation;
 
   @override
   void initState() {
     super.initState();
+    _getLocation();
+    selectedPets = [];
+    selectedLocation = const LatLng(0, 0);
     selectedDate = DateTime.now();
     _isValidTime = _isTimeWithinRange(_selectedTime);
+  }
+
+  Future<void> _getLocation() async {
+    try {
+      var serviceEnabled = await location.serviceEnabled();
+      if (!serviceEnabled) {
+        serviceEnabled = await location.requestService();
+        if (!serviceEnabled) {
+          return;
+        }
+      }
+
+      var permissionGranted = await location.hasPermission();
+      if (permissionGranted == PermissionStatus.denied) {
+        permissionGranted = await location.requestPermission();
+        if (permissionGranted != PermissionStatus.granted) {
+          return;
+        }
+      }
+
+      await location.getLocation().then((currentLocationData) => setState(() {
+            currentLocation = currentLocationData;
+            selectedLocation = LatLng(currentLocationData.latitude ?? 0,
+                currentLocationData.longitude ?? 0);
+          }));
+    } catch (e) {
+      print("Error al obtener la ubicación: $e");
+    }
   }
 
   bool _isTimeWithinRange(TimeOfDay time) {
@@ -123,24 +145,6 @@ class _RequestFormPageState extends State<RequestFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    var pet;
-    List<Map<String, String>> pets = [
-      //lista de prueba
-      {
-        'name': '1Kira',
-        'birth': '2021-01-04 12:34:56',
-        'type': 'Perro',
-        'breed': 'Pastor',
-        'size': 'Mediana',
-      },
-      {
-        'name': '2Eevee',
-        'birth': '2019-07-04 12:34:56',
-        'type': 'Perro',
-        'breed': 'Salchicha',
-        'size': 'Pequeño',
-      },
-    ];
     return SafeArea(
       child: Scaffold(
         backgroundColor: white,
@@ -150,13 +154,12 @@ class _RequestFormPageState extends State<RequestFormPage> {
           shadowColor: const Color.fromARGB(0, 214, 58, 58),
           iconTheme: const IconThemeData(color: black),
         ),
-        body: buildBodyContent(pets),
+        body: buildBodyContent(),
       ),
     );
-
   }
-  Widget buildBodyContent(pets) {
-    var pet;
+
+  Widget buildBodyContent() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: CustomScrollView(
@@ -166,50 +169,63 @@ class _RequestFormPageState extends State<RequestFormPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('Mascota', style: Font.titleBoldStyle),
-                const Text('Puedes agregar como máximo 2 mascotas', style: Font.textStyle),
-                const SizedBox(height: 10.0),
+                const Text('Puedes agregar como máximo 2 mascotas',
+                    style: Font.textStyle),
+                const SizedBox(
+                  height: 10.0,
+                ),
                 GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, Pages.addPetToServicesPage);
+                  onTap: () async {
+                    final receivedPets = await Navigator.pushNamed(
+                        context, Pages.addPetToServicesPage,
+                        arguments: selectedPets);
+
+                    setState(() {
+                      receivedPets != null
+                          ? selectedPets =
+                              receivedPets as List<Map<String, String>>
+                          : selectedPets = [];
+                    });
                   },
                   child: const Column(
                     children: [
                       CircleAvatar(
-                        backgroundColor: greyColor,
-                        radius: 30,
-                        child: Icon(
-                          Icons.add,
-                          color: white,
-                        ),
-                      ),
+                          backgroundColor: greyColor,
+                          radius: 30,
+                          child: Icon(
+                            Icons.add,
+                            color: white,
+                          )),
                       Text(
                         'Agregar',
                         textAlign: TextAlign.center,
-                      ),
+                      )
                     ],
                   ),
-                ),
+                )
               ],
             ),
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                pet = pets[index];
+              (context, index) {
+                final dynamic pet = selectedPets[index];
                 return SimplePetCard(
-                  name: pet['name'],
-                  type: pet['type'],
-                  breed: pet['breed'],
-                  size: pet['size'],
-                );
+                    name: pet['name'],
+                    type: pet['type'],
+                    breed: pet['breed'],
+                    size: pet['size']);
               },
-              childCount: 2,
+              childCount: selectedPets.length,
             ),
           ),
           const SliverToBoxAdapter(
-            child: Text(
-              'Servicio',
-              style: Font.titleBoldStyle,
+            child: Padding(
+              padding: EdgeInsets.only(top: 10.0),
+              child: Text(
+                'Servicio',
+                style: Font.titleBoldStyle,
+              ),
             ),
           ),
           SliverList(
@@ -227,7 +243,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Fecha'),
-                          Text(selectedDate.toString().substring(0, 10)),
+                          Text(selectedDate.toString().substring(0, 10))
                         ],
                       ),
                       children: [
@@ -276,8 +292,13 @@ class _RequestFormPageState extends State<RequestFormPage> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     tileColor: inputGrey,
-                    onTap: () {
-                      Navigator.pushNamed(context, Pages.selectLocationPage);
+                    onTap: () async {
+                      final receivedLocation = await Navigator.pushNamed(
+                          context, Pages.selectLocationPage,
+                          arguments: selectedLocation);
+                      setState(() {
+                        selectedLocation = receivedLocation as LatLng;
+                      });
                     },
                     leading: const Icon(Icons.location_on_outlined),
                     trailing: const Icon(Icons.keyboard_arrow_down),
@@ -286,8 +307,8 @@ class _RequestFormPageState extends State<RequestFormPage> {
                       children: [
                         const Text('Ubicación'),
                         Text(
-                          '(${myPosition?.latitude.toStringAsFixed(2)}, ${myPosition?.longitude.toStringAsFixed(2)})',
-                        ),
+                          '(${selectedLocation.latitude.toStringAsFixed(2)}, ${selectedLocation.longitude.toStringAsFixed(2)})',
+                        )
                       ],
                     ),
                   ),
@@ -329,19 +350,18 @@ class _RequestFormPageState extends State<RequestFormPage> {
               child: ButtonFormWidget(
                 onPressed: () {
                   final request = RequestEntity(
-                  type: "Paseo",
-                   start_date: "2021-01-01T00:00:00.000Z",
-                   end_date: "2021-01-01T00:00:00.000Z",
-                   hour:  "10:00",
-                   cost:100,
-                   status:'Pendiente',
-                   pet_id:[251],
-                   user_id:1,
-                   caretaker_id:1,
+                    type: "Paseo",
+                    start_date: "2021-01-01T00:00:00.000Z",
+                    end_date: "2021-01-01T00:00:00.000Z",
+                    hour: "10:00",
+                    cost: 100,
+                    status: 'Pendiente',
+                    pet_id: [251],
+                    user_id: 1,
+                    caretaker_id: 1,
                   );
                   context.read<RequestBloc>().add(CreateRequestEvent(request));
-                  Navigator.pop(
-                      context); // Regresar a la página anterior (PetsPage)
+                  Navigator.pop(context);
                 },
                 text: 'Enviar',
               ),
@@ -351,6 +371,4 @@ class _RequestFormPageState extends State<RequestFormPage> {
       ),
     );
   }
-
-
 }

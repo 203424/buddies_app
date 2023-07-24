@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:buddies_app/features/owner/domain/entities/owner_entity.dart';
 
 abstract class OwnerRepository{
