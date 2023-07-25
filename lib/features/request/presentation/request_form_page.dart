@@ -363,15 +363,19 @@ class _RequestFormPageState extends State<RequestFormPage> {
                                 end_date: "2021-01-01T00:00:00.000Z",
                                 hour: "10:00",
                                 cost: 100,
+                                duration:"1:00",
                                 status: 'Pendiente',
-                                pet_id: [251],
+                                location: [
+                                  -77.0369,
+                                  38.9072
+                                ],
+                                pet_id: [1,3],
                                 user_id: 1,
                                 caretaker_id: 1,
                               );
                               context
                                   .read<RequestBloc>()
                                   .add(CreateRequestEvent(request));
-                              Navigator.pop(context);
                               Navigator.pop(context);
                             },
                             text: 'Enviar'),

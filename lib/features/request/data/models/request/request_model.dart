@@ -7,6 +7,8 @@ class RequestModel extends RequestEntity {
     String? start_date,
     String? end_date,
     String? hour,
+    String? duration,
+    List<double>? location,
     int? cost,
     String? status,
     List<int>? pet_id,
@@ -18,6 +20,8 @@ class RequestModel extends RequestEntity {
             start_date: start_date,
             end_date: end_date,
             hour: hour,
+            duration: duration,
+            location: location,
             cost: cost,
             status: status,
             pet_id: pet_id,
@@ -31,6 +35,10 @@ class RequestModel extends RequestEntity {
       start_date: json['start_date'],
       end_date: json['end_date'],
       hour: json['hour'],
+      duration: json['duration'],
+      location: json['location'] != null
+          ? List<double>.from(json['location']) // Convierte el valor a List<int>? si no es nulo
+          : null,
       cost: json['cost'],
       status: json['status'],
       pet_id: json['pet_id'] != null
