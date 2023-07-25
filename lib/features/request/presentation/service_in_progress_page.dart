@@ -4,7 +4,7 @@ import 'package:buddies_app/const.dart';
 import 'package:buddies_app/widgets/button_form_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart' as googleMaps;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:location/location.dart';
@@ -18,14 +18,12 @@ class ServiceInProgressPage extends StatefulWidget {
 }
 
 class _ServiceInProgressPageState extends State<ServiceInProgressPage> {
-  final Completer<googleMaps.GoogleMapController> _controller = Completer();
+  final Completer<GoogleMapController> _controller = Completer();
 
-  static const googleMaps.LatLng sourceLocation =
-      googleMaps.LatLng(16.703837, -93.1711162);
-  static const googleMaps.LatLng destination =
-      googleMaps.LatLng(16.704463, -93.171241);
+  static const LatLng sourceLocation = LatLng(16.703837, -93.1711162);
+  static const LatLng destination = LatLng(16.704463, -93.171241);
 
-  List<googleMaps.LatLng> polylineCordinates = [];
+  List<LatLng> polylineCordinates = [];
   LocationData? currentLocation;
 
   void getPolyPoints() async {
@@ -33,15 +31,15 @@ class _ServiceInProgressPageState extends State<ServiceInProgressPage> {
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       apiKey,
-      PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
-      PointLatLng(destination.latitude, destination.longitude),
+      PointLatLng(sourceLocation.latitude, sourceLocation.longitude), //inicio (dueño)
+      PointLatLng(destination.latitude, destination.longitude), //fin (cuidador)
       travelMode: TravelMode.driving,
     );
 
     if (result.points.isNotEmpty) {
       for (var point in result.points) {
         polylineCordinates.add(
-          googleMaps.LatLng(point.latitude, point.longitude),
+          LatLng(point.latitude, point.longitude),
         );
       }
     }
@@ -53,10 +51,6 @@ class _ServiceInProgressPageState extends State<ServiceInProgressPage> {
     Location location = Location();
 
     location.getLocation().then((location) => {currentLocation = location});
-
-    location.onLocationChanged.listen((newLoc) {
-      currentLocation = newLoc;
-    });
   }
 
   @override
@@ -150,23 +144,15 @@ class _ServiceInProgressPageState extends State<ServiceInProgressPage> {
                       )
                     : Container(
                         height: MediaQuery.of(context).size.width - 20,
-                        child: googleMaps.GoogleMap(
+                        child: GoogleMap(
                           myLocationEnabled: true,
-                          initialCameraPosition: googleMaps.CameraPosition(
-                              target: googleMaps.LatLng(sourceLocation.latitude,
+                          initialCameraPosition: CameraPosition(
+                              target: LatLng(sourceLocation.latitude,
                                   sourceLocation.longitude),
                               zoom: 15),
-                          polylines: {
-                            googleMaps.Polyline(
-                              polylineId: const googleMaps.PolylineId('route'),
-                              points: polylineCordinates,
-                              color: redColor,
-                              width: 6,
-                            )
-                          },
                           markers: {
-                            const googleMaps.Marker(
-                                markerId: googleMaps.MarkerId('destination'),
+                            const Marker(
+                                markerId: MarkerId('destination'),
                                 position: destination)
                           },
                           onMapCreated: (mapController) {
