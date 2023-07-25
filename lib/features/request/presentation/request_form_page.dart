@@ -21,6 +21,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
   late List<Map<String, String>> selectedPets;
   TimeOfDay _selectedTime = TimeOfDay.now();
   bool _isValidTime = true;
+  bool _isValidLocation = false;
   late DateTime selectedDate;
   int _paymentMethod = 0;
   Location location = Location();
@@ -60,6 +61,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
             selectedLocation = LatLng(currentLocationData.latitude ?? 0,
                 currentLocationData.longitude ?? 0);
           }));
+      _isValidLocation = true;
     } catch (e) {
       print("Error al obtener la ubicación: $e");
     }
@@ -154,220 +156,231 @@ class _RequestFormPageState extends State<RequestFormPage> {
           shadowColor: const Color.fromARGB(0, 214, 58, 58),
           iconTheme: const IconThemeData(color: black),
         ),
-        body: buildBodyContent(),
-      ),
-    );
-  }
-
-  Widget buildBodyContent() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Mascota', style: Font.titleBoldStyle),
-                const Text('Puedes agregar como máximo 2 mascotas',
-                    style: Font.textStyle),
-                const SizedBox(
-                  height: 10.0,
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    final receivedPets = await Navigator.pushNamed(
-                        context, Pages.addPetToServicesPage,
-                        arguments: selectedPets);
-
-                    setState(() {
-                      receivedPets != null
-                          ? selectedPets =
-                              receivedPets as List<Map<String, String>>
-                          : selectedPets = [];
-                    });
-                  },
-                  child: const Column(
-                    children: [
-                      CircleAvatar(
-                          backgroundColor: greyColor,
-                          radius: 30,
-                          child: Icon(
-                            Icons.add,
-                            color: white,
-                          )),
-                      Text(
-                        'Agregar',
-                        textAlign: TextAlign.center,
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final dynamic pet = selectedPets[index];
-                return SimplePetCard(
-                    name: pet['name'],
-                    type: pet['type'],
-                    breed: pet['breed'],
-                    size: pet['size']);
-              },
-              childCount: selectedPets.length,
-            ),
-          ),
-          const SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.only(top: 10.0),
-              child: Text(
-                'Servicio',
-                style: Font.titleBoldStyle,
-              ),
-            ),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: ExpansionTile(
-                      backgroundColor: inputGrey,
-                      collapsedBackgroundColor: inputGrey,
-                      leading: const Icon(Icons.calendar_today_outlined),
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: !_isValidLocation
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Fecha'),
-                          Text(selectedDate.toString().substring(0, 10))
+                          const Text('Mascota', style: Font.titleBoldStyle),
+                          const Text('Puedes agregar como máximo 2 mascotas',
+                              style: Font.textStyle),
+                          const SizedBox(
+                            height: 10.0,
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              final receivedPets = await Navigator.pushNamed(
+                                  context, Pages.addPetToServicesPage,
+                                  arguments: selectedPets);
+
+                              setState(() {
+                                receivedPets != null
+                                    ? selectedPets = receivedPets
+                                        as List<Map<String, String>>
+                                    : selectedPets = [];
+                              });
+                            },
+                            child: const Column(
+                              children: [
+                                CircleAvatar(
+                                    backgroundColor: greyColor,
+                                    radius: 30,
+                                    child: Icon(
+                                      Icons.add,
+                                      color: white,
+                                    )),
+                                Text(
+                                  'Agregar',
+                                  textAlign: TextAlign.center,
+                                )
+                              ],
+                            ),
+                          )
                         ],
                       ),
-                      children: [
-                        ListTile(
-                          title: DatePickerWidget(
-                            selectedDate: selectedDate,
-                            onDateSelected: (date) {
+                    ),
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final dynamic pet = selectedPets[index];
+                          return SimplePetCard(
+                              name: pet['name'],
+                              type: pet['type'],
+                              breed: pet['breed'],
+                              size: pet['size']);
+                        },
+                        childCount: selectedPets.length,
+                      ),
+                    ),
+                    const SliverToBoxAdapter(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          'Servicio',
+                          style: Font.titleBoldStyle,
+                        ),
+                      ),
+                    ),
+                    SliverList(
+                      delegate: SliverChildListDelegate(
+                        [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0),
+                              child: ExpansionTile(
+                                backgroundColor: inputGrey,
+                                collapsedBackgroundColor: inputGrey,
+                                leading:
+                                    const Icon(Icons.calendar_today_outlined),
+                                title: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('Fecha'),
+                                    Text(selectedDate
+                                        .toString()
+                                        .substring(0, 10))
+                                  ],
+                                ),
+                                children: [
+                                  ListTile(
+                                    title: DatePickerWidget(
+                                      selectedDate: selectedDate,
+                                      onDateSelected: (date) {
+                                        setState(() {
+                                          selectedDate = date;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5.0),
+                            child: ListTile(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              tileColor: inputGrey,
+                              onTap: () {
+                                _selectTime(context);
+                              },
+                              leading: const Icon(Icons.access_time),
+                              trailing: const Icon(Icons.keyboard_arrow_down),
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text('Hora'),
+                                  if (_isValidTime)
+                                    Text(_selectedTime.format(context))
+                                  else
+                                    const Text('-- : --'),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5.0),
+                            child: ListTile(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              tileColor: inputGrey,
+                              onTap: () async {
+                                final receivedLocation =
+                                    await Navigator.pushNamed(
+                                        context, Pages.selectLocationPage,
+                                        arguments: selectedLocation);
+                                setState(() {
+                                  selectedLocation = receivedLocation != null
+                                      ? receivedLocation as LatLng
+                                      : selectedLocation;
+                                });
+                              },
+                              leading: const Icon(Icons.location_on_outlined),
+                              trailing: const Icon(Icons.keyboard_arrow_down),
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text('Ubicación'),
+                                  Text(
+                                    '(${selectedLocation.latitude.toStringAsFixed(2)}, ${selectedLocation.longitude.toStringAsFixed(2)})',
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Pago', style: Font.titleBoldStyle),
+                          RadioListTile(
+                            title: const Text('Efectivo'),
+                            value: 0,
+                            groupValue: _paymentMethod,
+                            onChanged: (value) {
                               setState(() {
-                                selectedDate = date;
+                                _paymentMethod = value!;
                               });
                             },
                           ),
-                        ),
-                      ],
+                          RadioListTile(
+                            title: const Text('Tarjeta'),
+                            value: 1,
+                            groupValue: _paymentMethod,
+                            onChanged: (value) {
+                              setState(() {
+                                _paymentMethod = value!;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: ListTile(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: ButtonFormWidget(
+                            onPressed: () {
+                              final request = RequestEntity(
+                                type: "Paseo",
+                                start_date: "2021-01-01T00:00:00.000Z",
+                                end_date: "2021-01-01T00:00:00.000Z",
+                                hour: "10:00",
+                                cost: 100,
+                                status: 'Pendiente',
+                                pet_id: [251],
+                                user_id: 1,
+                                caretaker_id: 1,
+                              );
+                              context
+                                  .read<RequestBloc>()
+                                  .add(CreateRequestEvent(request));
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                            text: 'Enviar'),
+                      ),
                     ),
-                    tileColor: inputGrey,
-                    onTap: () {
-                      _selectTime(context);
-                    },
-                    leading: const Icon(Icons.access_time),
-                    trailing: const Icon(Icons.keyboard_arrow_down),
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Hora'),
-                        if (_isValidTime)
-                          Text(_selectedTime.format(context))
-                        else
-                          const Text('-- : --'),
-                      ],
-                    ),
-                  ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: ListTile(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    tileColor: inputGrey,
-                    onTap: () async {
-                      final receivedLocation = await Navigator.pushNamed(
-                          context, Pages.selectLocationPage,
-                          arguments: selectedLocation);
-                      setState(() {
-                        selectedLocation = receivedLocation as LatLng;
-                      });
-                    },
-                    leading: const Icon(Icons.location_on_outlined),
-                    trailing: const Icon(Icons.keyboard_arrow_down),
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Ubicación'),
-                        Text(
-                          '(${selectedLocation.latitude.toStringAsFixed(2)}, ${selectedLocation.longitude.toStringAsFixed(2)})',
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Pago', style: Font.titleBoldStyle),
-                RadioListTile(
-                  title: const Text('Efectivo'),
-                  value: 0,
-                  groupValue: _paymentMethod,
-                  onChanged: (value) {
-                    setState(() {
-                      _paymentMethod = value!;
-                    });
-                  },
-                ),
-                RadioListTile(
-                  title: const Text('Tarjeta'),
-                  value: 1,
-                  groupValue: _paymentMethod,
-                  onChanged: (value) {
-                    setState(() {
-                      _paymentMethod = value!;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5.0),
-              child: ButtonFormWidget(
-                onPressed: () {
-                  final request = RequestEntity(
-                    type: "Paseo",
-                    start_date: "2021-01-01T00:00:00.000Z",
-                    end_date: "2021-01-01T00:00:00.000Z",
-                    hour: "10:00",
-                    cost: 100,
-                    status: 'Pendiente',
-                    pet_id: [251],
-                    user_id: 1,
-                    caretaker_id: 1,
-                  );
-                  context.read<RequestBloc>().add(CreateRequestEvent(request));
-                  Navigator.pop(context);
-                },
-                text: 'Enviar',
               ),
-            ),
-          ),
-        ],
       ),
     );
   }

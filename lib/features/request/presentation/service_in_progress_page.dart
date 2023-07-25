@@ -21,10 +21,8 @@ class ServiceInProgressPage extends StatefulWidget {
 class _ServiceInProgressPageState extends State<ServiceInProgressPage> {
   final Completer<GoogleMapController> _controller = Completer();
 
-  static const LatLng sourceLocation =
-      LatLng(16.703837, -93.1711162);
-  static const LatLng destination =
-      LatLng(16.704463, -93.171241);
+  static const LatLng sourceLocation = LatLng(16.703837, -93.1711162);
+  static const LatLng destination = LatLng(16.704463, -93.171241);
 
   List<LatLng> polylineCordinates = [];
   LocationData? currentLocation;
@@ -33,9 +31,10 @@ class _ServiceInProgressPageState extends State<ServiceInProgressPage> {
     PolylinePoints polylinePoints = PolylinePoints();
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      apiKey,
-      PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
-      PointLatLng(destination.latitude, destination.longitude),
+      Config.apiKey,
+      PointLatLng(
+          sourceLocation.latitude, sourceLocation.longitude), //inicio (dueño)
+      PointLatLng(destination.latitude, destination.longitude), //fin (cuidador)
       travelMode: TravelMode.driving,
     );
 
@@ -53,7 +52,7 @@ class _ServiceInProgressPageState extends State<ServiceInProgressPage> {
   void getCurrentLocation() {
     Location location = Location();
 
-    location.getLocation().then((location) => currentLocation = location);
+    location.getLocation().then((location) => {currentLocation = location});
   }
 
   @override
@@ -153,14 +152,6 @@ class _ServiceInProgressPageState extends State<ServiceInProgressPage> {
                               target: LatLng(sourceLocation.latitude,
                                   sourceLocation.longitude),
                               zoom: 15),
-                          polylines: {
-                            Polyline(
-                              polylineId: const PolylineId('route'),
-                              points: polylineCordinates,
-                              color: redColor,
-                              width: 6,
-                            )
-                          },
                           markers: {
                             const Marker(
                                 markerId: MarkerId('destination'),
