@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../pets/domain/entities/pet/pet_entity.dart';
 
 class AddPetToServicesPage extends StatefulWidget {
-  final List<Map<String, String>> markedPets;
+  final List<Map<String, dynamic>> markedPets;
   const AddPetToServicesPage({super.key, required this.markedPets});
 
   @override
@@ -29,7 +29,7 @@ List<PetEntity> getAllPets(BuildContext context) {
 
 class _AddPetToServicesPageState extends State<AddPetToServicesPage> {
   List<bool> selectedPets = [];
-  List<Map<String, String>> pets = [];
+  List<Map<String, dynamic>> pets = [];
   int maxSelectedPets = 2;
 
   void markSelectedPets() {
@@ -64,6 +64,7 @@ class _AddPetToServicesPageState extends State<AddPetToServicesPage> {
       // Clasificar las mascotas según su tamaño
       for (var pet in petsList) {
         pets.add({
+          'id': pet.id ?? 0,
           'name': pet.name ?? '',
           'birth': pet.birthday ?? '',
           'type': pet.type ?? '',
@@ -104,7 +105,7 @@ class _AddPetToServicesPageState extends State<AddPetToServicesPage> {
             padding: const EdgeInsets.only(right: 10.0),
             child: GestureDetector(
               onTap: () {
-                List<Map<String, String>> selected = [];
+                List<Map<String, dynamic>> selected = [];
                 for (int i = 0; i < pets.length; i++) {
                   if (selectedPets[i]) {
                     selected.add(pets[i]);

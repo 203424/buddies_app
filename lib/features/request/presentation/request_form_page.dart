@@ -18,7 +18,7 @@ class RequestFormPage extends StatefulWidget {
 }
 
 class _RequestFormPageState extends State<RequestFormPage> {
-  late List<Map<String, String>> selectedPets;
+  late List<Map<String, dynamic>> selectedPets;
   TimeOfDay _selectedTime = TimeOfDay.now();
   bool _isValidTime = true;
   bool _isValidLocation = false;
@@ -182,7 +182,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
 
                               setState(() {
                                 selectedPets = receivedPets != null
-                                    ? receivedPets as List<Map<String, String>>
+                                    ? receivedPets as List<Map<String, dynamic>>
                                     : selectedPets;
                               });
                             },
@@ -357,6 +357,8 @@ class _RequestFormPageState extends State<RequestFormPage> {
                         padding: const EdgeInsets.symmetric(vertical: 5.0),
                         child: ButtonFormWidget(
                             onPressed: () {
+                              List<int> selectedPetIds = selectedPets.map((pet) => pet['id'] as int).toList();
+
                               final request = RequestEntity(
                                 type: widget.title,
                                 start_date: "2021-01-01T00:00:00.000Z",
@@ -366,7 +368,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
                                 duration:"1:00",
                                 status: 'Pendiente',
                                 location: selectedLocation,
-                                pet_id: [1,3],
+                                pet_id: selectedPetIds,
                                 user_id: 1,
                                 caretaker_id: 1,
 

@@ -45,7 +45,7 @@ class OnGenerateRoute {
       case Pages.addPetToServicesPage:
         {
           return routeBuilder(AddPetToServicesPage(
-            markedPets: args as List<Map<String, String>>,
+            markedPets: args as List<Map<String, dynamic>>,
           ));
         }
       case Pages.selectLocationPage:
