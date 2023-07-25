@@ -1,4 +1,4 @@
-package com.example.buddies_app
+package com.sietesol.buddies_app
 
 import io.flutter.embedding.android.FlutterActivity
 
