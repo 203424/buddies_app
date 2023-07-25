@@ -181,10 +181,9 @@ class _RequestFormPageState extends State<RequestFormPage> {
                                   arguments: selectedPets);
 
                               setState(() {
-                                receivedPets != null
-                                    ? selectedPets = receivedPets
-                                        as List<Map<String, String>>
-                                    : selectedPets = [];
+                                selectedPets = receivedPets != null
+                                    ? receivedPets as List<Map<String, String>>
+                                    : selectedPets;
                               });
                             },
                             child: const Column(
