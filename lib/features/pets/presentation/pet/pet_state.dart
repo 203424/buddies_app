@@ -31,14 +31,14 @@ class PetDeletedState extends PetState {
   PetDeletedState(this.id);
 }
 class PetCreatedState extends PetState {
-  final PetEntity pet;
-  PetCreatedState(this.pet);
+  final List<PetEntity> pets;
+  PetCreatedState(this.pets);
 
 }
 class PetUpdatedState extends PetState {
-  final PetEntity pet;
-  final int petId;
-  PetUpdatedState(this.pet, this.petId);
+  final List<PetEntity> pets;
+  final List<int>petIds;
+  PetUpdatedState(this.pets, this.petIds);
 
 
 }

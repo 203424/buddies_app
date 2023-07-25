@@ -101,9 +101,15 @@ class _AddPetPageState extends State<AddPetPage> {
                   SizedBox(
                     height: 10.0,
                   ),
-                  InputFormWidget(
-                    title: 'Tamaño',
-                    controller: _sizeController,
+                  DropdownPickerWidget(
+                      title: 'Tamaño',
+                      value: _sizeController.text,
+                      options: ['Pequeño', 'Mediano', 'Grande'],
+                      onChanged: (newValue) {
+                        setState(() {
+                          _sizeController.text = newValue;
+                        });
+                      }
                   ),
                   BreedPickerWidget(
                     petType: _typeController.text.toLowerCase(),
@@ -146,9 +152,8 @@ class _AddPetPageState extends State<AddPetPage> {
                         description: _descriptionController.text,
                         owner_id: 1,
                       );
-                      print(pet.size);
-                      context.read<PetBloc>().add(CreatePetEvent(pet: pet));
-                      Navigator.pop(
+                      final petsList = [pet];
+                      context.read<PetBloc>().add(CreatePetEvent(pets: petsList));                      Navigator.pop(
                           context); // Regresar a la página anterior (PetsPage)
                     },
                     text: 'Guardar',

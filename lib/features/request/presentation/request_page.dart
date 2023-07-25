@@ -27,110 +27,18 @@ class _RequestPageState extends State<RequestPage> {
     // Disparar el evento para obtener la lista de mascotas
     context.read<RequestBloc>().add(GetAllRequestsEvent());
     context.read<PetBloc>().add(GetPetsEvent());
-  }
 
+  }
+  Timer? _fetchPetsTimer;
+  void _fetchPetsWithDelay() {
+    _fetchPetsTimer = Timer(Duration(seconds: 1), () {
+      context.read<RequestBloc>().add(GetAllRequestsEvent());
+      context.read<PetBloc>().add(GetPetsEvent());
+
+    });
+  }
   @override
   Widget build(BuildContext context) {
-    List<Map<String, String>> servicesInProgress = [
-      //lista de prueba
-      {
-        'name': 'Kira',
-        'time': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': '34',
-        'status': 'Por terminar',
-      },
-      {
-        'name': 'Eevee',
-        'time': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': '34',
-        'status': 'Activo',
-      },
-      {
-        'name': 'Manguito',
-        'time': '2021-07-04 12:34:56',
-        'service': 'Hospedaje - 3d',
-        'price': '250',
-        'status': 'Pendiente',
-      },
-      {
-        'name': 'Kira',
-        'time': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': '34',
-        'status': 'Por Pagar',
-      },
-    ];
-    List<Map<String, dynamic>> history = [
-      //lista de prueba
-      {
-        'name': 'Kira',
-        'date': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': 34,
-      },
-      {
-        'name': 'Kira',
-        'date': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': 34,
-      },
-      {
-        'name': 'Kira',
-        'date': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': 34,
-      },
-      {
-        'name': 'Kira',
-        'date': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': 34,
-      },
-      {
-        'name': 'Kira',
-        'date': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': 34,
-      },
-      {
-        'name': 'Kira',
-        'date': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': 34,
-      },
-      {
-        'name': 'Kira',
-        'date': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': 34,
-      },
-      {
-        'name': 'Kira',
-        'date': '2021-07-04 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': 34,
-      },
-      {
-        'name': 'Eevee',
-        'date': '2021-07-05 12:34:56',
-        'service': 'Paseo individual - 1h',
-        'price': 34,
-      },
-      {
-        'name': 'Manguito',
-        'date': '2021-07-06 12:34:56',
-        'service': 'Hospedaje - 3d',
-        'price': 250,
-      },
-      {
-        'name': 'Manguito',
-        'date': '2021-07-06 12:34:56',
-        'service': 'Hospedaje - 3d',
-        'price': 250,
-      },
-    ];
     return SafeArea(
       child: Scaffold(
         backgroundColor: white,
@@ -142,8 +50,8 @@ class _RequestPageState extends State<RequestPage> {
         ),
         body: BlocListener<RequestBloc, RequestState>(
           listener: (context, state) {
-            if (state is CreateRequestEvent) {
-              context.read<PetBloc>().add(GetPetsEvent());
+            if (state is CreateRequestEvent || state is GetPetsEvent || state is GetAllRequestsEvent || state is GetPetsByIdEvent ) {
+              _fetchPetsWithDelay();
             }
           },
           child: BlocBuilder<RequestBloc, RequestState>(
@@ -176,8 +84,7 @@ class _RequestPageState extends State<RequestPage> {
 
   List<PetEntity> getAllPets(BuildContext context) {
     final petBloc = context.read<PetBloc>();
-    petBloc.add(
-        GetPetsEvent()); // Disparar el evento para obtener todas las mascotas
+    petBloc.add(GetPetsEvent()); // Disparar el evento para obtener todas las mascotas
     final state = petBloc.state;
     if (state is PetLoadedState) {
       return state.pets;
@@ -214,7 +121,6 @@ class _RequestPageState extends State<RequestPage> {
 
   Widget _buildRequestPageWidget(
       BuildContext context, List<RequestEntity> requests) {
-    List<PetEntity> listPets = getAllPets(context);
     List<Map<String, String>> newList = [];
     List<Map<String, dynamic>> finalized = [];
 
@@ -248,7 +154,7 @@ class _RequestPageState extends State<RequestPage> {
       };
 
       newList.add(newObject);
-      if (status == 'FINALIZADO') {
+      if (status == 'Finalizado') {
         finalized.add(finalizedObject);
       }
     }

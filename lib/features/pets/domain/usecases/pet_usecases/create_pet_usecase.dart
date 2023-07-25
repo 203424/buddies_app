@@ -6,7 +6,7 @@ class CreatePetUseCase {
 
   CreatePetUseCase(this.repository);
 
-  Future<PetEntity> execute(PetEntity  pet) async {
-    return await repository.createPet(pet);
+  Future<List<PetEntity>> execute(List<PetEntity> pets) async {
+    return await repository.createPet(pets);
   }
 }

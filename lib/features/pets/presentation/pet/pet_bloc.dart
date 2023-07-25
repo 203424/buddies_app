@@ -52,9 +52,9 @@ class PetBloc extends Bloc<PetEvent, PetState> {
     });
 
     on<CreatePetEvent>((event, emit) async {
-      emit(PetCreatedState(event.pet));
+      emit(PetCreatedState(event.pets));
       try {
-        await createPetUseCase.execute(event.pet);
+        await createPetUseCase.execute(event.pets);
         emit(PetSuccessState("Mascota creada exitosamente"));
       } catch (e) {
         emit(PetErrorState('Error al crear la mascota: $e'));
@@ -74,9 +74,9 @@ class PetBloc extends Bloc<PetEvent, PetState> {
     });
 
     on<UpdatePetEvent>((event, emit) async {
-      emit(PetUpdatedState(event.pet, event.petId));
+      emit(PetUpdatedState(event.pets, event.petIds));
       try {
-        await updatePetUseCase.execute(event.petId, event.pet);
+        await updatePetUseCase.execute(event.petIds, event.pets);
         emit(PetSuccessState("Mascota actualizada exitosamente"));
       } catch (e) {
         emit(PetErrorState(e.toString()));

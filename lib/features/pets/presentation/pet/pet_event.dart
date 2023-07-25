@@ -3,9 +3,9 @@ part of 'pet_bloc.dart';
 abstract class PetEvent {}
 
 class CreatePetEvent extends PetEvent {
-  final PetEntity pet;
+  final List<PetEntity> pets;
 
-  CreatePetEvent({required this.pet});
+  CreatePetEvent({required this.pets});
 }
 
 class DeletePetEvent extends PetEvent {
@@ -23,8 +23,8 @@ class GetPetsByIdEvent extends PetEvent {
 class GetPetsEvent extends PetEvent {}
 
 class UpdatePetEvent extends PetEvent {
-  final int petId;
-  final PetEntity pet;
+  final List<int> petIds;
+  List<PetEntity> pets;
 
-  UpdatePetEvent({required this.petId, required this.pet});
+  UpdatePetEvent({required this.petIds, required this.pets});
 }

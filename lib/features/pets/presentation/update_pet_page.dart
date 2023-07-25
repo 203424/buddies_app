@@ -148,11 +148,17 @@ class _UpdatePetPageState extends State<UpdatePetPage> {
                     description: _descriptionController.text,
                     owner_id: 1,
                   );
-                  // Y luego, disparar el evento para actualizar la mascota en el bloc
-                  context.read<PetBloc>().add(UpdatePetEvent(
-                      pet: updatedPet, petId: updatedPet.id ?? 0));
-                  Navigator.pop(
-                      context); // Regresar a la página anterior (PetsPage)
+                  final updatedPetsList = [updatedPet];
+
+                  // Crear la lista con el ID de la mascota que deseas actualizar
+                  final petIdsList = [widget.petId];
+
+                  // Disparar el evento para actualizar la mascota en el bloc
+                  context.read<PetBloc>().add(UpdatePetEvent(                    pets: updatedPetsList,
+                    petIds: petIdsList,
+                  ));
+
+                  Navigator.pop(context); // Regresar a la página anterior (PetsPage)
                 },
                 text: 'Guardar',
                 height: 50.0,
