@@ -1,4 +1,5 @@
 import 'package:buddies_app/features/request/domain/entities/request/request_entity.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RequestModel extends RequestEntity {
   RequestModel({
@@ -8,7 +9,7 @@ class RequestModel extends RequestEntity {
     String? end_date,
     String? hour,
     String? duration,
-    List<double>? location,
+    LatLng? location,
     int? cost,
     String? status,
     List<int>? pet_id,
@@ -37,9 +38,11 @@ class RequestModel extends RequestEntity {
       hour: json['hour'],
       duration: json['duration'],
       location: json['location'] != null
-          ? List<double>.from(json['location']) // Convierte el valor a List<int>? si no es nulo
-          : null,
-      cost: json['cost'],
+          ? LatLng(
+        json['location'][1], // La latitud debe ser el segundo valor
+        json['location'][0], // La longitud debe ser el primer valor
+      )
+          : null, // Si es nulo, deja location como null      cost: json['cost'],
       status: json['status'],
       pet_id: json['pet_id'] != null
           ? List<int>.from(json['pet_id']) // Convierte el valor a List<int>? si no es nulo

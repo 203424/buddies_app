@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 class RequestEntity {
   final int? id;
   final String? type;
@@ -7,7 +9,7 @@ class RequestEntity {
   final String? end_date;
   final String? hour;
   final String? duration;
-  final List<double>? location; // Agregar el campo para la ubicación
+  final LatLng? location; // Agregar el campo para la ubicación
   final int? cost;
   final String? status;
   final List<int>? pet_id;
