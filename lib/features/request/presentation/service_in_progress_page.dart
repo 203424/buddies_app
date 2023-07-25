@@ -30,8 +30,9 @@ class _ServiceInProgressPageState extends State<ServiceInProgressPage> {
     PolylinePoints polylinePoints = PolylinePoints();
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      apiKey,
-      PointLatLng(sourceLocation.latitude, sourceLocation.longitude), //inicio (dueño)
+      Config.apiKey,
+      PointLatLng(
+          sourceLocation.latitude, sourceLocation.longitude), //inicio (dueño)
       PointLatLng(destination.latitude, destination.longitude), //fin (cuidador)
       travelMode: TravelMode.driving,
     );

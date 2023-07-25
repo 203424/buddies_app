@@ -21,6 +21,11 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def myApiKey = localProperties['api_key_google_maps']
+if (myApiKey == null) {
+    throw new GradleException("Google Maps API Key not found. Define api_key_google_maps in local.properties.")
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -52,6 +57,8 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode 1
         versionName "1.0.0"
+
+        manifestPlaceholders += [apiKey: myApiKey]
     }
 
     buildTypes {

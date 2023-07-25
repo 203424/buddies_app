@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 //Paleta de colores
 const Color white = Color(0xFFECECEC);
@@ -26,7 +27,9 @@ const MaterialColor redColorSwatch = MaterialColor(0xFFFF4D4D, {
   900: Color(0xFF990000),
 });
 
-const String apiKey = "AIzaSyASkPsefLaxzMFcDhw-dEdImunjNSr0Ais";
+class Config {
+  static String apiKey = dotenv.get('API_KEY');
+}
 
 //Estilos (fuentes)
 class Font {
