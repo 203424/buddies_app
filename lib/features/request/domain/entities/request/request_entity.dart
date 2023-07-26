@@ -10,7 +10,7 @@ class RequestEntity {
   final String? hour;
   final String? duration;
   final LatLng? location; // Agregar el campo para la ubicación
-  final int? cost;
+  final double? cost;
   final String? status;
   final List<int>? pet_id;
   final int? user_id;

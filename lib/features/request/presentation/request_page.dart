@@ -21,20 +21,21 @@ class RequestPage extends StatefulWidget {
 }
 
 class _RequestPageState extends State<RequestPage> {
-
   @override
   void initState() {
     super.initState();
     // Disparar el evento para obtener la lista de mascotas
     _fetchPetsWithDelay();
-
   }
+
   @override
   void dispose() {
-super.dispose();
-_fetchPetsWithDelay();
+    super.dispose();
+    // _fetchPetsWithDelay();
   }
+
   Timer? _fetchPetsTimer;
+
   void _fetchPetsWithDelay() {
     _fetchPetsTimer = Timer(Duration(seconds: 1), () {
       context.read<PetBloc>().add(GetPetsEvent());
@@ -55,7 +56,7 @@ _fetchPetsWithDelay();
         ),
         body: BlocListener<RequestBloc, RequestState>(
           listener: (context, state) {
-            if (state is CreateRequestEvent ) {
+            if (state is CreateRequestEvent) {
               _fetchPetsWithDelay();
             }
           },
@@ -88,7 +89,8 @@ _fetchPetsWithDelay();
 
   List<PetEntity> getAllPets(BuildContext context) {
     final petBloc = context.read<PetBloc>();
-    petBloc.add(GetPetsEvent()); // Disparar el evento para obtener todas las mascotas
+    petBloc.add(
+        GetPetsEvent()); // Disparar el evento para obtener todas las mascotas
     final state = petBloc.state;
     if (state is PetLoadedState) {
       return state.pets;
@@ -140,7 +142,7 @@ _fetchPetsWithDelay();
       String time = i < requests.length ? requests[i].hour ?? ' ' : '';
       String status = i < requests.length ? requests[i].status ?? ' ' : '';
       DateTime? date = i < requests.length ? requests[i].start_date : null;
-      int cost = i < requests.length ? requests[i].cost ?? 0 : 0;
+      double cost = i < requests.length ? requests[i].cost ?? 0 : 0;
 
       Map<String, dynamic> newObject = {
         'name': name, //Nombre de la mascota

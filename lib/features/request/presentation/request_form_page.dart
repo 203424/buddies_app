@@ -28,6 +28,8 @@ class _RequestFormPageState extends State<RequestFormPage> {
   Location location = Location();
   LocationData? currentLocation;
   late LatLng selectedLocation;
+  late String selectedService;
+  late double cost = 0.0;
 
   @override
   void initState() {
@@ -37,6 +39,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
     selectedLocation = const LatLng(0, 0);
     selectedDate = DateTime.now();
     _isValidTime = _isTimeWithinRange(_selectedTime);
+    selectedService = "";
   }
 
   Future<void> _getLocation() async {
@@ -154,7 +157,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
         appBar: AppBar(
           backgroundColor: white,
           title: Text('Solicitar ${widget.title}', style: Font.pageTitleStyle),
-          shadowColor: const Color.fromARGB(0, 214, 58, 58),
+          shadowColor: Colors.transparent,
           iconTheme: const IconThemeData(color: black),
         ),
         body: !_isValidLocation
@@ -231,6 +234,56 @@ class _RequestFormPageState extends State<RequestFormPage> {
                     SliverList(
                       delegate: SliverChildListDelegate(
                         [
+                          if (widget.title == "Paseo")
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 5.0),
+                              child: ListTile(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                tileColor: inputGrey,
+                                onTap: () async {
+                                  final receivedService =
+                                      await Navigator.pushNamed(
+                                          context, Pages.selectServicePage);
+                                  setState(() {
+                                    if (receivedService != null) {
+                                      receivedService as Map<String, dynamic>;
+
+                                      selectedService =
+                                          receivedService['service'];
+                                      cost = receivedService['cost'];
+                                    } else {
+                                      if (selectedService != '') {
+                                        selectedService = selectedService;
+                                        cost = cost;
+                                      } else {
+                                        selectedService = "";
+                                        cost = 0.0;
+                                      }
+                                    }
+                                  });
+                                },
+                                leading: BuddiesIcons.serviciosIcon(
+                                    color: greyColor, sizeIcon: 20.0),
+                                trailing: const Icon(Icons.keyboard_arrow_down),
+                                title: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      'Tipo de paseo',
+                                    ),
+                                    Text(
+                                      selectedService == ''
+                                          ? 'Seleccione una opción'
+                                          : selectedService,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5.0),
                             child: ClipRRect(
@@ -244,9 +297,9 @@ class _RequestFormPageState extends State<RequestFormPage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    if(widget.title == "Paseo")
+                                    if (widget.title == "Paseo")
                                       const Text('Fecha  '),
-                                    if(widget.title == "Hospedaje")
+                                    if (widget.title == "Hospedaje")
                                       const Text('Fecha de Inicio '),
                                     Text(selectedDate
                                         .toString()
@@ -268,19 +321,20 @@ class _RequestFormPageState extends State<RequestFormPage> {
                               ),
                             ),
                           ),
-                          if(widget.title == "Hospedaje")
+                          if (widget.title == "Hospedaje")
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 5.0),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10.0),
                                 child: ExpansionTile(
                                   backgroundColor: inputGrey,
                                   collapsedBackgroundColor: inputGrey,
                                   leading:
-                                  const Icon(Icons.calendar_today_outlined),
+                                      const Icon(Icons.calendar_today_outlined),
                                   title: Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       const Text('Fecha Final'),
                                       Text(selectedDate
@@ -396,21 +450,25 @@ class _RequestFormPageState extends State<RequestFormPage> {
                         padding: const EdgeInsets.symmetric(vertical: 5.0),
                         child: ButtonFormWidget(
                             onPressed: () {
-                              List<int> selectedPetIds = selectedPets.map((pet) => pet['id'] as int).toList();
+                              List<int> selectedPetIds = selectedPets
+                                  .map((pet) => pet['id'] as int)
+                                  .toList();
                               print(selectedDate);
                               final request = RequestEntity(
-                                type: widget.title,
-                                start_date: selectedDate, // Aquí ya asignamos selectedDate a start_date
-                                end_date: "2021-01-01T00:00:00.000Z",
-                                hour: "10:00",
-                                cost: 100,
-                                duration:"1:00",
+                                type: selectedService,
+                                start_date:
+                                    selectedDate, // Aquí ya asignamos selectedDate a start_date
+                                end_date: widget.title == 'Paseo'
+                                    ? selectedDate.toString()
+                                    : "2021-01-01T00:00:00.000Z",
+                                hour: _selectedTime.toString(),
+                                cost: cost,
+                                duration: "1:00",
                                 status: 'Pendiente',
                                 location: selectedLocation,
                                 pet_id: selectedPetIds,
                                 user_id: 1,
                                 caretaker_id: 1,
-
                               );
                               context
                                   .read<RequestBloc>()

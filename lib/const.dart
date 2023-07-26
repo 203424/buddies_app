@@ -36,6 +36,12 @@ class Font {
   static const TextStyle textStyle =
       TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: black);
 
+  static const TextStyle textStyleGrey =
+      TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: greyColor);
+
+  static const TextStyle textStyleRed =
+      TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: redColor);
+
   static TextStyle textStyleBold({Color? color, double? fontSize}) {
     return TextStyle(
       fontSize: fontSize ?? 14.0,
@@ -169,6 +175,7 @@ class Pages {
   static const String signUpPage = "signUpPage";
   static const String addPetPage = "addPetPage";
   static const String requestFormPage = "requestFormPage";
+  static const String selectServicePage = "selectServicePage";
   static const String historyListPage = "historyListPage";
   static const String servicesListPage = "servicesListPage";
   static const String serviceInProgressPage = "serviceInProgressPage";

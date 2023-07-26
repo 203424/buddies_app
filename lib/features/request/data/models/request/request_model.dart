@@ -11,7 +11,7 @@ class RequestModel extends RequestEntity {
     String? hour,
     String? duration,
     LatLng? location,
-    int? cost,
+    double? cost,
     String? status,
     List<int>? pet_id,
     int? user_id,
