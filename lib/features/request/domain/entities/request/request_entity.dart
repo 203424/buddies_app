@@ -5,7 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class RequestEntity {
   final int? id;
   final String? type;
-  final String? start_date;
+  final DateTime? start_date;
   final String? end_date;
   final String? hour;
   final String? duration;

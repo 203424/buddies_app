@@ -1,11 +1,12 @@
 import 'package:buddies_app/features/request/domain/entities/request/request_entity.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 
 class RequestModel extends RequestEntity {
   RequestModel({
     int? id,
     String? type,
-    String? start_date,
+    DateTime? start_date,
     String? end_date,
     String? hour,
     String? duration,
@@ -30,10 +31,14 @@ class RequestModel extends RequestEntity {
             caretaker_id: caretaker_id);
 
   factory RequestModel.fromJson(Map<String, dynamic> json) {
+    DateTime? startDate;
+    if (json['start_date'] != null) {
+      startDate = DateTime.parse(json['start_date']);
+    }
     return RequestModel(
       id: json['id'],
       type: json['type'],
-      start_date: json['start_date'],
+      start_date: startDate,
       end_date: json['end_date'],
       hour: json['hour'],
       duration: json['duration'],
@@ -42,13 +47,11 @@ class RequestModel extends RequestEntity {
         json['location'][1], // La latitud debe ser el segundo valor
         json['location'][0], // La longitud debe ser el primer valor
       )
-          : null, // Si es nulo, deja location como null      cost: json['cost'],
+          : null,
       status: json['status'],
-      pet_id: json['pet_id'] != null
-          ? List<int>.from(json['pet_id']) // Convierte el valor a List<int>? si no es nulo
-          : null, // Si es nulo, deja pet_id como null
-      user_id: json['user_id'], // Si user_id también es un entero, utiliza int? aquí
-      caretaker_id: json['caretaker_id'], // Si caretaker_id también es un entero, utiliza int? aquí
+      pet_id: json['pet_id'] != null ? List<int>.from(json['pet_id']) : null,
+      user_id: json['user_id'],
+      caretaker_id: json['caretaker_id'],
     );
   }
 

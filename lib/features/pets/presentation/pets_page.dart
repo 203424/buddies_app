@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:buddies_app/const.dart';
+import 'package:buddies_app/features/request/presentation/request/request_bloc.dart';
 import 'package:buddies_app/widgets/button_form_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +21,7 @@ class _PetsPageState extends State<PetsPage> {
     super.initState();
     // Disparar el evento para obtener la lista de mascotas
     context.read<PetBloc>().add(GetPetsEvent());
+
   }
 
   Timer? _fetchPetsTimer;

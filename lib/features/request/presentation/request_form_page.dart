@@ -7,6 +7,7 @@ import 'package:buddies_app/widgets/button_form_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 
 class RequestFormPage extends StatefulWidget {
@@ -243,7 +244,10 @@ class _RequestFormPageState extends State<RequestFormPage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text('Fecha'),
+                                    if(widget.title == "Paseo")
+                                      const Text('Fecha  '),
+                                    if(widget.title == "Hospedaje")
+                                      const Text('Fecha de Inicio '),
                                     Text(selectedDate
                                         .toString()
                                         .substring(0, 10))
@@ -264,6 +268,41 @@ class _RequestFormPageState extends State<RequestFormPage> {
                               ),
                             ),
                           ),
+                          if(widget.title == "Hospedaje")
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child: ExpansionTile(
+                                  backgroundColor: inputGrey,
+                                  collapsedBackgroundColor: inputGrey,
+                                  leading:
+                                  const Icon(Icons.calendar_today_outlined),
+                                  title: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('Fecha Final'),
+                                      Text(selectedDate
+                                          .toString()
+                                          .substring(0, 10))
+                                    ],
+                                  ),
+                                  children: [
+                                    ListTile(
+                                      title: DatePickerWidget(
+                                        selectedDate: selectedDate,
+                                        onDateSelected: (date) {
+                                          setState(() {
+                                            selectedDate = date;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5.0),
                             child: ListTile(
@@ -358,10 +397,10 @@ class _RequestFormPageState extends State<RequestFormPage> {
                         child: ButtonFormWidget(
                             onPressed: () {
                               List<int> selectedPetIds = selectedPets.map((pet) => pet['id'] as int).toList();
-
+                              print(selectedDate);
                               final request = RequestEntity(
                                 type: widget.title,
-                                start_date: "2021-01-01T00:00:00.000Z",
+                                start_date: selectedDate, // Aquí ya asignamos selectedDate a start_date
                                 end_date: "2021-01-01T00:00:00.000Z",
                                 hour: "10:00",
                                 cost: 100,

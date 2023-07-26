@@ -21,22 +21,27 @@ class RequestPage extends StatefulWidget {
 }
 
 class _RequestPageState extends State<RequestPage> {
+
   @override
   void initState() {
     super.initState();
     // Disparar el evento para obtener la lista de mascotas
-    context.read<RequestBloc>().add(GetAllRequestsEvent());
-    context.read<PetBloc>().add(GetPetsEvent());
+    _fetchPetsWithDelay();
 
+  }
+  @override
+  void dispose() {
+super.dispose();
+_fetchPetsWithDelay();
   }
   Timer? _fetchPetsTimer;
   void _fetchPetsWithDelay() {
     _fetchPetsTimer = Timer(Duration(seconds: 1), () {
-      context.read<RequestBloc>().add(GetAllRequestsEvent());
       context.read<PetBloc>().add(GetPetsEvent());
-
+      context.read<RequestBloc>().add(GetAllRequestsEvent());
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -50,7 +55,7 @@ class _RequestPageState extends State<RequestPage> {
         ),
         body: BlocListener<RequestBloc, RequestState>(
           listener: (context, state) {
-            if (state is CreateRequestEvent || state is GetPetsEvent || state is GetAllRequestsEvent || state is GetPetsByIdEvent ) {
+            if (state is CreateRequestEvent ) {
               _fetchPetsWithDelay();
             }
           },
@@ -67,13 +72,12 @@ class _RequestPageState extends State<RequestPage> {
                   return Center(child: CircularProgressIndicator());
                 } else {
                   final List<RequestEntity> requests = state.requests;
-
                   return _buildRequestPageWidget(context, requests);
                 }
               } else if (state is RequestErrorState) {
                 return Center(child: Text(state.message));
               } else {
-                return const SizedBox();
+                return _buildRequestPageWidget(context, []);
               }
             },
           ),
@@ -121,7 +125,7 @@ class _RequestPageState extends State<RequestPage> {
 
   Widget _buildRequestPageWidget(
       BuildContext context, List<RequestEntity> requests) {
-    List<Map<String, String>> newList = [];
+    List<Map<String, dynamic>> newList = [];
     List<Map<String, dynamic>> finalized = [];
 
 // Verificar la longitud de ambas listas (listPetsId y requests) para determinar el tamaño de la nueva lista
@@ -135,10 +139,10 @@ class _RequestPageState extends State<RequestPage> {
       String service = i < requests.length ? requests[i].type ?? ' ' : '';
       String time = i < requests.length ? requests[i].hour ?? ' ' : '';
       String status = i < requests.length ? requests[i].status ?? ' ' : '';
-      String date = i < requests.length ? requests[i].start_date ?? ' ' : '';
+      DateTime? date = i < requests.length ? requests[i].start_date : null;
       int cost = i < requests.length ? requests[i].cost ?? 0 : 0;
 
-      Map<String, String> newObject = {
+      Map<String, dynamic> newObject = {
         'name': name, //Nombre de la mascota
         'date': date, //fecha en la que se pidio el servicio
         'time': time, //hora programada

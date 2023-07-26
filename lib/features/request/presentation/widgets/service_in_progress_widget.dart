@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ServiceInProgressWidget extends StatelessWidget {
-  final Map<String, String> service;
+  final Map<String, dynamic> service;
   const ServiceInProgressWidget({super.key, required this.service});
 
   @override

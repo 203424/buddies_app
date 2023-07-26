@@ -55,7 +55,7 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
 
   @override
   Future<void> deleteRequest(int id) async {
-    final url = Uri.http(apiURL, '/api/pets/$id');
+    final url = Uri.http(apiURL, '/api/requests/$id');
     final headers = {'Content-Type': 'application/json'};
 
     final response = await http.delete(url, headers: headers);
