@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "742890676193",
+    "project_id": "buddies-app-df34b",
+    "storage_bucket": "buddies-app-df34b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742890676193:android:9f6006d63068a2eea27ca0",
+        "android_client_info": {
+          "package_name": "com.sietesol.buddies_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742890676193-b926m7qgi4o4ibgsm62uct88kdg557em.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaLhnWLHVQknJgO6b7hv404pKU-NjggWo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742890676193-b926m7qgi4o4ibgsm62uct88kdg557em.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,11 +10,15 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:buddies_app/features/pets/presentation/pet/pet_bloc.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'on_generate_route.dart';
 
-void main() async{
+void main() async {
   await dotenv.load(fileName: '.env');
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   initializeDateFormatting().then((_) => runApp(const MainApp()));
 }
 
@@ -65,7 +69,6 @@ class MainApp extends StatelessWidget {
         routes: {
           '/': (context) {
             return LoginPage();
-
           },
         },
       ),
