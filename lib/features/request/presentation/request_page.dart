@@ -127,7 +127,7 @@ class _RequestPageState extends State<RequestPage> {
 
   Widget _buildRequestPageWidget(
       BuildContext context, List<RequestEntity> requests) {
-    List<Map<String, dynamic>> newList = [];
+    List<Map<String, String>> newList = [];
     List<Map<String, dynamic>> finalized = [];
 
 // Verificar la longitud de ambas listas (listPetsId y requests) para determinar el tamaño de la nueva lista
@@ -136,15 +136,14 @@ class _RequestPageState extends State<RequestPage> {
 // Recorrer ambas listas y generar los objetos para la nueva lista
     for (int i = 0; i < maxLength; i++) {
       String name = i < requests.length
-          ? getAllPetsById(context, requests[i].pet_id ?? []) ?? ' '
-          : '';
+          ? getAllPetsById(context, requests[i].pet_id ?? []) ?? ' ' : '';
       String service = i < requests.length ? requests[i].type ?? ' ' : '';
       String time = i < requests.length ? requests[i].hour ?? ' ' : '';
       String status = i < requests.length ? requests[i].status ?? ' ' : '';
-      DateTime? date = i < requests.length ? requests[i].start_date : null;
+      String date = i < requests.length ? requests[i].start_date ?? ' ' : '';
       double cost = i < requests.length ? requests[i].cost ?? 0 : 0;
 
-      Map<String, dynamic> newObject = {
+      Map<String, String> newObject = {
         'name': name, //Nombre de la mascota
         'date': date, //fecha en la que se pidio el servicio
         'time': time, //hora programada

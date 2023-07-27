@@ -24,6 +24,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
   bool _isValidTime = true;
   bool _isValidLocation = false;
   late DateTime selectedDate;
+  late DateTime finalizedSelectedDate;
   int _paymentMethod = 0;
   Location location = Location();
   LocationData? currentLocation;
@@ -38,6 +39,8 @@ class _RequestFormPageState extends State<RequestFormPage> {
     selectedPets = [];
     selectedLocation = const LatLng(0, 0);
     selectedDate = DateTime.now();
+    finalizedSelectedDate = DateTime.now();
+
     _isValidTime = _isTimeWithinRange(_selectedTime);
     selectedService = "";
   }
@@ -51,6 +54,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
           return;
         }
       }
+
 
       var permissionGranted = await location.hasPermission();
       if (permissionGranted == PermissionStatus.denied) {
@@ -273,7 +277,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
-                                      'Tipo de paseo',
+                                      'Opcion',
                                     ),
                                     Text(
                                       selectedService == ''
@@ -311,10 +315,9 @@ class _RequestFormPageState extends State<RequestFormPage> {
                                     title: DatePickerWidget(
                                       selectedDate: selectedDate,
                                       onDateSelected: (date) {
-                                        setState(() {
-                                          selectedDate = date;
-                                        });
+                                        updateDates(date, finalizedSelectedDate); // Utilizar updateDates en lugar de setState
                                       },
+                                      minSelectableDate: DateTime.now(),
                                     ),
                                   ),
                                 ],
@@ -323,21 +326,18 @@ class _RequestFormPageState extends State<RequestFormPage> {
                           ),
                           if (widget.title == "Hospedaje")
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 5.0),
+                              padding: const EdgeInsets.symmetric(vertical: 5.0),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10.0),
                                 child: ExpansionTile(
                                   backgroundColor: inputGrey,
                                   collapsedBackgroundColor: inputGrey,
-                                  leading:
-                                      const Icon(Icons.calendar_today_outlined),
+                                  leading: const Icon(Icons.calendar_today_outlined),
                                   title: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       const Text('Fecha Final'),
-                                      Text(selectedDate
+                                      Text(finalizedSelectedDate
                                           .toString()
                                           .substring(0, 10))
                                     ],
@@ -345,12 +345,11 @@ class _RequestFormPageState extends State<RequestFormPage> {
                                   children: [
                                     ListTile(
                                       title: DatePickerWidget(
-                                        selectedDate: selectedDate,
+                                        selectedDate: finalizedSelectedDate,
                                         onDateSelected: (date) {
-                                          setState(() {
-                                            selectedDate = date;
-                                          });
+                                          updateDates(selectedDate, date); // Utilizar updateDates en lugar de setState
                                         },
+                                        minSelectableDate: selectedDate,
                                       ),
                                     ),
                                   ],
@@ -453,15 +452,13 @@ class _RequestFormPageState extends State<RequestFormPage> {
                               List<int> selectedPetIds = selectedPets
                                   .map((pet) => pet['id'] as int)
                                   .toList();
-                              print(selectedDate);
+                              print(formatDateTimeToUtcString(selectedDate));
+                              print(formatTimeOfDay(_selectedTime));
                               final request = RequestEntity(
-                                type: selectedService,
-                                start_date:
-                                    selectedDate, // Aquí ya asignamos selectedDate a start_date
-                                end_date: widget.title == 'Paseo'
-                                    ? selectedDate.toString()
-                                    : "2021-01-01T00:00:00.000Z",
-                                hour: _selectedTime.toString(),
+                                type: widget.title,
+                                start_date: formatDateTimeToUtcString(selectedDate), // Aquí ya asignamos selectedDate a start_date
+                                end_date: formatDateTimeToUtcString(finalizedSelectedDate),
+                                hour: formatTimeOfDay(_selectedTime),
                                 cost: cost,
                                 duration: "1:00",
                                 status: 'Pendiente',
@@ -483,5 +480,25 @@ class _RequestFormPageState extends State<RequestFormPage> {
               ),
       ),
     );
+  }
+  void updateDates(DateTime newSelectedDate, DateTime newFinalizedSelectedDate) {
+    setState(() {
+      selectedDate = newSelectedDate;
+      finalizedSelectedDate = newFinalizedSelectedDate.isBefore(newSelectedDate)
+          ? newSelectedDate
+          : newFinalizedSelectedDate;
+    });
+  }
+  String formatDateTimeToUtcString(DateTime dateTime) {
+    final utcDateTime = dateTime.toUtc();
+    final formatter = DateFormat("yyyy-MM-dd'T'00:00:00.000'Z'");
+    return formatter.format(utcDateTime);
+  }
+
+  String formatTimeOfDay(TimeOfDay timeOfDay) {
+    final now = DateTime.now();
+    final dateTime = DateTime(now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
+    final format = DateFormat("HH:mm");
+    return format.format(dateTime);
   }
 }

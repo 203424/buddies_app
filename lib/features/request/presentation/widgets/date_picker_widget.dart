@@ -5,11 +5,13 @@ import 'package:table_calendar/table_calendar.dart';
 class DatePickerWidget extends StatefulWidget {
   final DateTime selectedDate;
   final ValueChanged<DateTime> onDateSelected;
+  final DateTime minSelectableDate; // Nueva propiedad para la fecha mínima seleccionable.
 
   const DatePickerWidget({
     Key? key,
     required this.selectedDate,
     required this.onDateSelected,
+    required this.minSelectableDate, // Incluir la nueva propiedad en el constructor.
   }) : super(key: key);
 
   @override
@@ -26,10 +28,13 @@ class _DatePickerState extends State<DatePickerWidget> {
   }
 
   void _onDaySelected(DateTime day, DateTime focusedDay) {
-    setState(() {
-      today = day;
-    });
-    widget.onDateSelected(day);
+    // Verificar si el día seleccionado es posterior o igual a la fecha mínima seleccionable.
+    if (day.isAfter(widget.minSelectableDate) || isSameDay(day, widget.minSelectableDate)) {
+      setState(() {
+        today = day;
+      });
+      widget.onDateSelected(day);
+    }
   }
 
   @override
@@ -39,16 +44,16 @@ class _DatePickerState extends State<DatePickerWidget> {
         todayTextStyle: TextStyle(color: black),
         todayDecoration: BoxDecoration(color: Colors.transparent),
         selectedDecoration:
-            BoxDecoration(color: redColor, shape: BoxShape.circle),
+        BoxDecoration(color: redColor, shape: BoxShape.circle),
       ),
       locale: "es_ES",
       rowHeight: 43.0,
       headerStyle:
-          const HeaderStyle(formatButtonVisible: false, titleCentered: true),
+      const HeaderStyle(formatButtonVisible: false, titleCentered: true),
       availableGestures: AvailableGestures.all,
       selectedDayPredicate: (day) => isSameDay(day, today),
       focusedDay: today,
-      firstDay: DateTime.now(),
+      firstDay: widget.minSelectableDate, // Usar la fecha mínima seleccionable como primer día.
       lastDay: DateTime.utc(2023, 12, 31),
       onDaySelected: _onDaySelected,
     );

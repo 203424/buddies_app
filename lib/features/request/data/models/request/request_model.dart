@@ -6,7 +6,7 @@ class RequestModel extends RequestEntity {
   RequestModel({
     int? id,
     String? type,
-    DateTime? start_date,
+    String? start_date,
     String? end_date,
     String? hour,
     String? duration,
@@ -31,14 +31,10 @@ class RequestModel extends RequestEntity {
             caretaker_id: caretaker_id);
 
   factory RequestModel.fromJson(Map<String, dynamic> json) {
-    DateTime? startDate;
-    if (json['start_date'] != null) {
-      startDate = DateTime.parse(json['start_date']);
-    }
     return RequestModel(
       id: json['id'],
       type: json['type'],
-      start_date: startDate,
+      start_date: json['start_date'],
       end_date: json['end_date'],
       hour: json['hour'],
       duration: json['duration'],
