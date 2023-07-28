@@ -7,7 +7,11 @@ class ButtonFormWidget extends StatelessWidget {
   final double? width;
 
   const ButtonFormWidget(
-      {super.key, required this.onPressed, required this.text, this.height, this.width});
+      {super.key,
+      required this.onPressed,
+      required this.text,
+      this.height,
+      this.width});
 
   @override
   Widget build(BuildContext context) {

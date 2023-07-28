@@ -45,7 +45,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyABAce2MBET27zgPE5qFzF86-plT-QLRg4',
-    appId: '1:742890676193:web:420e03fa72604985a27ca0',
+    appId: '1:742890676193:web:76619eef266a2e40a27ca0',
     messagingSenderId: '742890676193',
     projectId: 'buddies-app-df34b',
     authDomain: 'buddies-app-df34b.firebaseapp.com',
@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBaLhnWLHVQknJgO6b7hv404pKU-NjggWo',
-    appId: '1:742890676193:android:9f6006d63068a2eea27ca0',
+    appId: '1:742890676193:android:3fde5272dd1b296da27ca0',
     messagingSenderId: '742890676193',
     projectId: 'buddies-app-df34b',
     storageBucket: 'buddies-app-df34b.appspot.com',
@@ -62,20 +62,22 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDYi6DD3gAMCzJQdEsUVuCQB8NeG10Af2w',
-    appId: '1:742890676193:ios:1bfb38ce9824b804a27ca0',
+    appId: '1:742890676193:ios:bc8bc8269c425054a27ca0',
     messagingSenderId: '742890676193',
     projectId: 'buddies-app-df34b',
     storageBucket: 'buddies-app-df34b.appspot.com',
+    androidClientId: '742890676193-raku73fc8o8v7q618c9e22jqd8ddblsr.apps.googleusercontent.com',
     iosClientId: '742890676193-2qg7rnv5hdgmvef5hi6ui3nkv6lh9atf.apps.googleusercontent.com',
     iosBundleId: 'com.example.buddiesApp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyDYi6DD3gAMCzJQdEsUVuCQB8NeG10Af2w',
-    appId: '1:742890676193:ios:b17e7bd64b874794a27ca0',
+    appId: '1:742890676193:ios:b611bccbdc95b2daa27ca0',
     messagingSenderId: '742890676193',
     projectId: 'buddies-app-df34b',
     storageBucket: 'buddies-app-df34b.appspot.com',
+    androidClientId: '742890676193-raku73fc8o8v7q618c9e22jqd8ddblsr.apps.googleusercontent.com',
     iosClientId: '742890676193-fc39729h4o9mf80n83ncbm4t7b0jkr0b.apps.googleusercontent.com',
     iosBundleId: 'com.example.buddiesApp.RunnerTests',
   );

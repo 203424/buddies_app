@@ -1,5 +1,6 @@
 import 'package:buddies_app/const.dart';
 import 'package:buddies_app/features/owner/presentation/login_page.dart';
+import 'package:buddies_app/features/owner/presentation/owner/owner_bloc.dart';
 // import 'package:buddies_app/features/owner/presentation/main_page.dart';
 import 'package:buddies_app/features/request/presentation/request/request_bloc.dart';
 import 'package:buddies_app/usecase_config.dart';
@@ -15,6 +16,7 @@ import 'firebase_options.dart';
 import 'on_generate_route.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -30,8 +32,12 @@ class MainApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: greyColorStatusBar),
     );
-
     final useCaseConfig = UseCaseConfig();
+
+    final ownerBloc = OwnerBloc(
+        createOwnerUseCase: useCaseConfig.createOwnerUseCase!,
+        signInWithGoogleUseCase: useCaseConfig.signInWithGoogleUseCase!);
+
     final petBloc = PetBloc(
       getPetsUseCase: useCaseConfig.getPetsUseCase!,
       getPetsByIdUseCase: useCaseConfig.getPetsByIdUseCase!,
@@ -55,6 +61,7 @@ class MainApp extends StatelessWidget {
 
     return MultiBlocProvider(
       providers: [
+        BlocProvider<OwnerBloc>.value(value: ownerBloc),
         BlocProvider<PetBloc>.value(value: petBloc),
         BlocProvider<RequestBloc>.value(value: requestBloc),
       ],

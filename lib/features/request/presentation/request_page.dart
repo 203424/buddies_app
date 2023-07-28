@@ -136,7 +136,8 @@ class _RequestPageState extends State<RequestPage> {
 // Recorrer ambas listas y generar los objetos para la nueva lista
     for (int i = 0; i < maxLength; i++) {
       String name = i < requests.length
-          ? getAllPetsById(context, requests[i].pet_id ?? []) ?? ' ' : '';
+          ? getAllPetsById(context, requests[i].pet_id ?? []) ?? ' '
+          : '';
       String service = i < requests.length ? requests[i].type ?? ' ' : '';
       String time = i < requests.length ? requests[i].hour ?? ' ' : '';
       String status = i < requests.length ? requests[i].status ?? ' ' : '';
@@ -228,15 +229,19 @@ class _RequestPageState extends State<RequestPage> {
               ),
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                final service = newList[index];
-                return ServiceInProgressWidget(service: service);
-              },
-              childCount: newList.length > 3 ? 3 : newList.length,
-            ),
-          ),
+          newList.isNotEmpty
+              ? SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      final service = newList[index];
+                      return ServiceInProgressWidget(service: service);
+                    },
+                    childCount: newList.length > 3 ? 3 : newList.length,
+                  ),
+                )
+              : SliverToBoxAdapter(
+                  child: listVacia(text: 'Sin servicios en curso'),
+                ),
           SliverToBoxAdapter(
             child: SizedBox(
               width: double.infinity,
@@ -266,15 +271,18 @@ class _RequestPageState extends State<RequestPage> {
               ),
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                final entry = finalized[index];
-                return HistoryWidget(history: entry);
-              },
-              childCount: finalized.length > 3 ? 3 : finalized.length,
-            ),
-          ),
+          finalized.isNotEmpty
+              ? SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      final entry = finalized[index];
+                      return HistoryWidget(history: entry);
+                    },
+                    childCount: finalized.length > 3 ? 3 : finalized.length,
+                  ),
+                )
+              : SliverToBoxAdapter(
+                  child: listVacia(text: 'Sin entradas en el historial')),
         ],
       ),
     );
@@ -307,6 +315,31 @@ class _RequestPageState extends State<RequestPage> {
           ),
           icon!,
         ],
+      ),
+    );
+  }
+
+  Widget listVacia({required String text}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: ElevatedButton(
+        onPressed: () {},
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(inputGrey),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+        ),
+        child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 28.0),
+            child: Center(
+              child: Text(
+                text,
+                style: Font.textStyleGrey,
+              ),
+            )),
       ),
     );
   }

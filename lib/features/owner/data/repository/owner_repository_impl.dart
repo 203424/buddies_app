@@ -1,4 +1,3 @@
-
 import 'package:buddies_app/features/owner/data/data_sources/owner_remote.dart';
 import 'package:buddies_app/features/owner/domain/entities/owner_entity.dart';
 
@@ -12,6 +11,11 @@ class OwnerRepositoryImpl implements OwnerRepository {
   @override
   Future<OwnerEntity> createOwner(OwnerEntity owner) async {
     return await ownerRemoteDataSource.createOwner(owner);
+  }
+
+  @override
+  Future<void> signInWithGoogle() async {
+    return await ownerRemoteDataSource.signInWithGoogle();
   }
 
   @override
@@ -37,6 +41,5 @@ class OwnerRepositoryImpl implements OwnerRepository {
   @override
   Future<List<OwnerEntity>> updateOwner(OwnerEntity owner) async {
     return await ownerRemoteDataSource.updateOwner(owner);
-
   }
 }
