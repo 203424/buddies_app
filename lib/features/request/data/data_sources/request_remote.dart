@@ -1,11 +1,12 @@
 
+import 'package:buddies_app/const.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:buddies_app/features/request/data/models/request/request_model.dart';
 
 import '../../domain/entities/request/request_entity.dart';
 
-String apiURL = '3.17.237.96';
+String apiURL = Config.apiURL;
 
 abstract class RequestRemoteDataSource {
   Future<RequestModel> createRequest(RequestEntity request);

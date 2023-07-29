@@ -1,7 +1,7 @@
 import 'package:buddies_app/features/owner/data/data_sources/owner_remote.dart';
 import 'package:buddies_app/features/owner/data/repository/owner_repository_impl.dart';
 import 'package:buddies_app/features/owner/domain/usecases/owner_usecases/create_owner_usecase.dart';
-import 'package:buddies_app/features/owner/domain/usecases/owner_usecases/sign_in_with_google_usecase.dart';
+import 'package:buddies_app/features/owner/domain/usecases/owner_usecases/sign_in_usecase.dart';
 import 'package:buddies_app/features/pets/data/repositories/pet_repository_impl.dart';
 import 'package:buddies_app/features/request/domain/usecases/request_usecases/create_request_usecase.dart';
 import 'package:buddies_app/features/request/domain/usecases/request_usecases/delete_request_usecase.dart';
@@ -53,7 +53,7 @@ class UseCaseConfig {
   OwnerRemoteDataSourceImpl? ownerRemoteDataSourceImpl;
 
   CreateOwnerUseCase? createOwnerUseCase;
-  SignInWithGoogleUseCase? signInWithGoogleUseCase;
+  SignInUseCase? signInUseCase;
 
   UseCaseConfig() {
     //Pet
@@ -86,6 +86,6 @@ class UseCaseConfig {
     ownerRepositoryImpl = OwnerRepositoryImpl(ownerRemoteDataSource: ownerRemoteDataSourceImpl!);
 
     createOwnerUseCase = CreateOwnerUseCase(ownerRepositoryImpl!);
-    signInWithGoogleUseCase = SignInWithGoogleUseCase(ownerRepositoryImpl!);
+    signInUseCase = SignInUseCase(ownerRepositoryImpl!);
   }
 }

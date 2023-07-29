@@ -6,6 +6,5 @@ abstract class OwnerRepository {
   Future<void> deleteOwner(int ownerid);
   Future<OwnerEntity> getOwnerById(int ownerid);
   Future<OwnerEntity> signIn(String email, String password);
-  Future<void> signInWithGoogle();
   Future<void> logOut();
 }

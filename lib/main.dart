@@ -36,7 +36,7 @@ class MainApp extends StatelessWidget {
 
     final ownerBloc = OwnerBloc(
         createOwnerUseCase: useCaseConfig.createOwnerUseCase!,
-        signInWithGoogleUseCase: useCaseConfig.signInWithGoogleUseCase!);
+        signInUseCase: useCaseConfig.signInUseCase!);
 
     final petBloc = PetBloc(
       getPetsUseCase: useCaseConfig.getPetsUseCase!,

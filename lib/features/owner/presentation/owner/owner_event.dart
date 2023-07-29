@@ -9,4 +9,11 @@ class CreateOwnerEvent extends OwnerEvent {
   CreateOwnerEvent({required this.owner});
 }
 
+class SignInEvent extends OwnerEvent {
+  final String email;
+  final String password;
+
+  SignInEvent({required this.email, required this.password});
+}
+
 class SignInWithGoogleEvent extends OwnerEvent {}

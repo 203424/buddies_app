@@ -29,6 +29,7 @@ const MaterialColor redColorSwatch = MaterialColor(0xFFFF4D4D, {
 
 class Config {
   static String apiKey = dotenv.get('API_KEY');
+  static String apiURL = dotenv.get('API_URL');
 }
 
 //Estilos (fuentes)

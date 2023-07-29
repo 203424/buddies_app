@@ -5,7 +5,15 @@ abstract class OwnerState {}
 
 class OwnerUnAuthenticated extends OwnerState {}
 
-class Loading extends OwnerState{}
+class Loading extends OwnerState {}
+
+class OwnerAuthenticated extends OwnerState {} //se recibe un token
+
+class OwnerErrorState extends OwnerState {
+  final String errorMessage;
+
+  OwnerErrorState(this.errorMessage);
+}
 
 class OwnerCreatedState extends OwnerState {
   final OwnerEntity owner;
@@ -16,10 +24,4 @@ class OwnerSuccessState extends OwnerState {
   final String successMessage;
 
   OwnerSuccessState(this.successMessage);
-}
-
-class OwnerErrorState extends OwnerState {
-  final String errorMessage;
-
-  OwnerErrorState(this.errorMessage);
 }

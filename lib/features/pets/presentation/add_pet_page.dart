@@ -109,8 +109,7 @@ class _AddPetPageState extends State<AddPetPage> {
                         setState(() {
                           _sizeController.text = newValue;
                         });
-                      }
-                  ),
+                      }),
                   BreedPickerWidget(
                     petType: _typeController.text.toLowerCase(),
                     selectedBreed: _breedController.text,
@@ -139,6 +138,7 @@ class _AddPetPageState extends State<AddPetPage> {
                     title: 'Describe a tu mascota',
                     controller: _descriptionController,
                     height: 100.0,
+                    isInputBlock: true,
                   ),
                   ButtonFormWidget(
                     onPressed: () {
@@ -153,7 +153,10 @@ class _AddPetPageState extends State<AddPetPage> {
                         owner_id: 1,
                       );
                       final petsList = [pet];
-                      context.read<PetBloc>().add(CreatePetEvent(pets: petsList));                      Navigator.pop(
+                      context
+                          .read<PetBloc>()
+                          .add(CreatePetEvent(pets: petsList));
+                      Navigator.pop(
                           context); // Regresar a la página anterior (PetsPage)
                     },
                     text: 'Guardar',

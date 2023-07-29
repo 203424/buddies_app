@@ -1,11 +1,12 @@
 import 'dart:convert';
 
+import 'package:buddies_app/const.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:buddies_app/features/pets/data/models/pet/pet_model.dart';
 import 'package:buddies_app/features/pets/domain/entities/pet/pet_entity.dart';
 
-String apiURL = '3.130.221.228';
+String apiURL = Config.apiURL;
 
 abstract class PetRemoteDataSource {
   Future<List<PetModel>> getPets();

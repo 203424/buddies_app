@@ -1,13 +1,10 @@
-import 'dart:convert';
-
-// import 'package:google_sign_in/google_sign_in.dart';
+import 'package:buddies_app/const.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:buddies_app/features/owner/data/models/owner_model.dart';
 import '../../domain/entities/owner_entity.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-String apiURL = '18.223.193.37';
+String apiURL = Config.apiURL;
 
 abstract class OwnerRemoteDataSource {
   Future<OwnerModel> createOwner(OwnerEntity owner);
@@ -15,13 +12,10 @@ abstract class OwnerRemoteDataSource {
   Future<void> deleteOwner(int ownerid);
   Future<OwnerModel> getOwnerById(int ownerid);
   Future<OwnerModel> signIn(String email, String password);
-  Future<void> signInWithGoogle();
   Future<void> logOut();
 }
 
 class OwnerRemoteDataSourceImpl implements OwnerRemoteDataSource {
-  final _firebaseAuth = FirebaseAuth.instance;
-
   @override
   Future<OwnerModel> createOwner(OwnerEntity owner) async {
     var response;
@@ -29,43 +23,21 @@ class OwnerRemoteDataSourceImpl implements OwnerRemoteDataSource {
     var headers = {'Content-Type': 'application/json'};
 
     var body = {
-      'id': owner.id,
       'name': owner.name,
       'email': owner.email,
-      // 'password': owner.password,
+      'password': owner.password,
     };
     response =
         await http.post(url, body: convert.jsonEncode(body), headers: headers);
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 201) {
       var responseData = convert.jsonDecode(response.body);
       print(responseData['email']);
       var ownerModel = OwnerModel.fromJson(responseData);
       return ownerModel;
     } else {
-      throw Exception('Error al crear la mascota');
-    }
-  }
-
-  @override
-  Future<void> signInWithGoogle() async {
-    try {
-      // final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-      // final GoogleSignInAuthentication? googleAuth =
-      //     await googleUser?.authentication;
-
-      // if (googleAuth?.accessToken != null && googleAuth?.idToken != null) {
-      //   final credential = GoogleAuthProvider.credential(
-      //     accessToken: googleAuth?.accessToken,
-      //     idToken: googleAuth?.idToken,
-      //   );
-
-      //   UserCredential userCredential =
-      //       await _firebaseAuth.signInWithCredential(credential);
-      // }
-      print('hola');
-    } on FirebaseAuthException catch (e) {
-      throw e.toString();
+      throw Exception('Error al registrar usuario');
     }
   }
 
@@ -83,22 +55,24 @@ class OwnerRemoteDataSourceImpl implements OwnerRemoteDataSource {
 
   @override
   Future<OwnerModel> signIn(String email, String password) async {
-    final url = Uri.http(apiURL, '/api/signIn');
+    final url = Uri.http(apiURL, '/api/owners/signIn/');
     final headers = {'Content-Type': 'application/json'};
     final body = {
       'email': email,
       'password': password,
     };
+    print(email + " " + password);
 
     final response =
         await http.post(url, body: convert.jsonEncode(body), headers: headers);
 
+    print(response.statusCode);
     if (response.statusCode == 200) {
       final responseData = convert.jsonDecode(response.body);
       final ownerModel = OwnerModel.fromJson(responseData);
       return ownerModel;
     } else {
-      throw Exception('Error al iniciar sesión');
+      throw Exception('Credenciales incorrectas');
     }
   }
 

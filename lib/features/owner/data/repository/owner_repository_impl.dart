@@ -14,11 +14,6 @@ class OwnerRepositoryImpl implements OwnerRepository {
   }
 
   @override
-  Future<void> signInWithGoogle() async {
-    return await ownerRemoteDataSource.signInWithGoogle();
-  }
-
-  @override
   Future<void> deleteOwner(int ownerid) async {
     return await ownerRemoteDataSource.deleteOwner(ownerid);
   }
