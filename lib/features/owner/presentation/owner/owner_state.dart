@@ -7,7 +7,11 @@ class OwnerUnAuthenticated extends OwnerState {}
 
 class Loading extends OwnerState {}
 
-class OwnerAuthenticated extends OwnerState {} //se recibe un token
+class OwnerAuthenticated extends OwnerState {
+  final String token;
+
+  OwnerAuthenticated(this.token);
+}
 
 class OwnerErrorState extends OwnerState {
   final String errorMessage;

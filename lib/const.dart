@@ -172,8 +172,7 @@ class BuddiesIcons {
 
 //pages
 class Pages {
-  static const String signInPage = "signInPage";
-  static const String signUpPage = "signUpPage";
+  static const String mainPage = "mainPage";
   static const String addPetPage = "addPetPage";
   static const String requestFormPage = "requestFormPage";
   static const String selectServicePage = "selectServicePage";

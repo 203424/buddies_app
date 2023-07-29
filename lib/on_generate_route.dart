@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'features/owner/presentation/account_form_page.dart';
+import 'features/owner/presentation/main_page.dart';
 import 'features/pets/domain/entities/pet/pet_entity.dart';
 import 'features/pets/presentation/update_pet_page.dart';
 
@@ -18,6 +19,12 @@ class OnGenerateRoute {
   static Route<dynamic>? route(RouteSettings settings) {
     final args = settings.arguments;
     switch (settings.name) {
+      case Pages.mainPage:
+        {
+          return routeBuilder(MainPage(
+            id: args as String,
+          ));
+        }
       case Pages.addPetPage:
         {
           return routeBuilder(const AddPetPage());

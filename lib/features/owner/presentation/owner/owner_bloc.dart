@@ -28,8 +28,8 @@ class OwnerBloc extends Bloc<OwnerEvent, OwnerState> {
     on<SignInEvent>((event, emit) async {
       emit(Loading());
       try {
-        await signInUseCase.execute(event.email, event.password);
-        emit(OwnerAuthenticated());
+        var owner = await signInUseCase.execute(event.email, event.password);
+        emit(OwnerAuthenticated(owner.id.toString()));
       } catch (e) {
         emit(OwnerErrorState('Error: $e'));
       }

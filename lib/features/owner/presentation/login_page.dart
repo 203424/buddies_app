@@ -82,14 +82,11 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.all(16.0),
             child: BlocListener<OwnerBloc, OwnerState>(
               listener: ((context, state) {
-                // if (state is OwnerSuccessState) {
-                //   showSnackBar(context, state.successMessage);
-                // } else
                 if (state is OwnerErrorState) {
                   showSnackBar(context, state.errorMessage);
                 } else if (state is OwnerAuthenticated) {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => const MainPage()));
+                  Navigator.of(context).pushReplacementNamed(Pages.mainPage,
+                      arguments: state.token);
                 }
               }),
               child: BlocBuilder<OwnerBloc, OwnerState>(

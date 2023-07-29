@@ -8,11 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:buddies_app/features/pets/presentation/pet/pet_bloc.dart';
 
-import '../../../usecase_config.dart';
-import 'account_page.dart';
-
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  final String? id;
+  const MainPage({Key? key, required this.id}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -77,7 +75,7 @@ class _MainPageState extends State<MainPage> {
               sizeIcon: 35.0,
               color: redColor,
             ),
-            label: 'Servicios',
+            label: 'Servicios - id:$widget.id',
           ),
           const BottomNavigationBarItem(
             icon: Icon(
