@@ -66,7 +66,7 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
 
   @override
   Future<List<PetModel>> getPets() async {
-    var url = Uri.http(apiURL, '/api/pets/');
+    var url = Uri.http(apiURL, '/api/pets/getAll');
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var dataPets = convert

@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../pets/domain/entities/pet/pet_entity.dart';
 import 'widgets/history_widget.dart';
@@ -21,11 +22,13 @@ class RequestPage extends StatefulWidget {
 }
 
 class _RequestPageState extends State<RequestPage> {
+  String? token;
   @override
   void initState() {
     super.initState();
     // Disparar el evento para obtener la lista de mascotas
     _fetchPetsWithDelay();
+    initConnectivity();
   }
 
   @override
@@ -35,7 +38,10 @@ class _RequestPageState extends State<RequestPage> {
   }
 
   Timer? _fetchPetsTimer;
-
+  void initConnectivity() async {
+    final prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
+  }
   void _fetchPetsWithDelay() {
     _fetchPetsTimer = Timer(Duration(seconds: 1), () {
       context.read<PetBloc>().add(GetPetsEvent());
@@ -163,7 +169,9 @@ class _RequestPageState extends State<RequestPage> {
       if (status == 'Finalizado') {
         finalized.add(finalizedObject);
       }
+
     }
+    print(token); // Imprimir el token dentro del bucle
 
 // Imprimir la nueva lista generada
 

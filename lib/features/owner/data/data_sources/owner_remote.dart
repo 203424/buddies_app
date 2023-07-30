@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:buddies_app/features/owner/data/models/owner_model.dart';
 import '../../domain/entities/owner_entity.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 String apiURL = Config.apiURL;
 
@@ -68,7 +69,12 @@ class OwnerRemoteDataSourceImpl implements OwnerRemoteDataSource {
 
     print(response.statusCode);
     if (response.statusCode == 200) {
+      final prefs = await SharedPreferences.getInstance();
+
       final responseData = convert.jsonDecode(response.body);
+      var token = "tokenazo mi rey"; // Assuming the token key is 'token' in the response
+      await prefs.setString('token', token);
+
       final ownerModel = OwnerModel.fromJson(responseData);
       return ownerModel;
     } else {
