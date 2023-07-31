@@ -18,32 +18,30 @@ class PetsPage extends StatefulWidget {
 class _PetsPageState extends State<PetsPage> {
   late int userId;
   late var prefs;
-
-  void initConnectivity() async {
+    
+  Future<void> initConnectivity() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
       userId = prefs.getInt("id");
     });
+    // Disparar el evento para obtener la lista de mascotas por el ID de usuario
+    context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
   }
 
   @override
   void initState() {
     super.initState();
     initConnectivity();
-    print("userId");
-    print(userId);
-    context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
   }
-
-  Timer? _fetchPetsTimer;
 
   @override
   void dispose() {
     super.dispose();
+
   }
 
   void _fetchPetsWithDelay() {
-    _fetchPetsTimer = Timer(Duration(seconds: 1), () {
+    Timer(Duration(seconds: 1), () {
       context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
     });
   }
@@ -84,11 +82,12 @@ class _PetsPageState extends State<PetsPage> {
                 return Center(child: CircularProgressIndicator());
               } else if (state is PetLoadedState) {
                 final List<PetEntity> pets = state.pets;
+
                 return _buildPetsList(pets);
               } else if (state is PetErrorState) {
                 return Center(child: Text(state.errorMessage));
               } else {
-                return const SizedBox();
+                return const Center(child: Text('No tienes ninguna mascota registrada'));
               }
             },
           ),
@@ -96,7 +95,7 @@ class _PetsPageState extends State<PetsPage> {
   }
 
   Widget _buildPetsList(List<PetEntity> pets) {
-    if (pets.isEmpty) {
+    if (pets == null) {
       return Center(child: Text('No se encontraron mascotas'));
     }
 

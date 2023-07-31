@@ -47,7 +47,7 @@ class _RequestPageState extends State<RequestPage> {
   }
   void _fetchPetsWithDelay() {
     _fetchPetsTimer = Timer(Duration(seconds: 1), () {
-      context.read<PetBloc>().add(GetPetsEvent());
+
       context.read<RequestBloc>().add(GetAllRequestsEvent());
     });
   }
