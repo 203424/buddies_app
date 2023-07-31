@@ -28,7 +28,6 @@ class _RequestPageState extends State<RequestPage> {
   @override
   void initState() {
     super.initState();
-    _fetchPetsWithDelay();
     initConnectivity();
   }
 
@@ -38,11 +37,16 @@ class _RequestPageState extends State<RequestPage> {
     // _fetchPetsWithDelay();
   }
 
-  void initConnectivity() async {
-    final prefs = await SharedPreferences.getInstance();
-    token = prefs.getString('token');
-    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(token!);
-    print(jwtDecodedToken);
+  late int userId;
+  late var prefs;
+
+  Future<void> initConnectivity() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getInt("id");
+    });
+    // Disparar el evento para obtener la lista de mascotas por el ID de usuario
+    context.read<RequestBloc>().add(GetByUserIdEvent(userId));
   }
 
   @override
@@ -59,7 +63,7 @@ class _RequestPageState extends State<RequestPage> {
         body: BlocListener<RequestBloc, RequestState>(
           listener: (context, state) {
             if (state is CreateRequestEvent) {
-              context.read<RequestBloc>().add(GetAllRequestsEvent());
+              context.read<RequestBloc>().add(GetByUserIdEvent(userId));
             }
           },
           child: BlocBuilder<RequestBloc, RequestState>(
@@ -70,7 +74,7 @@ class _RequestPageState extends State<RequestPage> {
                 if (state.requests.isEmpty) {
                   // Aquí puedes llamar al evento GetAllRequestsEvent
                   BlocProvider.of<RequestBloc>(context)
-                      .add(GetAllRequestsEvent());
+                      .add(GetByUserIdEvent(userId));
                   // Puedes dejar el indicador de carga mientras esperas la respuesta
                   return Center(child: CircularProgressIndicator());
                 } else {

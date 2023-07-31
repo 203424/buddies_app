@@ -173,7 +173,7 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
 
   @override
   Future<List<RequestModel>> getByUserId(int id) async {
-    final url = Uri.http(apiURL, '/api/requests/$id');
+    final url = Uri.http(apiURL, '/api/requests/getByUserId/$id');
     final prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
     final headers = {
