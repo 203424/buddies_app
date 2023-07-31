@@ -9,8 +9,9 @@ class RequestLoadingState extends RequestState {}
 
 class RequestLoadedState extends RequestState {
   final List<RequestEntity> requests;
+  final List<PetEntity> pets;
 
-  RequestLoadedState(this.requests);
+  RequestLoadedState(this.requests, this.pets);
 }
 
 class RequestSuccessState extends RequestState {

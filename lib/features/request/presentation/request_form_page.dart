@@ -479,7 +479,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
                                 duration: "1:00",
                                 status: 'Pendiente',
                                 location: selectedLocation,
-                                pet_id: selectedPetIds,
+                                pet_id: [1],
                                 user_id: userId,
                                 caretaker_id: 1,
                               );

@@ -42,7 +42,7 @@ class MainApp extends StatelessWidget {
       deletePetUseCase: useCaseConfig.deletePetUseCase!,
       updatePetUseCase: useCaseConfig.updatePetUseCase!,
       createPetUseCase: useCaseConfig.createPetUseCase!,
-      getPetsByUserIdUseCase: useCaseConfig.getPetsByUserIdUseCase !,
+      getPetsByUserIdUseCase: useCaseConfig.getPetsByUserIdUseCase!,
     );
 
     final requestBloc = RequestBloc(
@@ -56,6 +56,7 @@ class MainApp extends StatelessWidget {
       getInProgressUseCase: useCaseConfig.getInProgressUseCase!,
       getHistoryUseCase: useCaseConfig.getHistoryUseCase!,
       getByCaretakerIdUseCase: useCaseConfig.getByCaretakerIdUseCase!,
+      getPetsByUserIdUseCase: useCaseConfig.getPetsByUserIdUseCase!,
     );
 
     return MultiBlocProvider(

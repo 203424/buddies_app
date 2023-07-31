@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'widgets/service_in_progress_widget.dart';
 
 class ServicesListPage extends StatelessWidget {
-  final List<Map<String, String>> list;
+  final List<Map<String, dynamic>> list;
   const ServicesListPage({super.key, required this.list});
 
   @override
