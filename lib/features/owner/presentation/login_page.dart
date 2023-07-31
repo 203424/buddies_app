@@ -50,26 +50,6 @@ class _LoginPageState extends State<LoginPage> {
     ));
   }
 
-  // Future<void> signInWithGoogle() async {
-  //   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-  //   final GoogleSignInAuthentication? googleAuth =
-  //       await googleUser?.authentication;
-
-  //   if (googleAuth?.accessToken != null && googleAuth?.idToken != null) {
-  //     final credential = GoogleAuthProvider.credential(
-  //       accessToken: googleAuth?.accessToken,
-  //       idToken: googleAuth?.idToken,
-  //     );
-
-  //     UserCredential userCredential =
-  //         await FirebaseAuth.instance.signInWithCredential(credential);
-  //     if (userCredential.user != null) {
-  //       if (userCredential.additionalUserInfo!.isNewUser) {}
-  //     }
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     final ownerBloc = context.read<OwnerBloc>();

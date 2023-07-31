@@ -18,13 +18,12 @@ class PetsPage extends StatefulWidget {
 class _PetsPageState extends State<PetsPage> {
   late int userId;
   late var prefs;
-    
+
   Future<void> initConnectivity() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
       userId = prefs.getInt("id");
     });
-    // Disparar el evento para obtener la lista de mascotas por el ID de usuario
     context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
   }
 
@@ -34,16 +33,20 @@ class _PetsPageState extends State<PetsPage> {
     initConnectivity();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-
-  }
-
-  void _fetchPetsWithDelay() {
-    Timer(Duration(seconds: 1), () {
-      context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
-    });
+  void showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+      shape: ContinuousRectangleBorder(
+        borderRadius: BorderRadius.circular(
+            200.0),
+      ),
+      content: Text(
+        message,
+        style: Font.textStyleBold(fontSize: 16.0),
+      ),
+      duration: const Duration(seconds: 3),
+    ));
   }
 
   @override
@@ -62,7 +65,6 @@ class _PetsPageState extends State<PetsPage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            // Navegar a la página de agregar mascota
             Navigator.pushNamed(context, Pages.addPetPage);
           },
           backgroundColor: redColor,
@@ -73,21 +75,20 @@ class _PetsPageState extends State<PetsPage> {
             if (state is PetUpdatedState ||
                 state is PetCreatedState ||
                 state is PetDeletedState) {
-              _fetchPetsWithDelay();
+              context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
+            } else if (state is PetErrorState) {
+              showSnackBar(context, state.errorMessage);
             }
           },
           child: BlocBuilder<PetBloc, PetState>(
             builder: (context, state) {
               if (state is PetLoadingState) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else if (state is PetLoadedState) {
-                final List<PetEntity> pets = state.pets;
-
-                return _buildPetsList(pets);
-              } else if (state is PetErrorState) {
-                return Center(child: Text(state.errorMessage));
+                return _buildPetsList(state.pets);
               } else {
-                return const Center(child: Text('No tienes ninguna mascota registrada'));
+                return const Center(
+                    child: Text('No tienes ninguna mascota registrada'));
               }
             },
           ),
@@ -96,7 +97,7 @@ class _PetsPageState extends State<PetsPage> {
 
   Widget _buildPetsList(List<PetEntity> pets) {
     if (pets == null) {
-      return Center(child: Text('No se encontraron mascotas'));
+      return const Center(child: Text('No se encontraron mascotas'));
     }
 
     return ListView.builder(

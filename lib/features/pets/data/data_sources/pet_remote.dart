@@ -138,7 +138,7 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
     String escapedPetsIdJson = Uri.encodeQueryComponent(petsIdJson);
 
     // Construir la URL con los parámetros correctamente formateados
-    var url = Uri.https(
+    var url = Uri.http(
         apiURL, "/api/pets/getByIdMultiple", {"array": escapedPetsIdJson});
     final prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');

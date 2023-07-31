@@ -24,10 +24,10 @@ class RequestPage extends StatefulWidget {
 
 class _RequestPageState extends State<RequestPage> {
   String? token;
+  
   @override
   void initState() {
     super.initState();
-    // Disparar el evento para obtener la lista de mascotas
     _fetchPetsWithDelay();
     initConnectivity();
   }
@@ -38,18 +38,11 @@ class _RequestPageState extends State<RequestPage> {
     // _fetchPetsWithDelay();
   }
 
-  Timer? _fetchPetsTimer;
   void initConnectivity() async {
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
-    Map<String,dynamic> jwtDecodedToken = JwtDecoder.decode(token!);
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(token!);
     print(jwtDecodedToken);
-  }
-  void _fetchPetsWithDelay() {
-    _fetchPetsTimer = Timer(Duration(seconds: 1), () {
-
-      context.read<RequestBloc>().add(GetAllRequestsEvent());
-    });
   }
 
   @override
@@ -66,7 +59,7 @@ class _RequestPageState extends State<RequestPage> {
         body: BlocListener<RequestBloc, RequestState>(
           listener: (context, state) {
             if (state is CreateRequestEvent) {
-              _fetchPetsWithDelay();
+              context.read<RequestBloc>().add(GetAllRequestsEvent());
             }
           },
           child: BlocBuilder<RequestBloc, RequestState>(
@@ -172,7 +165,6 @@ class _RequestPageState extends State<RequestPage> {
       if (status == 'Finalizado') {
         finalized.add(finalizedObject);
       }
-
     }
     print(token); // Imprimir el token dentro del bucle
 

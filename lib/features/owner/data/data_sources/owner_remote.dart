@@ -76,6 +76,7 @@ class OwnerRemoteDataSourceImpl implements OwnerRemoteDataSource {
           JwtDecoder.decode(responseData['token']);
       await prefs.setString('token', responseData['token']);
       await prefs.setInt('id', jwtDecodedToken['id']);
+      print("jwt recibido: ${responseData['token']}\ndatos: $jwtDecodedToken");
       final ownerModel = OwnerModel.fromJson(responseData);
       return ownerModel;
     } else {
