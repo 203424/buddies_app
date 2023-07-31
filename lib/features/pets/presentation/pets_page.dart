@@ -16,21 +16,20 @@ class PetsPage extends StatefulWidget {
 }
 
 class _PetsPageState extends State<PetsPage> {
-  late int userId;
+  late int userId = 0;
   late var prefs;
 
-  Future<void> initConnectivity() async {
+  Future<void> getUserId() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
       userId = prefs.getInt("id");
     });
-    context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
   }
 
   @override
   void initState() {
     super.initState();
-    initConnectivity();
+    getUserId();
   }
 
   void showSnackBar(BuildContext context, String message) {
@@ -38,8 +37,7 @@ class _PetsPageState extends State<PetsPage> {
       behavior: SnackBarBehavior.floating,
       margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
       shape: ContinuousRectangleBorder(
-        borderRadius: BorderRadius.circular(
-            200.0),
+        borderRadius: BorderRadius.circular(200.0),
       ),
       content: Text(
         message,
@@ -51,6 +49,8 @@ class _PetsPageState extends State<PetsPage> {
 
   @override
   Widget build(BuildContext context) {
+    context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
+
     return Scaffold(
         backgroundColor: white,
         appBar: AppBar(
@@ -72,10 +72,8 @@ class _PetsPageState extends State<PetsPage> {
         ),
         body: BlocListener<PetBloc, PetState>(
           listener: (context, state) {
-            if (state is PetUpdatedState ||
-                state is PetCreatedState ||
-                state is PetDeletedState) {
-              context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
+            if (state is PetLoadedState) {
+              _buildPetsList(state.pets);
             } else if (state is PetErrorState) {
               showSnackBar(context, state.errorMessage);
             }
@@ -96,9 +94,9 @@ class _PetsPageState extends State<PetsPage> {
   }
 
   Widget _buildPetsList(List<PetEntity> pets) {
-    if (pets == null) {
-      return const Center(child: Text('No se encontraron mascotas'));
-    }
+    // if (pets == null) {
+    //   return const Center(child: Text('No se encontraron mascotas'));
+    // }
 
     return ListView.builder(
       itemCount: pets.length,
@@ -111,7 +109,6 @@ class _PetsPageState extends State<PetsPage> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  // Acción al presionar el botón (esto se puede mantener si deseas mantener alguna acción aquí)
                   Navigator.pushNamed(
                     context,
                     Pages.updatePetPage,
@@ -252,7 +249,9 @@ class _PetsPageState extends State<PetsPage> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                context.read<PetBloc>().add(DeletePetEvent(petId: pet.id ?? 0));
+                context
+                    .read<PetBloc>()
+                    .add(DeletePetEvent(petId: pet.id ?? 0, userId: userId));
                 // Disparar el evento para obtener la lista de mascotas actualizada después de eliminar una mascota
               },
             ),
