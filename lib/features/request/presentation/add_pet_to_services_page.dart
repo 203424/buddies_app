@@ -4,7 +4,7 @@ import 'package:buddies_app/widgets/button_form_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:buddies_app/features/pets/presentation/pet/pet_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../pets/domain/entities/pet/pet_entity.dart';
 
 class AddPetToServicesPage extends StatefulWidget {
   final List<Map<String, dynamic>> markedPets;
@@ -14,12 +14,22 @@ class AddPetToServicesPage extends StatefulWidget {
   State<AddPetToServicesPage> createState() => _AddPetToServicesPageState();
 }
 
+List<PetEntity> getAllPets(BuildContext context) {
+  final petBloc = context.read<PetBloc>();
+  petBloc.add(GetPetsEvent()); // Disparar el evento para obtener todas las mascotas
+  final state = petBloc.state;
+  print(state);
+  if (state is PetLoadedState) {
+    return state.pets;
+  } else {
+    return [];
+  }
+}
+
 class _AddPetToServicesPageState extends State<AddPetToServicesPage> {
   List<bool> selectedPets = [];
   List<Map<String, dynamic>> pets = [];
   int maxSelectedPets = 2;
-  late int userId;
-  late var prefs;
 
   void markSelectedPets() {
     if (widget.markedPets.isEmpty) {
@@ -48,9 +58,30 @@ class _AddPetToServicesPageState extends State<AddPetToServicesPage> {
   @override
   void initState() {
     super.initState();
-    getUserId();
-    context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
+    fetchPets();
     markSelectedPets();
+
+  }
+
+  Future<void> fetchPets() async {
+    try {
+      List<PetEntity> petsList = getAllPets(context); // Obtener mascotas desde PetBloc
+      print(petsList);
+      // Clasificar las mascotas según su tamaño
+      for (var pet in petsList) {
+        pets.add({
+          'id': pet.id ?? 0,
+          'name': pet.name ?? '',
+          'birth': pet.birthday ?? '',
+          'type': pet.type ?? '',
+          'breed': pet.breed ?? '',
+          'size': pet.size ?? '',
+        });
+      }
+    } catch (e) {
+      // Manejar el error si falla la obtención de las mascotas
+      print('Error fetching pets: $e');
+    }
   }
 
   @override
