@@ -32,20 +32,10 @@ class _RequestFormPageState extends State<RequestFormPage> {
   late LatLng selectedLocation;
   late String selectedService;
   late double cost = 0.0;
-  late int userId;
-  late var prefs;
 
-  Future<void> initConnectivity() async {
-    prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userId = prefs.getInt("id");
-    });
-    // Disparar el evento para obtener la lista de mascotas por el ID de usuario
-  }
   @override
   void initState() {
     super.initState();
-    initConnectivity();
     _getLocation();
     selectedPets = [];
     selectedLocation = const LatLng(0, 0);
@@ -480,7 +470,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
                                 status: 'Pendiente',
                                 location: selectedLocation,
                                 pet_id: selectedPetIds,
-                                user_id: userId,
+                                user_id: 1,
                                 caretaker_id: 1,
                               );
                               context
