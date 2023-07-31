@@ -24,7 +24,7 @@ class RequestPage extends StatefulWidget {
 
 class _RequestPageState extends State<RequestPage> {
   String? token;
-
+  
   @override
   void initState() {
     super.initState();
@@ -96,7 +96,7 @@ class _RequestPageState extends State<RequestPage> {
   List<PetEntity> getAllPets(BuildContext context) {
     final petBloc = context.read<PetBloc>();
     petBloc.add(
-        GetPetsByUserIdEvent(id: )); // Disparar el evento para obtener todas las mascotas
+        GetPetsEvent()); // Disparar el evento para obtener todas las mascotas
     final state = petBloc.state;
     if (state is PetLoadedState) {
       return state.pets;

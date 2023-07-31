@@ -22,59 +22,63 @@ class PetBloc extends Bloc<PetEvent, PetState> {
     required this.deletePetUseCase,
     required this.updatePetUseCase,
     required this.getPetsByUserIdUseCase,
-  }) : super(PetInitialState()) {
-    on<GetPetsByUserIdEvent>((event, emit) async {
-      emit(PetLoadingState());
-      try {
-        List<PetEntity> pets = await getPetsByUserIdUseCase.execute(event.id);
-        emit(PetLoadedState(pets));
-      } catch (e) {
-        emit(PetErrorState(e.toString()));
-      }
-    });
 
+  }) : super(PetInitialState()) {
     on<GetPetsByIdEvent>((event, emit) async {
       emit(PetLoadingState());
       try {
         List<PetEntity> pets = await getPetsByIdUseCase.execute(event.petsId);
-        emit(PetLoadedState(pets));
+        if (pets.isEmpty) {
+          emit(PetEmptyState());
+        } else {
+          emit(PetLoadedState(pets));
+        }
       } catch (e) {
         emit(PetErrorState(e.toString()));
       }
     });
 
     on<CreatePetEvent>((event, emit) async {
-      // emit(PetCreatedState(event.pets));
-      emit(PetLoadingState());
+      emit(PetCreatedState(event.pets));
       try {
         await createPetUseCase.execute(event.pets);
-        List<PetEntity> pets = await getPetsByUserIdUseCase.execute(event.userId);
-        emit(PetLoadedState(pets));
+        emit(PetSuccessState("Mascota creada exitosamente"));
       } catch (e) {
-        emit(PetErrorState('Error al registrar la mascota: $e'));
+        emit(PetErrorState('Error al crear la mascota: $e'));
       }
     });
 
     on<DeletePetEvent>((event, emit) async {
-      // emit(PetDeletedState(event.petId));
-      emit(PetLoadingState());
+      emit(PetDeletedState(event.petId));
       try {
         await deletePetUseCase.execute(event.petId);
-        List<PetEntity> pets = await getPetsByUserIdUseCase.execute(event.userId);
-        emit(PetLoadedState(pets));
+        emit(PetSuccessState("Mascota eliminada exitosamente"));
+        print('Pet deleted successfully');
       } catch (e) {
         emit(PetErrorState(e.toString()));
         print('Pet dont deleted successfully' + e.toString());
       }
     });
 
-    on<UpdatePetEvent>((event, emit) async {
-      // emit(PetUpdatedState(event.pets, event.petIds));
+    on<GetPetsByUserIdEvent>((event, emit) async {
       emit(PetLoadingState());
       try {
+        List<PetEntity> pets = await getPetsByUserIdUseCase.execute(event.id);
+        if (pets.isEmpty) {
+          emit(PetEmptyState());
+        } else {
+          emit(PetLoadedState(pets));
+        }
+      } catch (e) {
+        emit(PetErrorState(e.toString()));
+      }
+    });
+
+    on<UpdatePetEvent>((event, emit) async {
+      emit(PetUpdatedState(event.pets, event.petIds));
+      try {
         await updatePetUseCase.execute(event.petIds, event.pets);
-        List<PetEntity> pets = await getPetsByUserIdUseCase.execute(event.userId);
-        emit(PetLoadedState(pets));
+        emit(PetSuccessState("Mascota actualizada exitosamente"));
       } catch (e) {
         emit(PetErrorState(e.toString()));
       }

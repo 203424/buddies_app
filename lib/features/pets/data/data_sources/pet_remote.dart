@@ -82,7 +82,8 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
   @override
   Future<List<PetModel>> getPetsByUserId(int id) async {
     var url = Uri.http(apiURL, '/api/pets/getByUserId/$id');
-    final String? token = await getTokenFromSharedPreferences();
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
@@ -94,6 +95,7 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
           .jsonDecode(response.body)
           .map<PetModel>((data) => PetModel.fromJson(data))
           .toList();
+      print(dataPets);
       return dataPets;
     } else {
       throw Exception('Error');
@@ -102,30 +104,35 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
 
   @override
   Future<List<PetModel>> getPetsById(List<int> petsId) async {
+    // Formatear la lista de identificadores como una cadena JSON
     String petsIdJson = jsonEncode(petsId);
+    // Escapar la cadena JSON para que se transmita correctamente en la URL
     String escapedPetsIdJson = Uri.encodeQueryComponent(petsIdJson);
 
+    // Construir la URL con los parámetros correctamente formateados
     var url = Uri.http(
         apiURL, "/api/pets/getByIdMultiple", {"array": escapedPetsIdJson});
-    final String? token = await getTokenFromSharedPreferences();
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      
+      // Si la solicitud fue exitosa, parsea la respuesta y devuelve una lista con la mascota encontrada
       dynamic responseData = convert.jsonDecode(response.body);
       PetModel pet = PetModel.fromJson(responseData);
       return [pet];
     } else if (response.statusCode == 404) {
+      // Si la mascota no fue encontrada, devuelve una lista vacía
       return [];
     } else {
+      // Si la solicitud falló, puedes lanzar una excepción o manejar el error de alguna otra manera
       throw Exception('Error al obtener la mascota');
     }
   }
 
-  @override
   Future<List<PetModel>> updatePet(
       List<PetEntity> pets, List<int> petIds) async {
     String petsIdJson = jsonEncode(petIds);

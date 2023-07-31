@@ -27,22 +27,23 @@ class _AddPetPageState extends State<AddPetPage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _sizeController = TextEditingController();
 
-  late int userId;
-  late var prefs;
-
-  Future<void> getUserId() async {
-    prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userId = prefs.getInt("id");
-    });
-  }
+  late int id = 0;
 
   @override
   void initState() {
+    // TODO: implement initState
+    initConnectivity();
     super.initState();
-    getUserId();
   }
-
+  void initConnectivity() async {
+    final prefs = await SharedPreferences.getInstance();
+    int? userId = prefs.getInt("id");
+    if (userId != null) {
+      setState(() {
+        id = userId;
+      });
+    }
+  }
   @override
   void dispose() {
     _nameController.dispose();
@@ -168,12 +169,12 @@ class _AddPetPageState extends State<AddPetPage> {
                         gender: _genderController.text,
                         size: _sizeController.text,
                         description: _descriptionController.text,
-                        owner_id: userId,
+                        owner_id: id,
                       );
                       final petsList = [pet];
                       context
                           .read<PetBloc>()
-                          .add(CreatePetEvent(pets: petsList, userId: userId));
+                          .add(CreatePetEvent(pets: petsList));
                       Navigator.pop(
                           context); // Regresar a la página anterior (PetsPage)
                     },

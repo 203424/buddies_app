@@ -46,8 +46,9 @@ class _BreedPickerWidgetState extends State<BreedPickerWidget> {
 
   Future<void> _loadBreeds() async {
     if (widget.petType == 'perro') {
+      // Fetch dog breeds from API
       final response =
-          await http.get(Uri.https('dog.ceo', '/api/breeds/list/all'));
+          await http.get(Uri.parse('https://dog.ceo/api/breeds/list/all'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         _breeds = data['message'].keys.toList();
