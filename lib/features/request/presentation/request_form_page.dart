@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RequestFormPage extends StatefulWidget {
   final String title;
@@ -43,6 +44,11 @@ class _RequestFormPageState extends State<RequestFormPage> {
 
     _isValidTime = _isTimeWithinRange(_selectedTime);
     selectedService = "";
+  }
+
+  Future<String?> getTokenFromSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
   }
 
   Future<void> _getLocation() async {

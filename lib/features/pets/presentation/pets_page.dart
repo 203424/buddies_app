@@ -20,7 +20,7 @@ class PetsPage extends StatefulWidget {
 class _PetsPageState extends State<PetsPage> {
   late int userId = 0;
 
-  void initConnectivity() async {
+  Future<void> initConnectivity() async {
     final prefs = await SharedPreferences.getInstance();
     int? id = prefs.getInt("id");
     if (userId != null) {
@@ -28,6 +28,8 @@ class _PetsPageState extends State<PetsPage> {
         userId = id!;
       });
     }
+    // Disparar el evento para obtener la lista de mascotas por el ID de usuario
+    context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
   }
 
   @override
@@ -36,12 +38,6 @@ class _PetsPageState extends State<PetsPage> {
     // Disparar el evento para obtener la lista de mascotas
     // Obtener el ID de usuario actual (puedes obtenerlo de donde sea que lo estés almacenando)
     initConnectivity();
-    // Disparar el evento para obtener la lista de mascotas por el ID de usuario
-    context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
-    print("userId");
-
-    print(userId);
-    _fetchPetsWithDelay();
   }
 
   Timer? _fetchPetsTimer;
