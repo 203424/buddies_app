@@ -5,6 +5,7 @@ import 'package:buddies_app/features/pets/presentation/pet/pet_bloc.dart';
 import 'package:buddies_app/features/request/domain/entities/request/request_entity.dart';
 import 'package:buddies_app/features/request/presentation/request/request_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../pets/domain/entities/pet/pet_entity.dart';
 
 class AddPetToServicesPage extends StatefulWidget {
@@ -15,22 +16,40 @@ class AddPetToServicesPage extends StatefulWidget {
   State<AddPetToServicesPage> createState() => _AddPetToServicesPageState();
 }
 
-List<PetEntity> getAllPets(BuildContext context) {
-  final petBloc = context.read<PetBloc>();
-  petBloc.add(GetPetsEvent()); // Disparar el evento para obtener todas las mascotas
-  final state = petBloc.state;
-  print(state);
-  if (state is PetLoadedState) {
-    return state.pets;
-  } else {
-    return [];
-  }
-}
+
 
 class _AddPetToServicesPageState extends State<AddPetToServicesPage> {
   List<bool> selectedPets = [];
   List<Map<String, dynamic>> pets = [];
   int maxSelectedPets = 2;
+  late int userId;
+  late var prefs;
+
+  Future<void> initConnectivity() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getInt("id");
+    });
+    // Disparar el evento para obtener la lista de mascotas por el ID de usuario
+    context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
+    fetchPets();
+    markSelectedPets();
+  }
+
+  List<PetEntity> getAllPets(BuildContext context) {
+    final petBloc = context.read<PetBloc>();
+    petBloc.add(GetPetsByUserIdEvent(id: userId)); // Disparar el evento para obtener todas las mascotas
+    print(userId);
+    final state = petBloc.state;
+    print(state);
+    if (state is PetLoadedState) {
+      return state.pets;
+
+    } else {
+      return [];
+    }
+  }
+
 
   void markSelectedPets() {
     if (widget.markedPets.isEmpty) {
@@ -52,8 +71,8 @@ class _AddPetToServicesPageState extends State<AddPetToServicesPage> {
   @override
   void initState() {
     super.initState();
-    fetchPets();
-    markSelectedPets();
+    initConnectivity();
+
 
   }
 
@@ -82,66 +101,66 @@ class _AddPetToServicesPageState extends State<AddPetToServicesPage> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      backgroundColor: white,
-      appBar: AppBar(
-        backgroundColor: white,
-        title: const Text(
-          'Seleccionar mascotas',
-          style: Font.pageTitleStyle,
-        ),
-        leading: GestureDetector(
-          onTap: () => widget.markedPets.isNotEmpty
-              ? Navigator.pop(context, widget.markedPets)
-              : Navigator.pop(context),
-          child: const Icon(
-            Icons.close,
-            color: black,
-          ),
-        ),
-        iconTheme: const IconThemeData(size: 30.0),
-        shadowColor: Colors.transparent,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: GestureDetector(
-              onTap: () {
-                List<Map<String, dynamic>> selected = [];
-                for (int i = 0; i < pets.length; i++) {
-                  if (selectedPets[i]) {
-                    selected.add(pets[i]);
-                  }
-                }
-                Navigator.pop(context, selected);
-              },
+          backgroundColor: white,
+          appBar: AppBar(
+            backgroundColor: white,
+            title: const Text(
+              'Seleccionar mascotas',
+              style: Font.pageTitleStyle,
+            ),
+            leading: GestureDetector(
+              onTap: () => widget.markedPets.isNotEmpty
+                  ? Navigator.pop(context, widget.markedPets)
+                  : Navigator.pop(context),
               child: const Icon(
-                Icons.done,
-                color: redColor,
+                Icons.close,
+                color: black,
               ),
             ),
-          )
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: CustomScrollView(slivers: [
-          SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-            var pet = pets[index];
-            return petCardToSelect(pet, index);
-          }, childCount: pets.length)),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 15.0, top: 5.0),
-              child: ButtonFormWidget(
-                  onPressed: () {
-                    Navigator.pushNamed(context, Pages.addPetPage);
+            iconTheme: const IconThemeData(size: 30.0),
+            shadowColor: Colors.transparent,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: GestureDetector(
+                  onTap: () {
+                    List<Map<String, dynamic>> selected = [];
+                    for (int i = 0; i < pets.length; i++) {
+                      if (selectedPets[i]) {
+                        selected.add(pets[i]);
+                      }
+                    }
+                    Navigator.pop(context, selected);
                   },
-                  text: 'Agregar mascota'),
-            ),
-          )
-        ]),
-      ),
-    ));
+                  child: const Icon(
+                    Icons.done,
+                    color: redColor,
+                  ),
+                ),
+              )
+            ],
+          ),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: CustomScrollView(slivers: [
+              SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    var pet = pets[index];
+                    return petCardToSelect(pet, index);
+                  }, childCount: pets.length)),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0, top: 5.0),
+                  child: ButtonFormWidget(
+                      onPressed: () {
+                        Navigator.pushNamed(context, Pages.addPetPage);
+                      },
+                      text: 'Agregar mascota'),
+                ),
+              )
+            ]),
+          ),
+        ));
   }
 
   Widget petCardToSelect(pet, index) {
@@ -151,10 +170,10 @@ class _AddPetToServicesPageState extends State<AddPetToServicesPage> {
         onPressed: () {
           setState(() {
             if (selectedPets.where((selected) => selected).length >=
-                    maxSelectedPets &&
+                maxSelectedPets &&
                 !selectedPets[index]) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                
+
                 backgroundColor: redColor,
                 content: Text(
                     'Solo se permiten seleccionar $maxSelectedPets mascotas.',
@@ -211,10 +230,10 @@ class _AddPetToServicesPageState extends State<AddPetToServicesPage> {
               ),
               selectedPets[index]
                   ? const Icon(
-                      Icons.done,
-                      color: black,
-                      size: 30.0,
-                    )
+                Icons.done,
+                color: black,
+                size: 30.0,
+              )
                   : Container()
             ],
           ),

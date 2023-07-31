@@ -44,6 +44,7 @@ class RequestModel extends RequestEntity {
         json['location'][0], // La longitud debe ser el primer valor
       )
           : null,
+      cost: json['cost']?.toDouble(), // Parsea el valor como double si existe
       status: json['status'],
       pet_id: json['pet_id'] != null ? List<int>.from(json['pet_id']) : null,
       user_id: json['user_id'],

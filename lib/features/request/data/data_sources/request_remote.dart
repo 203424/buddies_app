@@ -173,7 +173,9 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
 
   @override
   Future<List<RequestModel>> getByUserId(int id) async {
+    print(id);
     final url = Uri.http(apiURL, '/api/requests/getByUserId/$id');
+
     final prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
     final headers = {
@@ -184,6 +186,9 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
 
     if (response.statusCode == 200) {
       final responseData = convert.jsonDecode(response.body);
+      if (responseData == null) {
+        return []; // Retorna una lista vacía si responseData es null
+      }
       // Aquí asumimos que responseData es una lista de objetos RequestModel
       final List<RequestModel> requestModels = (responseData as List)
           .map((data) => RequestModel.fromJson(data))
