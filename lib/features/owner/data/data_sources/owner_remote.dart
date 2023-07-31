@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:buddies_app/const.dart';
 import 'package:http/http.dart' as http;
@@ -73,11 +72,10 @@ class OwnerRemoteDataSourceImpl implements OwnerRemoteDataSource {
     if (response.statusCode == 200) {
       final prefs = await SharedPreferences.getInstance();
       final responseData = convert.jsonDecode(response.body);
-      Map<String,dynamic> jwtDecodedToken = JwtDecoder.decode(responseData.toString());
-
-      await prefs.setString('token', responseData['token'].toString());
+      Map<String, dynamic> jwtDecodedToken =
+          JwtDecoder.decode(responseData['token']);
+      await prefs.setString('token', responseData['token']);
       await prefs.setInt('id', jwtDecodedToken['id']);
-
       final ownerModel = OwnerModel.fromJson(responseData);
       return ownerModel;
     } else {
