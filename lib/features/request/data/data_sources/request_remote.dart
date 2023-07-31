@@ -173,7 +173,6 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
 
   @override
   Future<List<RequestModel>> getByUserId(int id) async {
-    print(id);
     final url = Uri.http(apiURL, '/api/requests/getByUserId/$id');
 
     final prefs = await SharedPreferences.getInstance();
@@ -186,6 +185,7 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
 
     if (response.statusCode == 200) {
       final responseData = convert.jsonDecode(response.body);
+
       if (responseData == null) {
         return []; // Retorna una lista vacía si responseData es null
       }
@@ -198,7 +198,7 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
       throw Exception('Error al obtener el dueño por ID');
     }
   }
-
+  
   @override
   Future<List<RequestModel>> getHistory(int userId)  async{
     final url = Uri.http(apiURL, '/api/requests/$userId');

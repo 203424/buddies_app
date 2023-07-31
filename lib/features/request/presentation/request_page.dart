@@ -47,6 +47,8 @@ class _RequestPageState extends State<RequestPage> {
     });
     // Disparar el evento para obtener la lista de mascotas por el ID de usuario
     context.read<RequestBloc>().add(GetByUserIdEvent(userId));
+    context.read<PetBloc>().add(GetPetsByUserIdEvent(id:userId));
+
   }
 
   @override
@@ -95,28 +97,25 @@ class _RequestPageState extends State<RequestPage> {
 
   List<PetEntity> getAllPets(BuildContext context) {
     final petBloc = context.read<PetBloc>();
-    petBloc.add(
-        GetPetsEvent()); // Disparar el evento para obtener todas las mascotas
     final state = petBloc.state;
     if (state is PetLoadedState) {
       return state.pets;
     } else {
+      petBloc.add(GetPetsEvent()); // Disparar el evento solo si las mascotas no están disponibles
       return [];
     }
   }
-
   String getAllPetsById(BuildContext context, List<int> ids) {
     final petBloc = context.read<PetBloc>();
-    // Disparar el evento para obtener mascotas por su ID
-    petBloc.add(GetPetsByIdEvent(petsId: ids));
 
+    // Verificar si las mascotas ya están disponibles en el estado actual
     final state = petBloc.state;
     if (state is PetLoadedState) {
       final List<PetEntity> allPets = state.pets;
 
       // Filtrar las mascotas por los ids proporcionados
       final List<PetEntity> petsById =
-          allPets.where((pet) => ids.contains(pet.id)).toList();
+      allPets.where((pet) => ids.contains(pet.id)).toList();
 
       if (petsById.isNotEmpty) {
         // Si hay mascotas con los ids proporcionados, combinamos los nombres en una cadena separada por ' - '
@@ -127,7 +126,11 @@ class _RequestPageState extends State<RequestPage> {
         return 'Error de mascota';
       }
     } else {
-      return 'No se encontraron listas';
+      // Las mascotas aún no están disponibles en el estado, disparamos el evento para obtenerlas
+      petBloc.add(GetPetsByIdEvent(petsId: ids));
+
+      // Puedes retornar una cadena vacía o un mensaje de espera mientras esperas la respuesta
+      return 'Cargando mascotas...';
     }
   }
 

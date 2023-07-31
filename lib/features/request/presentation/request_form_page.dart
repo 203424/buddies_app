@@ -479,7 +479,7 @@ class _RequestFormPageState extends State<RequestFormPage> {
                                 hour: formatTimeOfDay(_selectedTime),
                                 cost: cost,
                                 duration: "1:00",
-                                status: 'Pendiente',
+                                status: 'Finalizado',
                                 location: selectedLocation,
                                 pet_id: selectedPetIds,
                                 user_id: userId,
