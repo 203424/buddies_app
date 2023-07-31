@@ -8,5 +8,6 @@ abstract class PetRepository{
   Future<void> deletePet(int petid);
   Future<List<PetEntity>> getPets();
   Future<List<PetEntity>> getPetsById(List<int> petsId);
+  Future<List<PetEntity>> getPetsByUserId(int id);
 
 }

@@ -35,5 +35,11 @@ class PetRepositoryImpl implements PetRepository {
     return await petRemoteDataSource.updatePet(pets, petIds);
   }
 
+  @override
+  Future<List<PetEntity>> getPetsByUserId(int id) async {
+    return await petRemoteDataSource.getPetsByUserId(id);
+
+  }
+
 
 }

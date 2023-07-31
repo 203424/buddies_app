@@ -3,6 +3,7 @@ import 'package:buddies_app/features/pets/domain/entities/pet/pet_entity.dart';
 import 'package:buddies_app/features/pets/domain/usecases/pet_usecases/create_pet_usecase.dart';
 import 'package:buddies_app/features/pets/domain/usecases/pet_usecases/delete_pet_usecase.dart';
 import 'package:buddies_app/features/pets/domain/usecases/pet_usecases/get_pets_by_id_usecase.dart';
+import 'package:buddies_app/features/pets/domain/usecases/pet_usecases/get_pets_by_user_id.dart';
 import 'package:buddies_app/features/pets/domain/usecases/pet_usecases/get_pets_usecase.dart';
 import 'package:buddies_app/features/pets/domain/usecases/pet_usecases/update_pet_usecase.dart';
 
@@ -15,6 +16,7 @@ class PetBloc extends Bloc<PetEvent, PetState> {
   final CreatePetUseCase createPetUseCase;
   final DeletePetUseCase deletePetUseCase;
   final UpdatePetUseCase updatePetUseCase;
+  final GetPetsByUserIdUseCase getPetsByUserIdUseCase;
 
   PetBloc({
     required this.getPetsUseCase,
@@ -22,6 +24,8 @@ class PetBloc extends Bloc<PetEvent, PetState> {
     required this.createPetUseCase,
     required this.deletePetUseCase,
     required this.updatePetUseCase,
+    required this.getPetsByUserIdUseCase,
+
   }) : super(PetInitialState()) {
     on<GetPetsEvent>((event, emit) async {
       emit(PetLoadingState());
@@ -70,6 +74,20 @@ class PetBloc extends Bloc<PetEvent, PetState> {
       } catch (e) {
         emit(PetErrorState(e.toString()));
         print('Pet dont deleted successfully' + e.toString());
+      }
+    });
+
+    on<GetPetsByUserIdEvent>((event, emit) async {
+      emit(PetLoadingState());
+      try {
+        List<PetEntity> pets = await getPetsByUserIdUseCase.execute(event.id);
+        if (pets.isEmpty) {
+          emit(PetEmptyState());
+        } else {
+          emit(PetLoadedState(pets));
+        }
+      } catch (e) {
+        emit(PetErrorState(e.toString()));
       }
     });
 

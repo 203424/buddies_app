@@ -75,7 +75,7 @@ class _MainPageState extends State<MainPage> {
               sizeIcon: 35.0,
               color: redColor,
             ),
-            label: 'Servicios - id:$widget.id',
+            label: 'Servicios',
           ),
           const BottomNavigationBarItem(
             icon: Icon(

@@ -3,6 +3,7 @@ import 'package:buddies_app/const.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:buddies_app/features/request/data/models/request/request_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/entities/request/request_entity.dart';
 
@@ -27,7 +28,12 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
   @override
   Future<RequestModel> createRequest(RequestEntity request) async {
     var url = Uri.http(apiURL, '/api/requests/');
-    var headers = {'Content-Type': 'application/json'};
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     var body = {
       'id': request.id,
       'type': request.type,
@@ -57,8 +63,12 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
   @override
   Future<void> deleteRequest(int id) async {
     final url = Uri.http(apiURL, '/api/requests/$id');
-    final headers = {'Content-Type': 'application/json'};
-
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     final response = await http.delete(url, headers: headers);
 
     if (response.statusCode != 200) {
@@ -66,11 +76,23 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
     }
   }
 
+  Future<String?> getTokenFromSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
+
+
   @override
   Future<List<RequestModel>> getAllRequests() async {
-    final url = Uri.http(apiURL, '/api/requests');
-    final headers = {'Content-Type': 'application/json'};
 
+    final url = Uri.http(apiURL, '/api/requests');
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       final responseData = convert.jsonDecode(response.body);
@@ -86,8 +108,12 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
   @override
   Future<List<RequestModel>> getByCaretakerId(int caretakerId) async {
     final url = Uri.http(apiURL, '/api/requests/$caretakerId');
-    final headers = {'Content-Type': 'application/json'};
-
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {
@@ -105,8 +131,12 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
   @override
   Future<RequestModel> getById(int id) async {
     final url = Uri.http(apiURL, '/api/requests/$id');
-    final headers = {'Content-Type': 'application/json'};
-
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {
@@ -121,8 +151,12 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
   @override
   Future<List<RequestModel>> getByStatus(String status) async {
     final url = Uri.http(apiURL, '/api/requests');
-    final headers = {'Content-Type': 'application/json'};
-
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {
@@ -140,8 +174,12 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
   @override
   Future<List<RequestModel>> getByUserId(int id) async {
     final url = Uri.http(apiURL, '/api/requests/$id');
-    final headers = {'Content-Type': 'application/json'};
-
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {
@@ -159,8 +197,12 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
   @override
   Future<List<RequestModel>> getHistory(int userId)  async{
     final url = Uri.http(apiURL, '/api/requests/$userId');
-    final headers = {'Content-Type': 'application/json'};
-
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       final responseData = convert.jsonDecode(response.body);
@@ -177,8 +219,12 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
   @override
   Future<List<RequestModel>> getInProgress(int userId) async {
     final url = Uri.http(apiURL, '/api/requests/$userId');
-    final headers = {'Content-Type': 'application/json'};
-
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {
@@ -196,7 +242,12 @@ class RequestRemoteDataSourceImpl implements RequestRemoteDataSource
   @override
   Future<RequestModel> updateRequest(RequestEntity request) async {
     var url = Uri.http(apiURL, '/api/requests/');
-    var headers = {'Content-Type': 'application/json'};
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     var body = {
       'id': request.id,
       'type': request.type,

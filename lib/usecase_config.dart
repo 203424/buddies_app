@@ -3,6 +3,7 @@ import 'package:buddies_app/features/owner/data/repository/owner_repository_impl
 import 'package:buddies_app/features/owner/domain/usecases/owner_usecases/create_owner_usecase.dart';
 import 'package:buddies_app/features/owner/domain/usecases/owner_usecases/sign_in_usecase.dart';
 import 'package:buddies_app/features/pets/data/repositories/pet_repository_impl.dart';
+import 'package:buddies_app/features/pets/domain/usecases/pet_usecases/get_pets_by_user_id.dart';
 import 'package:buddies_app/features/request/domain/usecases/request_usecases/create_request_usecase.dart';
 import 'package:buddies_app/features/request/domain/usecases/request_usecases/delete_request_usecase.dart';
 import 'package:buddies_app/features/request/domain/usecases/request_usecases/get_by_user_id.dart';
@@ -33,6 +34,8 @@ class UseCaseConfig {
   GetPetsByIdUseCase? getPetsByIdUseCase;
   GetPetsUseCase? getPetsUseCase;
   UpdatePetUseCase? updatePetUseCase;
+  GetPetsByUserIdUseCase? getPetsByUserIdUseCase;
+
   //Request
   RequestRepositoryImpl? requestRepositoryImpl;
   RequestRemoteDataSourceImpl? requestRemoteDataSourceImpl;
@@ -66,6 +69,7 @@ class UseCaseConfig {
     getPetsUseCase =
         GetPetsUseCase(petRepositoryImpl!); // Initialize getPetsUseCase
     updatePetUseCase = UpdatePetUseCase(petRepositoryImpl!);
+    getPetsByUserIdUseCase = GetPetsByUserIdUseCase(petRepositoryImpl!);
     //Request
     requestRemoteDataSourceImpl = RequestRemoteDataSourceImpl();
     requestRepositoryImpl = RequestRepositoryImpl(

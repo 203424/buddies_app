@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:buddies_app/features/pets/presentation/pet/pet_bloc.dart';
 import 'package:buddies_app/features/pets/domain/entities/pet/pet_entity.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PetsPage extends StatefulWidget {
   const PetsPage({Key? key}) : super(key: key);
@@ -16,12 +18,29 @@ class PetsPage extends StatefulWidget {
 }
 
 class _PetsPageState extends State<PetsPage> {
+  late int userId = 0;
+
+  void initConnectivity() async {
+    final prefs = await SharedPreferences.getInstance();
+    int? id = prefs.getInt("id");
+    if (userId != null) {
+      setState(() {
+        userId = id!;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     // Disparar el evento para obtener la lista de mascotas
-    context.read<PetBloc>().add(GetPetsEvent());
+    // Obtener el ID de usuario actual (puedes obtenerlo de donde sea que lo estés almacenando)
+    initConnectivity();
+    // Disparar el evento para obtener la lista de mascotas por el ID de usuario
+    context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
+    print("userId");
 
+    print(userId);
   }
 
   Timer? _fetchPetsTimer;
@@ -33,10 +52,9 @@ class _PetsPageState extends State<PetsPage> {
 
   void _fetchPetsWithDelay() {
     _fetchPetsTimer = Timer(Duration(seconds: 1), () {
-      context.read<PetBloc>().add(GetPetsEvent());
+      context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

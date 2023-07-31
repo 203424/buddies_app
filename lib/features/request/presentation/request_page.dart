@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../pets/domain/entities/pet/pet_entity.dart';
@@ -41,6 +42,8 @@ class _RequestPageState extends State<RequestPage> {
   void initConnectivity() async {
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
+    Map<String,dynamic> jwtDecodedToken = JwtDecoder.decode(token!);
+    print(jwtDecodedToken);
   }
   void _fetchPetsWithDelay() {
     _fetchPetsTimer = Timer(Duration(seconds: 1), () {

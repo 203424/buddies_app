@@ -8,6 +8,9 @@ import 'package:buddies_app/widgets/button_form_widget.dart';
 import 'package:buddies_app/widgets/input_form_widget.dart';
 import 'package:buddies_app/widgets/date_picker_widget.dart';
 import 'package:buddies_app/widgets/dropdown_picker_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../widgets/breed_picker_widget.dart';
 
 class UpdatePetPage extends StatefulWidget {
   final int petId; // Se recibe el ID de la mascota que se va a actualizar
@@ -40,7 +43,19 @@ class _UpdatePetPageState extends State<UpdatePetPage> {
     _breedController.text = widget.pet.breed ?? '';
     _genderController.text = widget.pet.gender ?? '';
     _descriptionController.text = widget.pet.description ?? '';
-    _sizeController.text = widget.pet.description ?? '';
+    _sizeController.text = widget.pet.size ?? '';
+    initConnectivity();
+  }
+
+  late int id = 0;
+  void initConnectivity() async {
+    final prefs = await SharedPreferences.getInstance();
+    int? idverdadero = prefs.getInt("id");
+    if (idverdadero != null) {
+      setState(() {
+        id = idverdadero!;
+      });
+    }
   }
 
   @override
@@ -94,46 +109,68 @@ class _UpdatePetPageState extends State<UpdatePetPage> {
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Column(
             children: [
-              InputFormWidget(
-                title: 'Nombre',
-                controller: _nameController,
-              ),
-              DatePickerWidget(
-                controller: _birthController,
-              ),
-              DropdownPickerWidget(
-                title: 'Tipo',
-                value: _typeController.text,
-                options: ['Perro', 'Gato'],
-                onChanged: (newValue) {
-                  setState(() {
-                    _typeController.text = newValue;
-                  });
-                },
-              ),
-              InputFormWidget(
+            InputFormWidget(
+            title: 'Nombre',
+            controller: _nameController,
+          ),
+            DatePickerWidget(
+              controller: _birthController,
+            ),
+            SizedBox(
+              height: 15.0,
+            ),
+            DropdownPickerWidget(
+              title: 'Tipo',
+              value: _typeController.text,
+              options: ['Perro', 'Gato'],
+              onChanged: (newValue) {
+                setState(() {
+                  _typeController.text = newValue;
+                });
+              },
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            DropdownPickerWidget(
                 title: 'Tamaño',
-                controller: _sizeController,
-              ),
-              InputFormWidget(
-                title: 'Raza',
-                controller: _breedController,
-              ),
-              DropdownPickerWidget(
-                title: 'Sexo',
-                value: _genderController.text,
-                options: ['Macho', 'Hembra'],
+                value: _sizeController.text,
+                options: ['Pequeño', 'Mediano', 'Grande'],
                 onChanged: (newValue) {
                   setState(() {
-                    _genderController.text = newValue;
+                    _sizeController.text = newValue;
                   });
-                },
-              ),
-              InputFormWidget(
-                title: 'Describe a tu mascota',
-                controller: _descriptionController,
-                height: 100.0,
-              ),
+                }),
+            BreedPickerWidget(
+              petType: _typeController.text.toLowerCase(),
+              selectedBreed: _breedController.text,
+              onChanged: (breed) {
+                setState(() {
+                  print(_breedController.text);
+
+                  _breedController.text = breed;
+                });
+              },
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            DropdownPickerWidget(
+              title: 'Sexo',
+              value: _genderController.text,
+              options: ['Macho', 'Hembra'],
+              onChanged: (newValue) {
+                setState(() {
+                  _genderController.text = newValue;
+                });
+              },
+            ),
+            InputFormWidget(
+              title: 'Describe a tu mascota',
+              controller: _descriptionController,
+              height: 100.0,
+              isInputBlock: true,
+            ),
               ButtonFormWidget(
                 onPressed: () {
                   // Aquí puedes crear el objeto de la mascota con los datos actualizados
@@ -146,7 +183,7 @@ class _UpdatePetPageState extends State<UpdatePetPage> {
                     gender: _genderController.text,
                     size: _sizeController.text,
                     description: _descriptionController.text,
-                    owner_id: 1,
+                    owner_id: id,
                   );
                   final updatedPetsList = [updatedPet];
 

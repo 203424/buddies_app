@@ -9,6 +9,7 @@ import 'package:buddies_app/widgets/input_form_widget.dart';
 import 'package:buddies_app/widgets/breed_picker_widget.dart';
 import 'package:buddies_app/widgets/date_picker_widget.dart';
 import 'package:buddies_app/widgets/dropdown_picker_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddPetPage extends StatefulWidget {
   const AddPetPage({Key? key}) : super(key: key);
@@ -26,6 +27,23 @@ class _AddPetPageState extends State<AddPetPage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _sizeController = TextEditingController();
 
+  late int id = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    initConnectivity();
+    super.initState();
+  }
+  void initConnectivity() async {
+    final prefs = await SharedPreferences.getInstance();
+    int? userId = prefs.getInt("id");
+    if (userId != null) {
+      setState(() {
+        id = userId;
+      });
+    }
+  }
   @override
   void dispose() {
     _nameController.dispose();
@@ -35,6 +53,7 @@ class _AddPetPageState extends State<AddPetPage> {
     _genderController.dispose();
     _descriptionController.dispose();
     _sizeController.dispose();
+
     super.dispose();
   }
 
@@ -150,7 +169,7 @@ class _AddPetPageState extends State<AddPetPage> {
                         gender: _genderController.text,
                         size: _sizeController.text,
                         description: _descriptionController.text,
-                        owner_id: 1,
+                        owner_id: id,
                       );
                       final petsList = [pet];
                       context

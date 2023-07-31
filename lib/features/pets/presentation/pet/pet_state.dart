@@ -39,8 +39,10 @@ class PetUpdatedState extends PetState {
   final List<PetEntity> pets;
   final List<int>petIds;
   PetUpdatedState(this.pets, this.petIds);
-
-
 }
-
+class PetGetPetsByUserIdState extends PetState {
+  final List<PetEntity> pets;
+  int id;
+  PetGetPetsByUserIdState(this.id, this.pets);
+}
 

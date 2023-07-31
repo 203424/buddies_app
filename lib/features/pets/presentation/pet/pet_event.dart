@@ -14,6 +14,13 @@ class DeletePetEvent extends PetEvent {
   DeletePetEvent({required this.petId});
 }
 
+
+class GetPetsByUserIdEvent extends PetEvent {
+  final int id;
+
+  GetPetsByUserIdEvent({required this.id});
+}
+
 class GetPetsByIdEvent extends PetEvent {
   final List<int> petsId;
 
