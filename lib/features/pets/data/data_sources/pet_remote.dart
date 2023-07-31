@@ -10,19 +10,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 String apiURL = Config.apiURL;
 
 abstract class PetRemoteDataSource {
-  Future<List<PetModel>> getPets();
   Future<List<PetModel>> getPetsById(List<int> petsId);
-  Future<List<PetModel>> getPetsByUserId(int id, );
-
+  Future<List<PetModel>> getPetsByUserId(int id);
   Future<List<PetModel>> createPet(List<PetEntity> pets);
   Future<List<PetModel>> updatePet(List<PetEntity> pets, List<int> petIds);
   Future<void> deletePet(int petid);
 }
 
 class PetRemoteDataSourceImpl implements PetRemoteDataSource {
-
-
-
   @override
   Future<List<PetModel>> createPet(List<PetEntity> pets) async {
     var url = Uri.http(apiURL, '/api/pets/');
@@ -58,11 +53,11 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
       throw Exception('Error al crear la mascota');
     }
   }
+
   Future<String?> getTokenFromSharedPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
   }
-
 
   @override
   Future<void> deletePet(int petId) async {
@@ -85,28 +80,6 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
   }
 
   @override
-  Future<List<PetModel>> getPets() async {
-    var url = Uri.http(apiURL, '/api/pets/getAll');
-    final prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString('token');
-    final headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token',
-    };
-    var response = await http.get(url, headers: headers);
-    if (response.statusCode == 200) {
-      var dataPets = convert
-          .jsonDecode(response.body)
-          .map<PetModel>((data) => PetModel.fromJson(data))
-          .toList();
-      print(dataPets);
-      return dataPets;
-    } else {
-      throw Exception('Error');
-    }
-  }
-
-  @override
   Future<List<PetModel>> getPetsByUserId(int id) async {
     var url = Uri.http(apiURL, '/api/pets/getByUserId/$id');
     final prefs = await SharedPreferences.getInstance();
@@ -115,7 +88,7 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    var response = await http.get(url,  headers: headers);
+    var response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {
       var dataPets = convert
@@ -128,7 +101,6 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
       throw Exception('Error');
     }
   }
-
 
   @override
   Future<List<PetModel>> getPetsById(List<int> petsId) async {

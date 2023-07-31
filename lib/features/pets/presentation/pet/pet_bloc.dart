@@ -4,14 +4,12 @@ import 'package:buddies_app/features/pets/domain/usecases/pet_usecases/create_pe
 import 'package:buddies_app/features/pets/domain/usecases/pet_usecases/delete_pet_usecase.dart';
 import 'package:buddies_app/features/pets/domain/usecases/pet_usecases/get_pets_by_id_usecase.dart';
 import 'package:buddies_app/features/pets/domain/usecases/pet_usecases/get_pets_by_user_id.dart';
-import 'package:buddies_app/features/pets/domain/usecases/pet_usecases/get_pets_usecase.dart';
 import 'package:buddies_app/features/pets/domain/usecases/pet_usecases/update_pet_usecase.dart';
 
 part 'pet_event.dart';
 part 'pet_state.dart';
 
 class PetBloc extends Bloc<PetEvent, PetState> {
-  final GetPetsUseCase getPetsUseCase;
   final GetPetsByIdUseCase getPetsByIdUseCase;
   final CreatePetUseCase createPetUseCase;
   final DeletePetUseCase deletePetUseCase;
@@ -19,7 +17,6 @@ class PetBloc extends Bloc<PetEvent, PetState> {
   final GetPetsByUserIdUseCase getPetsByUserIdUseCase;
 
   PetBloc({
-    required this.getPetsUseCase,
     required this.getPetsByIdUseCase,
     required this.createPetUseCase,
     required this.deletePetUseCase,
@@ -27,20 +24,6 @@ class PetBloc extends Bloc<PetEvent, PetState> {
     required this.getPetsByUserIdUseCase,
 
   }) : super(PetInitialState()) {
-    on<GetPetsEvent>((event, emit) async {
-      emit(PetLoadingState());
-      try {
-        List<PetEntity> pets = await getPetsUseCase.execute();
-        if (pets.isEmpty) {
-          emit(PetEmptyState());
-        } else {
-          emit(PetLoadedState(pets));
-        }
-      } catch (e) {
-        emit(PetErrorState(e.toString()));
-      }
-    });
-
     on<GetPetsByIdEvent>((event, emit) async {
       emit(PetLoadingState());
       try {

@@ -13,7 +13,6 @@ import 'features/pets/data/data_sources/pet_remote.dart';
 import 'features/pets/domain/usecases/pet_usecases/create_pet_usecase.dart';
 import 'features/pets/domain/usecases/pet_usecases/delete_pet_usecase.dart';
 import 'features/pets/domain/usecases/pet_usecases/get_pets_by_id_usecase.dart';
-import 'features/pets/domain/usecases/pet_usecases/get_pets_usecase.dart';
 import 'features/pets/domain/usecases/pet_usecases/update_pet_usecase.dart';
 
 import 'features/request/data/data_sources/request_remote.dart';
@@ -32,7 +31,6 @@ class UseCaseConfig {
   CreatePetUseCase? createPetUseCase;
   DeletePetUseCase? deletePetUseCase;
   GetPetsByIdUseCase? getPetsByIdUseCase;
-  GetPetsUseCase? getPetsUseCase;
   UpdatePetUseCase? updatePetUseCase;
   GetPetsByUserIdUseCase? getPetsByUserIdUseCase;
 
@@ -63,11 +61,10 @@ class UseCaseConfig {
     petRemoteDataSourceImpl = PetRemoteDataSourceImpl();
     petRepositoryImpl =
         PetRepositoryImpl(petRemoteDataSource: petRemoteDataSourceImpl!);
+
     createPetUseCase = CreatePetUseCase(petRepositoryImpl!);
     deletePetUseCase = DeletePetUseCase(petRepositoryImpl!);
     getPetsByIdUseCase = GetPetsByIdUseCase(petRepositoryImpl!);
-    getPetsUseCase =
-        GetPetsUseCase(petRepositoryImpl!); // Initialize getPetsUseCase
     updatePetUseCase = UpdatePetUseCase(petRepositoryImpl!);
     getPetsByUserIdUseCase = GetPetsByUserIdUseCase(petRepositoryImpl!);
     //Request
