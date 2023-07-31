@@ -41,6 +41,7 @@ class _PetsPageState extends State<PetsPage> {
     print("userId");
 
     print(userId);
+    _fetchPetsWithDelay();
   }
 
   Timer? _fetchPetsTimer;
@@ -48,6 +49,7 @@ class _PetsPageState extends State<PetsPage> {
   @override
   void dispose() {
     super.dispose();
+
   }
 
   void _fetchPetsWithDelay() {
@@ -91,11 +93,12 @@ class _PetsPageState extends State<PetsPage> {
                 return Center(child: CircularProgressIndicator());
               } else if (state is PetLoadedState) {
                 final List<PetEntity> pets = state.pets;
+
                 return _buildPetsList(pets);
               } else if (state is PetErrorState) {
                 return Center(child: Text(state.errorMessage));
               } else {
-                return const SizedBox();
+                return const Center(child: Text('No tienes ninguna mascota registrada'));
               }
             },
           ),
@@ -103,7 +106,7 @@ class _PetsPageState extends State<PetsPage> {
   }
 
   Widget _buildPetsList(List<PetEntity> pets) {
-    if (pets.isEmpty) {
+    if (pets == null) {
       return Center(child: Text('No se encontraron mascotas'));
     }
 
