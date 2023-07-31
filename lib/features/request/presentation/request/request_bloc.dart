@@ -1,7 +1,7 @@
 
 import 'package:bloc/bloc.dart';
-import 'package:buddies_app/features/pets/domain/entities/pet/pet_entity.dart';
-import 'package:buddies_app/features/pets/domain/usecases/pet_usecases/get_pets_by_user_id.dart';
+import 'package:meta/meta.dart';
+
 import '../../domain/entities/request/request_entity.dart';
 import '../../domain/usecases/request_usecases/create_request_usecase.dart';
 import '../../domain/usecases/request_usecases/delete_request_usecase.dart';
@@ -29,7 +29,6 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
   final GetInProgressUseCase getInProgressUseCase;
   final GetHistoryUseCase getHistoryUseCase;
   final GetByCaretakerIdUseCase getByCaretakerIdUseCase;
-  final GetPetsByUserIdUseCase getPetsByUserIdUseCase;
 
   RequestBloc({
     required this.createRequestUseCase,
@@ -42,7 +41,6 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
     required this.getInProgressUseCase,
     required this.getHistoryUseCase,
     required this.getByCaretakerIdUseCase,
-    required this.getPetsByUserIdUseCase
 
   }) : super(RequestInitialState())
   {
@@ -51,11 +49,10 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
       emit(RequestLoadingState());
       try {
         List<RequestEntity> request = await getAllRequestUseCase.execute();
-        List<PetEntity> pets = await getPetsByUserIdUseCase.execute(event.userId);
         if (request.isEmpty) {
           emit(RequestEmptyState());
         } else {
-          emit(RequestLoadedState(request, pets));
+          emit(RequestLoadedState(request));
         }
       } catch (e) {
         emit(RequestErrorState(e.toString()));
@@ -67,11 +64,10 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
       emit(RequestLoadingState());
       try {
         List<RequestEntity> request = await getByUserIdUseCase.execute(event.userId);
-        List<PetEntity> pets = await getPetsByUserIdUseCase.execute(event.userId);
         if (request.isEmpty) {
           emit(RequestEmptyState());
         } else {
-          emit(RequestLoadedState(request, pets));
+          emit(RequestLoadedState(request));
         }
       } catch (e) {
         emit(RequestErrorState(e.toString()));
@@ -82,11 +78,10 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
       emit(RequestGetState(event.userId));
       try {
         List<RequestEntity> request = await getInProgressUseCase.execute(event.userId);
-        List<PetEntity> pets = await getPetsByUserIdUseCase.execute(event.userId);
         if (request.isEmpty) {
           emit(RequestEmptyState());
         } else {
-          emit(RequestLoadedState(request,pets));
+          emit(RequestLoadedState(request));
         }
       } catch (e) {
         emit(RequestErrorState(e.toString()));
@@ -97,11 +92,10 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
       emit(RequestGetState(event.userId));
       try {
         List<RequestEntity> request = await getHistoryUseCase.execute(event.userId);
-        List<PetEntity> pets = await getPetsByUserIdUseCase.execute(event.userId);
         if (request.isEmpty) {
           emit(RequestEmptyState());
         } else {
-          emit(RequestLoadedState(request,pets));
+          emit(RequestLoadedState(request));
         }
       } catch (e) {
         emit(RequestErrorState(e.toString()));
@@ -112,11 +106,10 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
       emit(RequestGetState(event.caretakerId));
       try {
         List<RequestEntity> request = await getByCaretakerIdUseCase.execute(event.caretakerId);
-        List<PetEntity> pets = await getPetsByUserIdUseCase.execute(event.userId);
         if (request.isEmpty) {
           emit(RequestEmptyState());
         } else {
-          emit(RequestLoadedState(request,pets));
+          emit(RequestLoadedState(request));
         }
       } catch (e) {
         emit(RequestErrorState(e.toString()));
@@ -127,11 +120,10 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
       emit(RequestStatusState(event.status));
       try {
         List<RequestEntity> request = await getByStatusUseCase.execute(event.status);
-        List<PetEntity> pets = await getPetsByUserIdUseCase.execute(event.userId);
         if (request.isEmpty) {
           emit(RequestEmptyState());
         } else {
-          emit(RequestLoadedState(request,pets));
+          emit(RequestLoadedState(request));
         }
       } catch (e) {
         emit(RequestErrorState(e.toString()));

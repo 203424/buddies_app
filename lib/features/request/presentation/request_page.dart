@@ -24,231 +24,85 @@ class RequestPage extends StatefulWidget {
 
 class _RequestPageState extends State<RequestPage> {
   String? token;
-  late int userId;
-  late var prefs;
-  List<Map<String, dynamic>> servicesInProgressList = [];
-  List<Map<String, dynamic>> historyList = [];
-  List<PetEntity> pets = [];
-  List<RequestEntity> services = [];
 
   @override
   void initState() {
     super.initState();
-    userId = 0;
-    getUserId();
+    initConnectivity();
   }
 
-  Future<void> getUserId() async {
+  @override
+  void dispose() {
+    super.dispose();
+    // _fetchPetsWithDelay();
+  }
+
+  late int userId;
+  late var prefs;
+
+  Future<void> initConnectivity() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
       userId = prefs.getInt("id");
     });
+    // Disparar el evento para obtener la lista de mascotas por el ID de usuario
+    context.read<RequestBloc>().add(GetByUserIdEvent(userId));
   }
 
   @override
   Widget build(BuildContext context) {
-    context.read<RequestBloc>().add(GetByUserIdEvent(userId));
     return SafeArea(
       child: Scaffold(
+        backgroundColor: white,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: white,
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            backgroundColor: white,
-            title: BuddiesIcons.logoRounded(sizeIcon: 50.0),
-            shadowColor: Colors.transparent,
+          title: BuddiesIcons.logoRounded(sizeIcon: 50.0),
+          shadowColor: Colors.transparent,
+        ),
+        body: BlocListener<RequestBloc, RequestState>(
+          listener: (context, state) {
+            if (state is CreateRequestEvent) {
+              context.read<RequestBloc>().add(GetByUserIdEvent(userId));
+            }
+          },
+          child: BlocBuilder<RequestBloc, RequestState>(
+            builder: (context, state) {
+              if (state is RequestLoadingState) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is RequestLoadedState) {
+                if (state.requests.isEmpty) {
+                  // Aquí puedes llamar al evento GetAllRequestsEvent
+                  BlocProvider.of<RequestBloc>(context)
+                      .add(GetByUserIdEvent(userId));
+                  // Puedes dejar el indicador de carga mientras esperas la respuesta
+                  return Center(child: CircularProgressIndicator());
+                } else {
+                  final List<RequestEntity> requests = state.requests;
+                  return _buildRequestPageWidget(context, requests);
+                }
+              } else if (state is RequestErrorState) {
+                return Center(child: Text(state.message));
+              } else {
+                return _buildRequestPageWidget(context, []);
+              }
+            },
           ),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15.0),
-                    child: GridView.count(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 10.0,
-                      crossAxisSpacing: 10.0,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      childAspectRatio: 1.0,
-                      children: [
-                        botonServicio(
-                          context: context,
-                          title: 'Paseo',
-                          page: Pages.requestFormPage,
-                          icon: BuddiesIcons.paseoIcon(
-                              sizeIcon: 100.0, color: primaryColor),
-                        ),
-                        botonServicio(
-                          context: context,
-                          page: Pages.requestFormPage,
-                          title: 'Hospedaje',
-                          icon: BuddiesIcons.serviciosIcon(
-                              sizeIcon: 100.0, color: primaryColor),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Servicios en curso",
-                          style: Font.titleStyle,
-                        ),
-                        servicesInProgressList.length > 3
-                            ? TextButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    Pages.servicesListPage,
-                                    arguments: {'list': servicesInProgressList},
-                                  );
-                                },
-                                child: Text(
-                                  "Ver todos",
-                                  style: Font.textStyleBold(color: redColor),
-                                ),
-                              )
-                            : Container(),
-                      ],
-                    ),
-                  ),
-                ),
-                BlocBuilder<RequestBloc, RequestState>(
-                    builder: (context, state) {
-                  pets = [];
-                  services = [];
-                  if (state is RequestLoadedState) {
-                    pets = state.pets;
-                    services = state.requests;
-                    for (var service in services) {
-                      for (var pet_id in service.pet_id as List) {
-                        for (var pet in pets) {
-                          if (pet.id == pet_id) {
-                            if (service.status != 'Finalizado') {
-                              servicesInProgressList.add(
-                                {
-                                  'name': pet.name,
-                                  'time': service.hour,
-                                  'service': service.type,
-                                  'price': service.cost,
-                                  'status': service.status,
-                                },
-                              );
-                            } else {
-                              historyList.add(
-                                {
-                                  'name': pet.name,
-                                  'date': service.start_date,
-                                  'service': service.type,
-                                  'price': service.cost,
-                                },
-                              );
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                  return servicesInProgressList.isNotEmpty
-                      ? SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                              final service = servicesInProgressList[index];
-                              return ServiceInProgressWidget(service: service);
-                            },
-                            childCount: servicesInProgressList.length > 3
-                                ? 3
-                                : servicesInProgressList.length,
-                          ),
-                        )
-                      : SliverToBoxAdapter(
-                          child: listVacia(text: 'Sin servicios en curso'),
-                        );
-                }),
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Historial",
-                          style: Font.titleStyle,
-                        ),
-                        historyList.length > 3
-                            ? TextButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    Pages.historyListPage,
-                                    arguments: {'list': historyList},
-                                  );
-                                },
-                                child: Text(
-                                  "Ver todos",
-                                  style: Font.textStyleBold(color: redColor),
-                                ),
-                              )
-                            : Container(),
-                      ],
-                    ),
-                  ),
-                ),
-                //aca va el bloc builder/listener de historial
-                historyList.isNotEmpty
-                    ? SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) {
-                            final entry = historyList[index];
-                            return HistoryWidget(history: entry);
-                          },
-                          childCount:
-                              historyList.length > 3 ? 3 : historyList.length,
-                        ),
-                      )
-                    : SliverToBoxAdapter(
-                        child: listVacia(text: 'Sin entradas en el historial')),
-              ],
-            ),
-          )
-
-          //    BlocListener<RequestBloc, RequestState>(
-          //   listener: (context, state) {
-          //     if (state is CreateRequestEvent) {
-          //       context.read<RequestBloc>().add(GetByUserIdEvent(userId));
-          //     }
-          //   },
-          //   child: BlocBuilder<RequestBloc, RequestState>(
-          //     builder: (context, state) {
-          //       if (state is RequestLoadingState) {
-          //         return Center(child: CircularProgressIndicator());
-          //       } else if (state is RequestLoadedState) {
-          //         if (state.requests.isEmpty) {
-          //           BlocProvider.of<RequestBloc>(context)
-          //               .add(GetByUserIdEvent(userId));
-          //           // Puedes dejar el indicador de carga mientras esperas la respuesta
-          //           return Center(child: CircularProgressIndicator());
-          //         } else {
-          //           final List<RequestEntity> requests = state.requests;
-          //           return _buildRequestPageWidget(context, requests);
-          //         }
-          //       } else if (state is RequestErrorState) {
-          //         return Center(child: Text(state.message));
-          //       } else {
-          //         return _buildRequestPageWidget(context, []);
-          //       }
-          //     },
-          //   ),
-          // ),
-
-          ),
+        ),
+      ),
     );
+  }
+
+  List<PetEntity> getAllPets(BuildContext context) {
+    final petBloc = context.read<PetBloc>();
+    petBloc.add(
+        GetPetsByUserIdEvent(id: )); // Disparar el evento para obtener todas las mascotas
+    final state = petBloc.state;
+    if (state is PetLoadedState) {
+      return state.pets;
+    } else {
+      return [];
+    }
   }
 
   String getAllPetsById(BuildContext context, List<int> ids) {

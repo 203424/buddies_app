@@ -64,7 +64,6 @@ class _ServiceInProgressPageState extends State<ServiceInProgressPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.service);
     Map<String, dynamic> paseador = {
       'name': 'Gabriel',
       'rating': 4.6,
@@ -218,7 +217,7 @@ class _ServiceInProgressPageState extends State<ServiceInProgressPage> {
                               style: Font.textStyle,
                             ),
                             Text(
-                              "\$${widget.service['price'] ?? 0}.00",
+                              "\$${widget.service['price']}.00",
                               style: Font.numberStyle(
                                   fontSize: 12, fontWeight: FontWeight.w700),
                             ),

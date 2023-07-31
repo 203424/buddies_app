@@ -32,17 +32,12 @@ class GetByUserIdEvent extends RequestEvent {
   GetByUserIdEvent(this.userId);
 }
 
-class GetAllRequestsEvent extends RequestEvent {
-  final int userId;
-
-  GetAllRequestsEvent(this.userId);
-}
+class GetAllRequestsEvent extends RequestEvent {}
 
 class GetByStatusEvent extends RequestEvent {
   final String status;
-  final int userId;
 
-  GetByStatusEvent(this.status, this.userId);
+  GetByStatusEvent(this.status);
 }
 
 class GetInProgressEvent extends RequestEvent {
@@ -59,7 +54,18 @@ class GetHistoryEvent extends RequestEvent {
 
 class GetByCaretakerIdEvent extends RequestEvent {
   final int caretakerId;
-  final int userId;
 
-  GetByCaretakerIdEvent(this.caretakerId, this.userId);
+  GetByCaretakerIdEvent(this.caretakerId);
 }
+
+
+
+
+
+
+
+
+
+
+
+
