@@ -5,6 +5,7 @@ import 'package:buddies_app/features/pets/presentation/pet/pet_bloc.dart';
 import 'package:buddies_app/features/request/domain/entities/request/request_entity.dart';
 import 'package:buddies_app/features/request/presentation/request/request_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../pets/domain/entities/pet/pet_entity.dart';
 
 class AddPetToServicesPage extends StatefulWidget {
@@ -15,22 +16,40 @@ class AddPetToServicesPage extends StatefulWidget {
   State<AddPetToServicesPage> createState() => _AddPetToServicesPageState();
 }
 
-List<PetEntity> getAllPets(BuildContext context) {
-  final petBloc = context.read<PetBloc>();
-  petBloc.add(GetPetsEvent()); // Disparar el evento para obtener todas las mascotas
-  final state = petBloc.state;
-  print(state);
-  if (state is PetLoadedState) {
-    return state.pets;
-  } else {
-    return [];
-  }
-}
+
 
 class _AddPetToServicesPageState extends State<AddPetToServicesPage> {
   List<bool> selectedPets = [];
   List<Map<String, dynamic>> pets = [];
   int maxSelectedPets = 2;
+  late int userId;
+  late var prefs;
+
+  Future<void> initConnectivity() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getInt("id");
+    });
+    // Disparar el evento para obtener la lista de mascotas por el ID de usuario
+    context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
+    fetchPets();
+    markSelectedPets();
+  }
+
+  List<PetEntity> getAllPets(BuildContext context) {
+    final petBloc = context.read<PetBloc>();
+    petBloc.add(GetPetsByUserIdEvent(id: userId)); // Disparar el evento para obtener todas las mascotas
+    print(userId);
+    final state = petBloc.state;
+    print(state);
+    if (state is PetLoadedState) {
+      return state.pets;
+
+    } else {
+      return [];
+    }
+  }
+
 
   void markSelectedPets() {
     if (widget.markedPets.isEmpty) {
@@ -52,8 +71,8 @@ class _AddPetToServicesPageState extends State<AddPetToServicesPage> {
   @override
   void initState() {
     super.initState();
-    fetchPets();
-    markSelectedPets();
+    initConnectivity();
+
 
   }
 

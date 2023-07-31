@@ -170,7 +170,6 @@ class _RequestPageState extends State<RequestPage> {
         finalized.add(finalizedObject);
       }
     }
-    print(token); // Imprimir el token dentro del bucle
 
 // Imprimir la nueva lista generada
 
