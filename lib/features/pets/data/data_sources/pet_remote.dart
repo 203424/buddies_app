@@ -70,7 +70,6 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    print(http.get(url, headers: headers));
 
     final response = await http.delete(url, headers: headers);
 
@@ -95,7 +94,6 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
           .jsonDecode(response.body)
           .map<PetModel>((data) => PetModel.fromJson(data))
           .toList();
-
       return dataPets;
     } else {
       throw Exception('Error');

@@ -9,7 +9,6 @@ class RequestModel extends RequestEntity {
     String? start_date,
     String? end_date,
     String? hour,
-    String? duration,
     LatLng? location,
     double? cost,
     String? status,
@@ -22,7 +21,6 @@ class RequestModel extends RequestEntity {
             start_date: start_date,
             end_date: end_date,
             hour: hour,
-            duration: duration,
             location: location,
             cost: cost,
             status: status,
@@ -37,7 +35,6 @@ class RequestModel extends RequestEntity {
       start_date: json['start_date'],
       end_date: json['end_date'],
       hour: json['hour'],
-      duration: json['duration'],
       location: json['location'] != null
           ? LatLng(
         json['location'][1], // La latitud debe ser el segundo valor

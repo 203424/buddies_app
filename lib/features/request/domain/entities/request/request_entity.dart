@@ -8,7 +8,6 @@ class RequestEntity {
   final String? start_date;
   final String? end_date;
   final String? hour;
-  final String? duration;
   final LatLng? location; // Agregar el campo para la ubicación
   final double? cost;
   final String? status;
@@ -22,7 +21,6 @@ class RequestEntity {
     this.start_date,
     this.end_date,
     this.hour,
-    this.duration,
     this.location,
     this.cost,
     this.status,

@@ -478,7 +478,6 @@ class _RequestFormPageState extends State<RequestFormPage> {
                                 end_date: formatDateTimeToUtcString(finalizedSelectedDate),
                                 hour: formatTimeOfDay(_selectedTime),
                                 cost: cost,
-                                duration: "1:00",
                                 status: 'Finalizado',
                                 location: selectedLocation,
                                 pet_id: selectedPetIds,

@@ -147,6 +147,7 @@ class _RequestPageState extends State<RequestPage> {
       String name = i < requests.length
           ? getAllPetsById(context, requests[i].pet_id ?? []) ?? ' '
           : '';
+      print("nombre de la mascota:" + name);
       String service = i < requests.length ? requests[i].type ?? ' ' : '';
       String time = i < requests.length ? requests[i].hour ?? ' ' : '';
       String status = i < requests.length ? requests[i].status ?? ' ' : '';
