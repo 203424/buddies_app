@@ -1,4 +1,5 @@
 import 'package:buddies_app/const.dart';
+import 'package:buddies_app/features/owner/presentation/owner/owner_bloc.dart';
 import 'package:buddies_app/features/pets/presentation/pets_page.dart';
 import 'package:buddies_app/features/request/presentation/request/request_bloc.dart';
 import 'package:buddies_app/features/request/presentation/request_page.dart';
@@ -7,10 +8,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:buddies_app/features/pets/presentation/pet/pet_bloc.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class MainPage extends StatefulWidget {
-  final String? id;
-  const MainPage({Key? key, required this.id}) : super(key: key);
+  final String? token;
+  const MainPage({Key? key, required this.token}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -101,12 +103,16 @@ class _MainPageState extends State<MainPage> {
           ),
           MultiBlocProvider(
             providers: [
+              BlocProvider.value(value: BlocProvider.of<OwnerBloc>(context)),
               BlocProvider.value(value: BlocProvider.of<PetBloc>(context)),
               BlocProvider.value(value: BlocProvider.of<RequestBloc>(context)),
             ],
-            child: RequestPage(),
+            child: RequestPage(token: widget.token),
           ),
-          AccountPage(),
+          BlocProvider.value(
+            value: BlocProvider.of<OwnerBloc>(context),
+            child: AccountPage(),
+          )
         ],
       ),
     );

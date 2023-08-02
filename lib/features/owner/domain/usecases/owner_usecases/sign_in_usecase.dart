@@ -6,9 +6,9 @@ class SignInUseCase {
 
   SignInUseCase(this.repository);
 
-  Future<OwnerEntity> execute(String email, String password) async {
+  Future<String> execute(String email, String password) async {
 
-    final OwnerEntity signedInOwner = await repository.signIn(email, password);
-    return signedInOwner;
+    final String token = await repository.signIn(email, password);
+    return token;
   }
 }

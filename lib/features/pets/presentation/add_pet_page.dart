@@ -35,6 +35,7 @@ class _AddPetPageState extends State<AddPetPage> {
     initConnectivity();
     super.initState();
   }
+
   void initConnectivity() async {
     final prefs = await SharedPreferences.getInstance();
     int? userId = prefs.getInt("id");
@@ -44,6 +45,7 @@ class _AddPetPageState extends State<AddPetPage> {
       });
     }
   }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -118,7 +120,7 @@ class _AddPetPageState extends State<AddPetPage> {
                     },
                   ),
                   SizedBox(
-                    height: 10.0,
+                    height: 15.0,
                   ),
                   DropdownPickerWidget(
                       title: 'Tamaño',
@@ -129,6 +131,9 @@ class _AddPetPageState extends State<AddPetPage> {
                           _sizeController.text = newValue;
                         });
                       }),
+                  SizedBox(
+                    height: 15.0,
+                  ),
                   BreedPickerWidget(
                     petType: _typeController.text.toLowerCase(),
                     selectedBreed: _breedController.text,
@@ -141,7 +146,7 @@ class _AddPetPageState extends State<AddPetPage> {
                     },
                   ),
                   SizedBox(
-                    height: 10.0,
+                    height: 15.0,
                   ),
                   DropdownPickerWidget(
                     title: 'Sexo',
@@ -152,6 +157,9 @@ class _AddPetPageState extends State<AddPetPage> {
                         _genderController.text = newValue;
                       });
                     },
+                  ),
+                  SizedBox(
+                    height: 15.0,
                   ),
                   InputFormWidget(
                     title: 'Describe a tu mascota',

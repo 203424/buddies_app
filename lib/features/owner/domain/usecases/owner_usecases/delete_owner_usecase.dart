@@ -7,7 +7,7 @@ class DeleteOwnerUseCase {
 
   DeleteOwnerUseCase(this.repository);
 
-  Future<void> execute(int ownerid) async {
-    return await repository.deleteOwner(ownerid);
+  Future<void> execute() async {
+    return await repository.deleteOwner();
   }
 }

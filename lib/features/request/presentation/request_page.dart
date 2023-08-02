@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:buddies_app/const.dart';
+import 'package:buddies_app/features/owner/presentation/owner/owner_bloc.dart';
 import 'package:buddies_app/features/pets/presentation/pet/pet_bloc.dart';
 import 'package:buddies_app/features/request/domain/entities/request/request_entity.dart';
 import 'package:buddies_app/features/request/presentation/request/request_bloc.dart';
@@ -16,29 +17,24 @@ import '../../pets/domain/entities/pet/pet_entity.dart';
 import 'widgets/history_widget.dart';
 
 class RequestPage extends StatefulWidget {
-  const RequestPage({super.key});
+  final String? token;
+  const RequestPage({super.key, required this.token});
 
   @override
   State<RequestPage> createState() => _RequestPageState();
 }
 
 class _RequestPageState extends State<RequestPage> {
-  String? token;
+  late int userId = 0;
+  late var prefs;
+  late Map<String, dynamic> jwtDecodedToken;
 
   @override
   void initState() {
     super.initState();
+    decodeToken();
     initConnectivity();
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-    // _fetchPetsWithDelay();
-  }
-
-  late int userId;
-  late var prefs;
 
   Future<void> initConnectivity() async {
     prefs = await SharedPreferences.getInstance();
@@ -48,6 +44,7 @@ class _RequestPageState extends State<RequestPage> {
     // Disparar el evento para obtener la lista de mascotas por el ID de usuario
     context.read<RequestBloc>().add(GetByUserIdEvent(userId));
     context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
+    context.read<OwnerBloc>().add(GetOwnerEvent());
   }
 
   @override
@@ -107,9 +104,20 @@ class _RequestPageState extends State<RequestPage> {
     }
   }
 
+  String getName(BuildContext context) {
+    final ownerBloc = context.read<OwnerBloc>();
+    final state = ownerBloc.state;
+    print(state.toString());
+    if (state is OwnerCreatedState) {
+      return state.owner.name as String;
+    } else {
+      ownerBloc.add(GetOwnerEvent());
+      return '------';
+    }
+  }
+
   String getAllPetsById(BuildContext context, List<int> ids) {
     final petBloc = context.read<PetBloc>();
-
     // Verificar si las mascotas ya están disponibles en el estado actual
     final state = petBloc.state;
     if (state is PetLoadedState) {
@@ -140,7 +148,7 @@ class _RequestPageState extends State<RequestPage> {
       BuildContext context, List<RequestEntity> requests) {
     List<Map<String, dynamic>> newList = [];
     List<Map<String, dynamic>> finalized = [];
-
+    String username = getName(context);
 // Verificar la longitud de ambas listas (listPetsId y requests) para determinar el tamaño de la nueva lista
     int maxLength = requests.length;
 
@@ -184,6 +192,25 @@ class _RequestPageState extends State<RequestPage> {
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: CustomScrollView(
         slivers: [
+          SliverToBoxAdapter(
+            child: RichText(
+              text: TextSpan(
+                text: 'Bienvenido ',
+                style: Font.buddiesStyle(color: black),
+                children: [
+                  TextSpan(
+                    text:
+                        '${username[0].toUpperCase() + username.substring(1).toLowerCase()}\n',
+                    style: Font.buddiesStyle(color: redColor),
+                  ),
+                  const TextSpan(
+                    text: '¿Que haremos hoy?',
+                    style: Font.titleStyle,
+                  ),
+                ],
+              ),
+            ),
+          ),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -355,5 +382,10 @@ class _RequestPageState extends State<RequestPage> {
             )),
       ),
     );
+  }
+
+  void decodeToken() {
+    jwtDecodedToken = JwtDecoder.decode(widget.token!);
+    print(jwtDecodedToken);
   }
 }

@@ -11,9 +11,9 @@ String apiURL = Config.apiURL;
 abstract class OwnerRemoteDataSource {
   Future<OwnerModel> createOwner(OwnerEntity owner);
   Future<List<OwnerModel>> updateOwner(OwnerEntity owner);
-  Future<void> deleteOwner(int ownerid);
-  Future<OwnerModel> getOwnerById(int ownerid);
-  Future<OwnerModel> signIn(String email, String password);
+  Future<void> deleteOwner();
+  Future<OwnerModel> getOwnerById();
+  Future<String> signIn(String email, String password);
   Future<void> logOut();
 }
 
@@ -22,7 +22,9 @@ class OwnerRemoteDataSourceImpl implements OwnerRemoteDataSource {
   Future<OwnerModel> createOwner(OwnerEntity owner) async {
     var response;
     var url = Uri.http(apiURL, '/api/owners/');
-    var headers = {'Content-Type': 'application/json'};
+    final headers = {
+      'Content-Type': 'application/json',
+    };
 
     var body = {
       'name': owner.name,
@@ -43,32 +45,40 @@ class OwnerRemoteDataSourceImpl implements OwnerRemoteDataSource {
     }
   }
 
+  Future<String> getTokenFromSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token') as String;
+  }
+
   @override
-  Future<void> deleteOwner(int ownerid) async {
+  Future<void> deleteOwner() async {
+    final prefs = await SharedPreferences.getInstance();
+    final int? ownerid = prefs.getInt('id');
     final url = Uri.http(apiURL, '/api/owners/$ownerid');
-    final headers = {'Content-Type': 'application/json'};
+    final String token = await getTokenFromSharedPreferences();
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
 
     final response = await http.delete(url, headers: headers);
-
+    print(url);
     if (response.statusCode != 200) {
       throw Exception('Error al eliminar la mascota');
     }
   }
 
   @override
-  Future<OwnerModel> signIn(String email, String password) async {
+  Future<String> signIn(String email, String password) async {
     final url = Uri.http(apiURL, '/api/owners/signIn/');
     final headers = {'Content-Type': 'application/json'};
     final body = {
       'email': email,
       'password': password,
     };
-    print(email + " " + password);
 
     final response =
         await http.post(url, body: convert.jsonEncode(body), headers: headers);
-
-    print(response.statusCode);
     if (response.statusCode == 200) {
       final prefs = await SharedPreferences.getInstance();
       final responseData = convert.jsonDecode(response.body);
@@ -77,17 +87,22 @@ class OwnerRemoteDataSourceImpl implements OwnerRemoteDataSource {
       await prefs.setString('token', responseData['token']);
       await prefs.setInt('id', jwtDecodedToken['id']);
       print("jwt recibido: ${responseData['token']}\ndatos: $jwtDecodedToken");
-      final ownerModel = OwnerModel.fromJson(responseData);
-      return ownerModel;
+      return responseData['token'];
     } else {
       throw Exception('Credenciales incorrectas');
     }
   }
 
   @override
-  Future<OwnerModel> getOwnerById(int ownerid) async {
+  Future<OwnerModel> getOwnerById() async {
+    final prefs = await SharedPreferences.getInstance();
+    final int? ownerid = prefs.getInt('id');
     final url = Uri.http(apiURL, '/api/owners/$ownerid');
-    final headers = {'Content-Type': 'application/json'};
+    final String token = await getTokenFromSharedPreferences();
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
 
     final response = await http.get(url, headers: headers);
 
@@ -103,7 +118,11 @@ class OwnerRemoteDataSourceImpl implements OwnerRemoteDataSource {
   @override
   Future<void> logOut() async {
     final url = Uri.http(apiURL, '/api/logout');
-    final headers = {'Content-Type': 'application/json'};
+    final String token = getTokenFromSharedPreferences() as String;
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
 
     // Si estás utilizando un token de autenticación en la API, puedes enviar una solicitud para invalidar el token aquí.
     // Por ejemplo, puedes enviar una solicitud POST con el token actual a un endpoint de logout.
@@ -123,9 +142,12 @@ class OwnerRemoteDataSourceImpl implements OwnerRemoteDataSource {
 
   @override
   Future<List<OwnerModel>> updateOwner(OwnerEntity owner) async {
-    var url = Uri.http(apiURL,
-        '/api/pets/$owner.id'); // Asegurarse de incluir el id de la mascota en la ruta
-    var headers = {'Content-Type': 'application/json'};
+    var url = Uri.http(apiURL, '/api/pets/$owner.id');
+    final String token = getTokenFromSharedPreferences() as String;
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
 
     var body = {
       'id': owner.id,

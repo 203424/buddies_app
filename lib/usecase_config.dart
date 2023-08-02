@@ -1,7 +1,10 @@
 import 'package:buddies_app/features/owner/data/data_sources/owner_remote.dart';
 import 'package:buddies_app/features/owner/data/repository/owner_repository_impl.dart';
 import 'package:buddies_app/features/owner/domain/usecases/owner_usecases/create_owner_usecase.dart';
+import 'package:buddies_app/features/owner/domain/usecases/owner_usecases/delete_owner_usecase.dart';
+import 'package:buddies_app/features/owner/domain/usecases/owner_usecases/get_by_id_usecase.dart';
 import 'package:buddies_app/features/owner/domain/usecases/owner_usecases/sign_in_usecase.dart';
+import 'package:buddies_app/features/owner/domain/usecases/owner_usecases/update_owner_usecase.dart';
 import 'package:buddies_app/features/pets/data/repositories/pet_repository_impl.dart';
 import 'package:buddies_app/features/pets/domain/usecases/pet_usecases/get_pets_by_user_id.dart';
 import 'package:buddies_app/features/request/domain/usecases/request_usecases/create_request_usecase.dart';
@@ -55,6 +58,9 @@ class UseCaseConfig {
 
   CreateOwnerUseCase? createOwnerUseCase;
   SignInUseCase? signInUseCase;
+  DeleteOwnerUseCase? deleteOwnerUseCase;
+  UpdateOwnerUseCase? updateOwnerUseCase;
+  GetOwnerByIdUseCase? getOwnerByIdUseCase;
 
   UseCaseConfig() {
     //Pet
@@ -84,9 +90,13 @@ class UseCaseConfig {
     getByCaretakerIdUseCase = GetByCaretakerIdUseCase(requestRepositoryImpl!);
     //Owner
     ownerRemoteDataSourceImpl = OwnerRemoteDataSourceImpl();
-    ownerRepositoryImpl = OwnerRepositoryImpl(ownerRemoteDataSource: ownerRemoteDataSourceImpl!);
+    ownerRepositoryImpl =
+        OwnerRepositoryImpl(ownerRemoteDataSource: ownerRemoteDataSourceImpl!);
 
+    getOwnerByIdUseCase = GetOwnerByIdUseCase(ownerRepositoryImpl!);
     createOwnerUseCase = CreateOwnerUseCase(ownerRepositoryImpl!);
     signInUseCase = SignInUseCase(ownerRepositoryImpl!);
+    deleteOwnerUseCase = DeleteOwnerUseCase(ownerRepositoryImpl!);
+    updateOwnerUseCase = UpdateOwnerUseCase(ownerRepositoryImpl!);
   }
 }

@@ -14,13 +14,13 @@ class OwnerRepositoryImpl implements OwnerRepository {
   }
 
   @override
-  Future<void> deleteOwner(int ownerid) async {
-    return await ownerRemoteDataSource.deleteOwner(ownerid);
+  Future<void> deleteOwner() async {
+    return await ownerRemoteDataSource.deleteOwner();
   }
 
   @override
-  Future<OwnerEntity> getOwnerById(int ownerid) async {
-    return await ownerRemoteDataSource.getOwnerById(ownerid);
+  Future<OwnerEntity> getOwnerById() async {
+    return await ownerRemoteDataSource.getOwnerById();
   }
 
   @override
@@ -29,7 +29,7 @@ class OwnerRepositoryImpl implements OwnerRepository {
   }
 
   @override
-  Future<OwnerEntity> signIn(String email, String password) async {
+  Future<String> signIn(String email, String password) async {
     return await ownerRemoteDataSource.signIn(email, password);
   }
 

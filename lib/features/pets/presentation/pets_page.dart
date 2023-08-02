@@ -38,8 +38,7 @@ class _PetsPageState extends State<PetsPage> {
       behavior: SnackBarBehavior.floating,
       margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
       shape: ContinuousRectangleBorder(
-        borderRadius: BorderRadius.circular(
-            200.0),
+        borderRadius: BorderRadius.circular(200.0),
       ),
       content: Text(
         message,
@@ -155,10 +154,10 @@ class _PetsPageState extends State<PetsPage> {
                             const SizedBox(height: 25.0),
                             Row(
                               children: [
-                                //Text(
-                                //  '${calcularEdad(DateTime.parse(pet.birthday!))}',
-                                //  style: Font.textStyle,
-                                //),
+                                Text(
+                                  calcularEdad(DateTime.parse(pet.birthday!)),
+                                  style: Font.textStyle,
+                                ),
                                 const SizedBox(width: 20.0),
                                 Text(
                                   '${pet.type ?? ''} ${pet.breed ?? ''}',
@@ -210,8 +209,14 @@ class _PetsPageState extends State<PetsPage> {
     }
 
     if (edadAnios < 1) {
+      if (edadMeses <= 1) {
+        return '1 mes';
+      }
       return '$edadMeses meses';
     } else {
+      if (edadAnios == 1){
+        return '1 año';
+      }
       return '$edadAnios años';
     }
   }

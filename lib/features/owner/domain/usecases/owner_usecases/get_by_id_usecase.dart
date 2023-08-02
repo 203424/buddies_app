@@ -7,7 +7,7 @@ class GetOwnerByIdUseCase {
 
   GetOwnerByIdUseCase(this.repository);
 
-  Future<OwnerEntity> execute(int ownerid) async{
-    return repository.getOwnerById(ownerid);
+  Future<OwnerEntity> execute() async{
+    return repository.getOwnerById();
   }
 }

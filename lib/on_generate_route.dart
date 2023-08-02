@@ -22,7 +22,7 @@ class OnGenerateRoute {
       case Pages.mainPage:
         {
           return routeBuilder(MainPage(
-            id: args as String,
+            token: args as String,
           ));
         }
       case Pages.addPetPage:

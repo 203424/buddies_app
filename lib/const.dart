@@ -54,8 +54,11 @@ class Font {
   static const TextStyle titleBoldStyle =
       TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, color: black);
 
-  static const TextStyle titleStyle =
-      TextStyle(fontSize: 22.0, fontWeight: FontWeight.w900, color: black);
+  static const TextStyle titleStyle = TextStyle(
+      fontSize: 22.0,
+      fontWeight: FontWeight.w900,
+      color: black,
+      fontFamily: 'Montserrat');
   static const TextStyle pageTitleStyle =
       TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400, color: black);
   static TextStyle buddiesStyle({Color? color}) {

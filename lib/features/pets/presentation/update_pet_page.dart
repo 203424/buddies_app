@@ -109,68 +109,71 @@ class _UpdatePetPageState extends State<UpdatePetPage> {
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Column(
             children: [
-            InputFormWidget(
-            title: 'Nombre',
-            controller: _nameController,
-          ),
-            DatePickerWidget(
-              controller: _birthController,
-            ),
-            SizedBox(
-              height: 15.0,
-            ),
-            DropdownPickerWidget(
-              title: 'Tipo',
-              value: _typeController.text,
-              options: ['Perro', 'Gato'],
-              onChanged: (newValue) {
-                setState(() {
-                  _typeController.text = newValue;
-                });
-              },
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            DropdownPickerWidget(
-                title: 'Tamaño',
-                value: _sizeController.text,
-                options: ['Pequeño', 'Mediano', 'Grande'],
+              InputFormWidget(
+                title: 'Nombre',
+                controller: _nameController,
+              ),
+              DatePickerWidget(
+                controller: _birthController,
+              ),
+              SizedBox(
+                height: 15.0,
+              ),
+              DropdownPickerWidget(
+                title: 'Tipo',
+                value: _typeController.text,
+                options: ['Perro', 'Gato'],
                 onChanged: (newValue) {
                   setState(() {
-                    _sizeController.text = newValue;
+                    _typeController.text = newValue;
                   });
-                }),
-            BreedPickerWidget(
-              petType: _typeController.text.toLowerCase(),
-              selectedBreed: _breedController.text,
-              onChanged: (breed) {
-                setState(() {
-                  print(_breedController.text);
+                },
+              ),
+              SizedBox(
+                height: 15.0,
+              ),
+              DropdownPickerWidget(
+                  title: 'Tamaño',
+                  value: _sizeController.text,
+                  options: ['Pequeño', 'Mediano', 'Grande'],
+                  onChanged: (newValue) {
+                    setState(() {
+                      _sizeController.text = newValue;
+                    });
+                  }),
+              SizedBox(
+                height: 15.0,
+              ),
+              BreedPickerWidget(
+                petType: _typeController.text.toLowerCase(),
+                selectedBreed: _breedController.text,
+                onChanged: (breed) {
+                  setState(() {
+                    print(_breedController.text);
 
-                  _breedController.text = breed;
-                });
-              },
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            DropdownPickerWidget(
-              title: 'Sexo',
-              value: _genderController.text,
-              options: ['Macho', 'Hembra'],
-              onChanged: (newValue) {
-                setState(() {
-                  _genderController.text = newValue;
-                });
-              },
-            ),
-            InputFormWidget(
-              title: 'Describe a tu mascota',
-              controller: _descriptionController,
-              height: 100.0,
-              isInputBlock: true,
-            ),
+                    _breedController.text = breed;
+                  });
+                },
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              DropdownPickerWidget(
+                title: 'Sexo',
+                value: _genderController.text,
+                options: ['Macho', 'Hembra'],
+                onChanged: (newValue) {
+                  setState(() {
+                    _genderController.text = newValue;
+                  });
+                },
+              ),
+              InputFormWidget(
+                title: 'Describe a tu mascota',
+                controller: _descriptionController,
+                height: 100.0,
+                isInputBlock: true,
+              ),
               ButtonFormWidget(
                 onPressed: () {
                   // Aquí puedes crear el objeto de la mascota con los datos actualizados
@@ -191,11 +194,13 @@ class _UpdatePetPageState extends State<UpdatePetPage> {
                   final petIdsList = [widget.petId];
 
                   // Disparar el evento para actualizar la mascota en el bloc
-                  context.read<PetBloc>().add(UpdatePetEvent(                    pets: updatedPetsList,
-                    petIds: petIdsList,
-                  ));
+                  context.read<PetBloc>().add(UpdatePetEvent(
+                        pets: updatedPetsList,
+                        petIds: petIdsList,
+                      ));
 
-                  Navigator.pop(context); // Regresar a la página anterior (PetsPage)
+                  Navigator.pop(
+                      context); // Regresar a la página anterior (PetsPage)
                 },
                 text: 'Guardar',
                 height: 50.0,

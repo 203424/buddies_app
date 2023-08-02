@@ -5,6 +5,8 @@ abstract class OwnerState {}
 
 class OwnerUnAuthenticated extends OwnerState {}
 
+class OwnerDeleted extends OwnerState {}
+
 class Loading extends OwnerState {}
 
 class OwnerAuthenticated extends OwnerState {

@@ -47,12 +47,35 @@ class _BreedPickerWidgetState extends State<BreedPickerWidget> {
   Future<void> _loadBreeds() async {
     if (widget.petType == 'perro') {
       // Fetch dog breeds from API
-      final response =
-          await http.get(Uri.parse('https://dog.ceo/api/breeds/list/all'));
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        _breeds = data['message'].keys.toList();
-      }
+      // Uri url = Uri.https('dog.ceo','/api/breeds/list/all');
+      // final response =
+      //     await http.get(url);
+      // if (response.statusCode == 200) {
+      //   final data = jsonDecode(response.body);
+      //   _breeds = data['message'].keys.toList();
+      // }
+      _breeds = [
+        'Chihuahua',
+        'Labrador Retriever',
+        'German Shepherd',
+        'Golden Retriever',
+        'French Bulldog',
+        'Siberian Husky',
+        'Boxer',
+        'Poodle',
+        'Yorkshire Terrier',
+        'Pug',
+        'Bulldog',
+        'Dachshund',
+        'Shih Tzu',
+        'Beagle',
+        'Rottweiler',
+        'Great Dane',
+        'Dalmatian',
+        'Border Collie',
+        'Australian Shepherd',
+        'Cocker Spaniel',
+      ];
     } else if (widget.petType == 'gato') {
       // Use a predefined list of cat breeds
       _breeds = [

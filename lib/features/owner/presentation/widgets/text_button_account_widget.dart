@@ -7,6 +7,7 @@ class TextButtonAccountWidget extends StatelessWidget {
   final bool mostrarBorde;
   final bool redondearSuperior;
   final bool redondearInferior;
+  final bool disabledButton;
   final Color? colorText;
 
   const TextButtonAccountWidget({
@@ -16,6 +17,7 @@ class TextButtonAccountWidget extends StatelessWidget {
     this.mostrarBorde = true,
     this.redondearSuperior = true,
     this.redondearInferior = true,
+    this.disabledButton = false,
     this.colorText,
   }) : super(key: key);
 
@@ -30,10 +32,10 @@ class TextButtonAccountWidget extends StatelessWidget {
     );
 
     return Material(
-      color: inputGrey,
+      color: disabledButton ? greyColor.withOpacity(0.2) : inputGrey,
       borderRadius: borderRadius,
       child: InkWell(
-        onTap: onPressed,
+        onTap: disabledButton ? () {} : onPressed,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
           decoration: mostrarBorde

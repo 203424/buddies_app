@@ -16,4 +16,6 @@ class SignInEvent extends OwnerEvent {
   SignInEvent({required this.email, required this.password});
 }
 
-class SignInWithGoogleEvent extends OwnerEvent {}
+class DeleteOwnerEvent extends OwnerEvent {}
+
+class GetOwnerEvent extends OwnerEvent {}

@@ -67,6 +67,11 @@ class _LoginPageState extends State<LoginPage> {
                 } else if (state is OwnerAuthenticated) {
                   Navigator.of(context).pushReplacementNamed(Pages.mainPage,
                       arguments: state.token);
+                } else if (state is OwnerCreatedState) {
+                  setState(() {
+                    registerForm = !registerForm;
+                    _nameController.text = '';
+                  });
                 }
               }),
               child: BlocBuilder<OwnerBloc, OwnerState>(
@@ -119,11 +124,6 @@ class _LoginPageState extends State<LoginPage> {
                                         name: _nameController.text);
                                     ownerBloc
                                         .add(CreateOwnerEvent(owner: owner));
-
-                                    setState(() {
-                                      registerForm = !registerForm;
-                                      _nameController.text = '';
-                                    });
                                   }
                                 },
                                 text: 'Guardar')
