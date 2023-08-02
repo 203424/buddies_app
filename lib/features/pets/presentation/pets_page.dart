@@ -214,7 +214,7 @@ class _PetsPageState extends State<PetsPage> {
       }
       return '$edadMeses meses';
     } else {
-      if (edadAnios == 1){
+      if (edadAnios == 1) {
         return '1 año';
       }
       return '$edadAnios años';

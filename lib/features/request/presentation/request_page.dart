@@ -323,6 +323,42 @@ class _RequestPageState extends State<RequestPage> {
                 )
               : SliverToBoxAdapter(
                   child: listVacia(text: 'Sin entradas en el historial')),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
+              child: Container(
+                height: 130,
+                padding: const EdgeInsets.symmetric(
+                    vertical: 20.0, horizontal: 20.0),
+                decoration: BoxDecoration(
+                    color: inputGrey,
+                    borderRadius: BorderRadius.circular(10.0)),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Consejo del día',
+                          style: Font.textStyleBold(
+                              color: redColor, fontSize: 20.0),
+                        ),
+                        const Icon(
+                          Icons.lightbulb,
+                          color: redColor,
+                        )
+                      ],
+                    ),
+                    const Text(
+                      'Los Borzois son perros grandes y atléticos que requieren mucho espacio y ejercicio diario. Paseos largos, carreras y juegos son esenciales para mantenerlos saludables y felices.',
+                      style: Font.textStyle,
+                      textAlign: TextAlign.justify,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
