@@ -24,7 +24,7 @@ class RequestPage extends StatefulWidget {
 
 class _RequestPageState extends State<RequestPage> {
   String? token;
-  
+
   @override
   void initState() {
     super.initState();
@@ -47,8 +47,7 @@ class _RequestPageState extends State<RequestPage> {
     });
     // Disparar el evento para obtener la lista de mascotas por el ID de usuario
     context.read<RequestBloc>().add(GetByUserIdEvent(userId));
-    context.read<PetBloc>().add(GetPetsByUserIdEvent(id:userId));
-
+    context.read<PetBloc>().add(GetPetsByUserIdEvent(id: userId));
   }
 
   @override
@@ -64,7 +63,7 @@ class _RequestPageState extends State<RequestPage> {
         ),
         body: BlocListener<RequestBloc, RequestState>(
           listener: (context, state) {
-            if (state is CreateRequestEvent) {
+            if (state is RequestCreatedState) {
               context.read<RequestBloc>().add(GetByUserIdEvent(userId));
             }
           },
@@ -75,8 +74,9 @@ class _RequestPageState extends State<RequestPage> {
               } else if (state is RequestLoadedState) {
                 if (state.requests.isEmpty) {
                   // Aquí puedes llamar al evento GetAllRequestsEvent
-                  BlocProvider.of<RequestBloc>(context)
-                      .add(GetByUserIdEvent(userId));
+                  // BlocProvider.of<RequestBloc>(context)
+                  //     .add(GetByUserIdEvent(userId));
+                  context.read<RequestBloc>().add(GetByUserIdEvent(userId));
                   // Puedes dejar el indicador de carga mientras esperas la respuesta
                   return Center(child: CircularProgressIndicator());
                 } else {
@@ -101,10 +101,12 @@ class _RequestPageState extends State<RequestPage> {
     if (state is PetLoadedState) {
       return state.pets;
     } else {
-      petBloc.add(GetPetsEvent()); // Disparar el evento solo si las mascotas no están disponibles
+      petBloc.add(GetPetsByUserIdEvent(
+          id: userId)); // Disparar el evento solo si las mascotas no están disponibles
       return [];
     }
   }
+
   String getAllPetsById(BuildContext context, List<int> ids) {
     final petBloc = context.read<PetBloc>();
 
@@ -112,10 +114,9 @@ class _RequestPageState extends State<RequestPage> {
     final state = petBloc.state;
     if (state is PetLoadedState) {
       final List<PetEntity> allPets = state.pets;
-
       // Filtrar las mascotas por los ids proporcionados
       final List<PetEntity> petsById =
-      allPets.where((pet) => ids.contains(pet.id)).toList();
+          allPets.where((pet) => ids.contains(pet.id)).toList();
 
       if (petsById.isNotEmpty) {
         // Si hay mascotas con los ids proporcionados, combinamos los nombres en una cadena separada por ' - '
@@ -127,7 +128,8 @@ class _RequestPageState extends State<RequestPage> {
       }
     } else {
       // Las mascotas aún no están disponibles en el estado, disparamos el evento para obtenerlas
-      petBloc.add(GetPetsByIdEvent(petsId: ids));
+      // petBloc.add(GetPetsByIdEvent(petsId: ids));
+      petBloc.add(GetPetsByUserIdEvent(id: userId));
 
       // Puedes retornar una cadena vacía o un mensaje de espera mientras esperas la respuesta
       return 'Cargando mascotas...';
@@ -136,7 +138,7 @@ class _RequestPageState extends State<RequestPage> {
 
   Widget _buildRequestPageWidget(
       BuildContext context, List<RequestEntity> requests) {
-    List<Map<String, String>> newList = [];
+    List<Map<String, dynamic>> newList = [];
     List<Map<String, dynamic>> finalized = [];
 
 // Verificar la longitud de ambas listas (listPetsId y requests) para determinar el tamaño de la nueva lista
@@ -145,21 +147,21 @@ class _RequestPageState extends State<RequestPage> {
 // Recorrer ambas listas y generar los objetos para la nueva lista
     for (int i = 0; i < maxLength; i++) {
       String name = i < requests.length
-          ? getAllPetsById(context, requests[i].pet_id ?? []) ?? ' '
+          ? getAllPetsById(context, requests[i].pet_id ?? [])
           : '';
-      print("nombre de la mascota:" + name);
       String service = i < requests.length ? requests[i].type ?? ' ' : '';
       String time = i < requests.length ? requests[i].hour ?? ' ' : '';
       String status = i < requests.length ? requests[i].status ?? ' ' : '';
       String date = i < requests.length ? requests[i].start_date ?? ' ' : '';
       double cost = i < requests.length ? requests[i].cost ?? 0 : 0;
 
-      Map<String, String> newObject = {
+      Map<String, dynamic> newObject = {
         'name': name, //Nombre de la mascota
         'date': date, //fecha en la que se pidio el servicio
         'time': time, //hora programada
         'service': service, //servicio que se da
         'status': status, // Estado del servicio
+        'price': cost
       };
 
       Map<String, dynamic> finalizedObject = {
@@ -168,13 +170,13 @@ class _RequestPageState extends State<RequestPage> {
         'service': service, //servicio que se da
         'price': cost, // Estado del servicio
       };
-
-      newList.add(newObject);
-      if (status == 'Finalizado') {
-        finalized.add(finalizedObject);
+      if (requests[i].pet_id?.length != 0 && name != 'Error de mascota') {
+        newList.add(newObject);
+        if (status == 'Finalizado') {
+          finalized.add(finalizedObject);
+        }
       }
     }
-    print(token); // Imprimir el token dentro del bucle
 
 // Imprimir la nueva lista generada
 

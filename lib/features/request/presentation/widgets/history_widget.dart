@@ -55,7 +55,7 @@ class HistoryWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                "\$${history['price']}.00",
+                "\$${history['price'].toStringAsFixed(2)}",
                 style: Font.numberStyle(
                     fontSize: 25.0, fontWeight: FontWeight.w900),
               ),

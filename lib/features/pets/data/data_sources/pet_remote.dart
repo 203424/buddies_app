@@ -136,7 +136,7 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
     String petsIdJson = jsonEncode(petIds);
     String escapedPetsIdJson = Uri.encodeQueryComponent(petsIdJson);
     var url = Uri.http(apiURL, "/api/pets/", {"array": escapedPetsIdJson});
-    print(url);
+    // print(url);
     final prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
     final headers = {
@@ -159,7 +159,7 @@ class PetRemoteDataSourceImpl implements PetRemoteDataSource {
 
     var response =
         await http.put(url, body: convert.jsonEncode(body), headers: headers);
-    print(response.body);
+    // print(response.body);
 
     if (response.statusCode == 200) {
       // Si la solicitud fue exitosa, parsea la respuesta y devuelve un objeto PetModel

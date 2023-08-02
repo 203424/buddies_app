@@ -22,7 +22,6 @@ class PetBloc extends Bloc<PetEvent, PetState> {
     required this.deletePetUseCase,
     required this.updatePetUseCase,
     required this.getPetsByUserIdUseCase,
-
   }) : super(PetInitialState()) {
     on<GetPetsByIdEvent>((event, emit) async {
       emit(PetLoadingState());

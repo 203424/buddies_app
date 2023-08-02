@@ -42,7 +42,7 @@ class MainApp extends StatelessWidget {
       deletePetUseCase: useCaseConfig.deletePetUseCase!,
       updatePetUseCase: useCaseConfig.updatePetUseCase!,
       createPetUseCase: useCaseConfig.createPetUseCase!,
-      getPetsByUserIdUseCase: useCaseConfig.getPetsByUserIdUseCase !,
+      getPetsByUserIdUseCase: useCaseConfig.getPetsByUserIdUseCase!,
     );
 
     final requestBloc = RequestBloc(
